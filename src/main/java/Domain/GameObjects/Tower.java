@@ -1,5 +1,4 @@
 package Domain.GameObjects;
-
 import java.util.List;
 
 public abstract class Tower extends GameObject {
@@ -72,11 +71,6 @@ public abstract class Tower extends GameObject {
     // Method to check if an enemy is in range
     public boolean isInRange(Enemy enemy) {
         return distanceTo(enemy) <= attackRange;
-    }
-
-    private int distanceTo(Enemy enemy) {
-        // TO BE IMPLEMENTED
-        return 0;
     }
 
     // Method to find the best target among available enemies

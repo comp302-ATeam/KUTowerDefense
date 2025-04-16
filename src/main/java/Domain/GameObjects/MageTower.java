@@ -10,7 +10,7 @@ public class MageTower extends Tower {
     public void attack(Enemy target) {
         if (target != null && canAttack()) {
             // Create a new magic spell that will manage itself
-            new MagicSpell(target.getX(), target.getY(),20,target);
+            new MagicSpell(x, y, target, this);
             updateLastAttackTime();
         }
     }

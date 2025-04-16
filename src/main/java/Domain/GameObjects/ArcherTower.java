@@ -10,7 +10,7 @@ public class ArcherTower extends Tower {
     public void attack(Enemy target) {
         if (target != null && canAttack()) {
             // Create a new arrow that will manage itself
-            new Arrow(target.getX(), target.getY(), this.damage, "Arrow", target);
+            new Arrow(x, y, target, this);
             updateLastAttackTime();
         }
     }
