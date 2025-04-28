@@ -37,4 +37,10 @@ public abstract class Enemy extends GameObject {
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
     public void Die(){}
+
+    public double getPathProgress()
+    {
+        // TO BE IMPLEMENTED
+        return 0;
+    }
 }

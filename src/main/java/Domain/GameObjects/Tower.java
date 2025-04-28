@@ -73,6 +73,11 @@ public abstract class Tower extends GameObject {
         return distanceTo(enemy) <= attackRange;
     }
 
+    private int distanceTo(Enemy enemy) {
+        // TO BE IMPLEMENTED
+        return 0;
+    }
+
     // Method to find the best target among available enemies
     /**
      * Finds the enemy that is closest to the exit among those in range.
