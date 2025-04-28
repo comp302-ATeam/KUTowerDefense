@@ -1,7 +1,13 @@
 package UI;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.scene.control.Button;
+import java.io.IOException;
+
 
 public class StartSceneController {
 
@@ -10,6 +16,7 @@ public class StartSceneController {
 //    @FXML
 //    private Button buttonLoadGame;
 //    @FXML
+@FXML
 private Button buttonOptions;
 //    @FXML
 //    private Button buttonQuit;
@@ -36,6 +43,7 @@ private Button buttonOptions;
             Stage stage = (Stage) ((Button) buttonOptions).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+            stage.centerOnScreen();
         } catch (IOException e) {
             e.printStackTrace();
         }
