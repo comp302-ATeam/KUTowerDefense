@@ -58,6 +58,5 @@ public class StartSceneController {
     @FXML
     private void onActionQuit() {
         System.out.println("Quit");
-
     }
 }
