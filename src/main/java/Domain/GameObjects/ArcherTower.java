@@ -7,7 +7,7 @@ public class ArcherTower extends Tower {
     }
 
     @Override
-    public void attack(Enemy target) {
+    public void attack(Enemy enemy) {
         if (target != null && canAttack()) {
             // Create a new arrow that will manage itself
             new Arrow(x, y, target, this);
