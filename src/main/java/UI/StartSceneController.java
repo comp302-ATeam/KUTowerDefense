@@ -52,6 +52,5 @@ private Button buttonOptions;
     @FXML
     private void onActionQuit() {
         System.out.println("Quit");
-
     }
 }
