@@ -68,6 +68,7 @@ public abstract class Tower extends GameObject {
     public int getCurrentLevel() { return currentLevel; }
     public int getCost() { return cost; }
 
+
     // Method to check if an enemy is in range
     public boolean isInRange(Enemy enemy) {
         return distanceTo(enemy) <= attackRange;
