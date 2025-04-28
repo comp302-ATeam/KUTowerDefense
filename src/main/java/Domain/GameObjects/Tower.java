@@ -38,7 +38,7 @@ public abstract class Tower extends GameObject {
     
 
     // Abstract method for attacking enemies
-    public abstract void attack(Enemy target);
+    //public abstract void attack(Enemy target);
 
     // Method to upgrade the tower
     public void upgrade() {
