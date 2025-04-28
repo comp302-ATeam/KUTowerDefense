@@ -1,6 +1,6 @@
 package Domain.GameObjects;
 
-public class Enemy extends GameObject {
+public abstract class Enemy extends GameObject {
 
     String enemyType;
     int healthPoints;
@@ -17,4 +17,16 @@ public class Enemy extends GameObject {
     public void update(double deltaTime) {
 
     }
+    protected abstract int CalcDamage(Projectile projectile);
+
+
+    public void takeDamage(Projectile projectile) {
+        int damageTaken = CalcDamage(projectile);
+        healthPoints -= damageTaken;
+
+        if( healthPoints <= 0 ) {
+            Die();
+        }
+    }
+    public void Die(){};
 }
