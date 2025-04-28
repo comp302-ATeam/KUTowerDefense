@@ -33,7 +33,7 @@ public class Wave {
                 enemyWave.add(new Knight(xPos, yPos, "Knight", 100, 1));
                 waitForEnemy();
             }
-            waitForEnemy();
+            waitForGroup();
         }
         return enemyWave;
     }
