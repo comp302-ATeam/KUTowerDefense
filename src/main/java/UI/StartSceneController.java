@@ -10,7 +10,7 @@ public class StartSceneController {
 //    @FXML
 //    private Button buttonLoadGame;
 //    @FXML
-//    private Button buttonOptions;
+private Button buttonOptions;
 //    @FXML
 //    private Button buttonQuit;
 
@@ -30,8 +30,15 @@ public class StartSceneController {
 
     @FXML
     private void onActionOptions() {
-        System.out.println("Options");
-
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/OptionsScene.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Button) buttonOptions).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

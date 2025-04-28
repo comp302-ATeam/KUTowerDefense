@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="UI.OptionsSceneController">
+    <children>
+        <Text layoutX="180" layoutY="40" text="Options" />
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.OptionsSceneController">
+        <Button fx:id="backButton" layoutX="180" layoutY="100" text="Back to Main Menu" onAction="#handleBackButton"/>
 
+        <Button fx:id="musicToggleButton" layoutX="180" layoutY="150" text="Toggle Music" onAction="#handleMusicToggle"/>
+
+        <Button fx:id="soundEffectsToggleButton" layoutX="180" layoutY="200" text="Toggle SFX" onAction="#handleSfxToggle"/>
+
+    </children>
 </AnchorPane>
