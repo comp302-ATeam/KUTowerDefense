@@ -6,7 +6,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/javafx-sdk-21.0.7" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/java/Domain/GameObjects" />
     </content>
     <orderEntry type="jdk" jdkName="openjdk-24" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
