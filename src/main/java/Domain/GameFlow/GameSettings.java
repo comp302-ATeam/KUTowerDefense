@@ -31,5 +31,7 @@ public class GameSettings implements Serializable {
     public static class Player implements Serializable {
         public int startingHP;
         public int startingGold;
+        public boolean musicOn;
+        public boolean sfxOn;
     }
 }

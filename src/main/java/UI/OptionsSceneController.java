@@ -157,6 +157,8 @@ public class OptionsSceneController {
 
         s.player.startingHP = spinnerPlayerHP.getValue();
         s.player.startingGold = spinnerPlayerGold.getValue();
+        s.player.musicOn = isMusicOn;
+        s.player.sfxOn = isSfxOn;
 
         return s;
     }
@@ -194,6 +196,10 @@ public class OptionsSceneController {
 
         spinnerPlayerHP.getValueFactory().setValue(s.player.startingHP);
         spinnerPlayerGold.getValueFactory().setValue(s.player.startingGold);
+        isMusicOn = s.player.musicOn;
+        isSfxOn = s.player.sfxOn;
+        musicToggleButton.setText(isMusicOn ? "Music: ON" : "Music: OFF");
+        soundEffectsToggleButton.setText(isSfxOn ? "SFX: ON" : "SFX: OFF");
     }
 
     @FXML
