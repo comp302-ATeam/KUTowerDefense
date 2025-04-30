@@ -155,7 +155,7 @@
 
         <!-- Save / Restore Buttons -->
         <Button fx:id="saveButton" layoutX="781.0" layoutY="736.0" text="Save Settings" onAction="#handleSaveButton" />
-        <Button fx:id="restoreDefaultsButton" layoutX="774.0" layoutY="783.0" text="Restore Defaults" />
+        <Button fx:id="restoreDefaultsButton" layoutX="774.0" layoutY="783.0" text="Restore Defaults" onAction="#handleRestoreDefaults" />
 
         <Button fx:id="musicToggleButton" layoutX="774.0" layoutY="830.0" text="Music: ON" onAction="#handleMusicToggle" />
         <Button fx:id="soundEffectsToggleButton" layoutX="774.0" layoutY="877.0" text="SFX: ON" onAction="#handleSfxToggle" />

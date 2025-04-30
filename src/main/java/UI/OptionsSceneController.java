@@ -204,7 +204,20 @@ public class OptionsSceneController {
 
     @FXML
     private void handleRestoreDefaults(ActionEvent event) {
+        System.out.println("Restoring default settings...");
         initializeDefaults();
+
+        isMusicOn = true;
+        isSfxOn = true;
+        musicToggleButton.setText("Music: ON");
+        soundEffectsToggleButton.setText("SFX: ON");
+
+        // 🔐 Save the restored state
+        GameSettings defaults = gatherSettingsFromUI();
+        defaults.player.musicOn = isMusicOn;
+        defaults.player.sfxOn = isSfxOn;
+        saveSettingsToDisk(defaults);
+        System.out.println("Defaults saved.");
     }
 
     @FXML
