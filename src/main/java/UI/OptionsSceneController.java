@@ -9,20 +9,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.control.SpinnerValueFactory;
-import java.io.IOException;
+import java.io.*;
+import Domain.GameFlow.GameSettings;
 
 public class OptionsSceneController {
 
-    @FXML
-    private Button backButton;
-    @FXML
-    private Button musicToggleButton;
-    @FXML
-    private Button soundEffectsToggleButton;
-    @FXML
-    private Button saveButton;
-    @FXML
-    private Button restoreDefaultsButton;
+    @FXML private Button backButton;
+    @FXML private Button musicToggleButton;
+    @FXML private Button soundEffectsToggleButton;
+    @FXML private Button saveButton;
+    @FXML private Button restoreDefaultsButton;
 
     // Wave Settings
     @FXML private Spinner<Integer> spinnerNumWaves;
@@ -57,7 +53,6 @@ public class OptionsSceneController {
     @FXML private Spinner<Double> spinnerArtilleryFireRate;
     @FXML private Spinner<Double> spinnerMageFireRate;
 
-
     // Player Settings
     @FXML private Spinner<Integer> spinnerPlayerHP;
     @FXML private Spinner<Integer> spinnerPlayerGold;
@@ -67,8 +62,14 @@ public class OptionsSceneController {
 
     @FXML
     private void initialize() {
-        initializeDefaults();
+        initializeDefaults();  // Always set up value factories first
+
+        GameSettings settings = loadSettingsFromDisk();
+        if (settings != null) {
+            applySettingsToUI(settings);  // Now safe to set values
+        }
     }
+
 
     private void initIntegerSpinner(Spinner<Integer> spinner, int min, int max, int initial) {
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max, initial));
@@ -113,9 +114,125 @@ public class OptionsSceneController {
         initDoubleSpinner(spinnerMageFireRate, 0.1, 5.0, 1.8, 0.1);
 
         // Player Settings
-        initIntegerSpinner(spinnerPlayerHP, 1, 500, 20);
+        initIntegerSpinner(spinnerPlayerHP, 1, 500, 100);
         initIntegerSpinner(spinnerPlayerGold, 0, 1000, 100);
     }
+
+    private GameSettings gatherSettingsFromUI() {
+        GameSettings s = new GameSettings();
+        s.waves = new GameSettings.Waves();
+        s.enemy = new GameSettings.Enemy();
+        s.tower = new GameSettings.Tower();
+        s.player = new GameSettings.Player();
+
+        s.waves.numWaves = spinnerNumWaves.getValue();
+        s.waves.groupsPerWave = spinnerGroupsPerWave.getValue();
+        s.waves.enemiesPerGroup = spinnerEnemiesPerGroup.getValue();
+        s.waves.goblinsPerGroup = spinnerGoblinsPerGroup.getValue();
+        s.waves.knightsPerGroup = spinnerKnightsPerGroup.getValue();
+        s.waves.delayBetweenWaves = spinnerDelayBetweenWaves.getValue();
+        s.waves.delayBetweenGroups = spinnerDelayBetweenGroups.getValue();
+        s.waves.delayBetweenEnemies = spinnerDelayBetweenEnemies.getValue();
+
+        s.enemy.goblinHP = spinnerGoblinHP.getValue();
+        s.enemy.knightHP = spinnerKnightHP.getValue();
+        s.enemy.goblinGold = spinnerGoblinGold.getValue();
+        s.enemy.knightGold = spinnerKnightGold.getValue();
+        s.enemy.goblinSpeed = spinnerGoblinSpeed.getValue();
+        s.enemy.knightSpeed = spinnerKnightSpeed.getValue();
+
+        s.tower.archerCost = spinnerArcherCost.getValue();
+        s.tower.artilleryCost = spinnerArtilleryCost.getValue();
+        s.tower.mageCost = spinnerMageCost.getValue();
+        s.tower.archerRange = spinnerArcherRange.getValue();
+        s.tower.artilleryRange = spinnerArtilleryRange.getValue();
+        s.tower.mageRange = spinnerMageRange.getValue();
+        s.tower.aoeRadius = spinnerAoeRadius.getValue();
+        s.tower.arrowDamage = spinnerArrowDamage.getValue();
+        s.tower.artilleryDamage = spinnerArtilleryDamage.getValue();
+        s.tower.magicDamage = spinnerMagicDamage.getValue();
+        s.tower.archerFireRate = spinnerArcherFireRate.getValue();
+        s.tower.artilleryFireRate = spinnerArtilleryFireRate.getValue();
+        s.tower.mageFireRate = spinnerMageFireRate.getValue();
+
+        s.player.startingHP = spinnerPlayerHP.getValue();
+        s.player.startingGold = spinnerPlayerGold.getValue();
+
+        return s;
+    }
+
+    private void applySettingsToUI(GameSettings s) {
+        spinnerNumWaves.getValueFactory().setValue(s.waves.numWaves);
+        spinnerGroupsPerWave.getValueFactory().setValue(s.waves.groupsPerWave);
+        spinnerEnemiesPerGroup.getValueFactory().setValue(s.waves.enemiesPerGroup);
+        spinnerGoblinsPerGroup.getValueFactory().setValue(s.waves.goblinsPerGroup);
+        spinnerKnightsPerGroup.getValueFactory().setValue(s.waves.knightsPerGroup);
+        spinnerDelayBetweenWaves.getValueFactory().setValue(s.waves.delayBetweenWaves);
+        spinnerDelayBetweenGroups.getValueFactory().setValue(s.waves.delayBetweenGroups);
+        spinnerDelayBetweenEnemies.getValueFactory().setValue(s.waves.delayBetweenEnemies);
+
+        spinnerGoblinHP.getValueFactory().setValue(s.enemy.goblinHP);
+        spinnerKnightHP.getValueFactory().setValue(s.enemy.knightHP);
+        spinnerGoblinGold.getValueFactory().setValue(s.enemy.goblinGold);
+        spinnerKnightGold.getValueFactory().setValue(s.enemy.knightGold);
+        spinnerGoblinSpeed.getValueFactory().setValue(s.enemy.goblinSpeed);
+        spinnerKnightSpeed.getValueFactory().setValue(s.enemy.knightSpeed);
+
+        spinnerArcherCost.getValueFactory().setValue(s.tower.archerCost);
+        spinnerArtilleryCost.getValueFactory().setValue(s.tower.artilleryCost);
+        spinnerMageCost.getValueFactory().setValue(s.tower.mageCost);
+        spinnerArcherRange.getValueFactory().setValue(s.tower.archerRange);
+        spinnerArtilleryRange.getValueFactory().setValue(s.tower.artilleryRange);
+        spinnerMageRange.getValueFactory().setValue(s.tower.mageRange);
+        spinnerAoeRadius.getValueFactory().setValue(s.tower.aoeRadius);
+        spinnerArrowDamage.getValueFactory().setValue(s.tower.arrowDamage);
+        spinnerArtilleryDamage.getValueFactory().setValue(s.tower.artilleryDamage);
+        spinnerMagicDamage.getValueFactory().setValue(s.tower.magicDamage);
+        spinnerArcherFireRate.getValueFactory().setValue(s.tower.archerFireRate);
+        spinnerArtilleryFireRate.getValueFactory().setValue(s.tower.artilleryFireRate);
+        spinnerMageFireRate.getValueFactory().setValue(s.tower.mageFireRate);
+
+        spinnerPlayerHP.getValueFactory().setValue(s.player.startingHP);
+        spinnerPlayerGold.getValueFactory().setValue(s.player.startingGold);
+    }
+
+    @FXML
+    private void handleRestoreDefaults(ActionEvent event) {
+        initializeDefaults();
+    }
+
+    @FXML
+    private void handleSaveButton(ActionEvent event) {
+        GameSettings settings = gatherSettingsFromUI();
+        saveSettingsToDisk(settings);
+        System.out.println("Settings saved.");
+    }
+
+
+    private GameSettings loadSettingsFromDisk() {
+        File file = new File("src/data/OptionsSettings.dat");
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            System.out.println("✅ Loaded settings from: " + file.getAbsolutePath());
+            return (GameSettings) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("❌ Could not load settings: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private void saveSettingsToDisk(GameSettings settings) {
+        File file = new File("src/data/OptionsSettings.dat");
+        try {
+            file.getParentFile().mkdirs(); // Ensure directory exists
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+                oos.writeObject(settings);
+                System.out.println("✅ Saved settings to: " + file.getAbsolutePath());
+            }
+        } catch (IOException e) {
+            System.err.println("❌ Could not save settings: " + e.getMessage());
+        }
+    }
+
 
     @FXML
     private void handleBackButton(ActionEvent event) {
@@ -123,8 +240,8 @@ public class OptionsSceneController {
             Parent root = FXMLLoader.load(getClass().getResource("/StartScene.fxml"));
             Stage stage = (Stage) backButton.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.show();
             stage.centerOnScreen();
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,36 +250,12 @@ public class OptionsSceneController {
     @FXML
     private void handleMusicToggle(ActionEvent event) {
         isMusicOn = !isMusicOn;
-        if (isMusicOn) {
-            System.out.println("Music turned ON");
-            musicToggleButton.setText("Music: ON");
-        } else {
-            System.out.println("Music turned OFF");
-            musicToggleButton.setText("Music: OFF");
-        }
+        musicToggleButton.setText(isMusicOn ? "Music: ON" : "Music: OFF");
     }
 
     @FXML
     private void handleSfxToggle(ActionEvent event) {
         isSfxOn = !isSfxOn;
-        if (isSfxOn) {
-            System.out.println("Sound Effects turned ON");
-            soundEffectsToggleButton.setText("SFX: ON");
-        } else {
-            System.out.println("Sound Effects turned OFF");
-            soundEffectsToggleButton.setText("SFX: OFF");
-        }
-    }
-
-    @FXML
-    private void handleRestoreDefaults(ActionEvent event) {
-        System.out.println("Restoring default settings...");
-        initializeDefaults();
-    }
-
-    @FXML
-    private void handleSaveButton(ActionEvent event) {
-        System.out.println("Settings would be saved! (not implemented yet)");
-        // Future work: Save to file
+        soundEffectsToggleButton.setText(isSfxOn ? "SFX: ON" : "SFX: OFF");
     }
 }

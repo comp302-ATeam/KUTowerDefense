@@ -154,7 +154,7 @@
         </GridPane>
 
         <!-- Save / Restore Buttons -->
-        <Button fx:id="saveButton" layoutX="781.0" layoutY="736.0" text="Save Settings" />
+        <Button fx:id="saveButton" layoutX="781.0" layoutY="736.0" text="Save Settings" onAction="#handleSaveButton" />
         <Button fx:id="restoreDefaultsButton" layoutX="774.0" layoutY="783.0" text="Restore Defaults" />
 
     </children>
