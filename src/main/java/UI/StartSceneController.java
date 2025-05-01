@@ -1,13 +1,15 @@
 package UI;
 
+import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import java.io.IOException;
-
+import javafx.scene.Parent;
 
 public class StartSceneController {
 
@@ -16,8 +18,7 @@ public class StartSceneController {
 //    @FXML
 //    private Button buttonLoadGame;
 //    @FXML
-@FXML
-private Button buttonOptions;
+//    private Button buttonOptions;
 //    @FXML
 //    private Button buttonQuit;
 
@@ -37,20 +38,26 @@ private Button buttonOptions;
 
     @FXML
     private void onActionOptions() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/OptionsScene.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Button) buttonOptions).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-            stage.centerOnScreen();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Options");
+
     }
+
+    @FXML
+    private void onActionOpenMapEditor(ActionEvent event) throws IOException {
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/MapBuilderScene.fxml"));
+        stage.setScene(new Scene(root));
+        stage.show();
+        stage.setMaximized(true);
+
+
+    }
+
 
     @FXML
     private void onActionQuit() {
         System.out.println("Quit");
+
     }
 }
