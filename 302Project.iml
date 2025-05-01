@@ -6,9 +6,30 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <excludeFolder url="file://$MODULE_DIR$/javafx-sdk-21.0.6" />
+      <excludeFolder url="file://$MODULE_DIR$/javafx-sdk-21.0.7" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/java/Domain/GameObjects" />
     </content>
     <orderEntry type="jdk" jdkName="openjdk-24" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="javafx" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library name="javafxrun">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx-swt.jar!/" />
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx.base.jar!/" />
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx.controls.jar!/" />
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx.fxml.jar!/" />
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx.graphics.jar!/" />
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx.media.jar!/" />
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx.swing.jar!/" />
+          <root url="jar://$MODULE_DIR$/javafx-sdk-21.0.7/lib/javafx.web.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <NATIVE>
+          <root url="file://$MODULE_DIR$/javafx-sdk-21.0.7/lib" />
+        </NATIVE>
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" exported="" scope="RUNTIME" name="lib" level="project" />
   </component>
 </module>
