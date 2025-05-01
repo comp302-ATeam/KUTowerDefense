@@ -1,7 +1,7 @@
 package Domain.GameObjects;
 
 public abstract class Enemy extends GameObject {
-    /* enemy has 3 attributes, it has its own enemy type (goblin or knight),
+    /* enemy has 3 attributes, it has its own enemy type (goblin or knight)
     *  its health points and its speed.
     * */
     String enemyType;

@@ -9,9 +9,16 @@ public class ArcherTower extends Tower {
     @Override
     public void attack(Enemy target) {
         if (target != null && canAttack()) {
-            // Create a new arrow that will manage itself
-            new Arrow(x, y, target, this);
+            // Create a new arrow
+            Arrow arrow = new Arrow(this.getX(), this.getY(), 10, target);
+            // here we should add arrow to the game
+            // update time
             updateLastAttackTime();
         }
+    }
+
+    @Override
+    public void update(double deltaTime) {
+
     }
 } 
