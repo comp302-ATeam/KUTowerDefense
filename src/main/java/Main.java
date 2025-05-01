@@ -5,6 +5,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    public Stage rootStage;
+
+
+
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("StartScene.fxml"));
@@ -13,6 +17,7 @@ public class Main extends Application {
         stage.setTitle("KUTowerDefense");
         stage.show();
 
+        rootStage = stage;
     }
 
     public static void main(String[] args) {

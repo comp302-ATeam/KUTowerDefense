@@ -9,8 +9,9 @@
    <children>
       <Button fx:id="buttonStartNew" layoutX="222.0" layoutY="200.0" mnemonicParsing="false" onAction="#onActionStartNew" prefHeight="25.0" prefWidth="156.0" text="New Game" textAlignment="CENTER" />
       <Button fx:id="buttonLoadGame" layoutX="222.0" layoutY="234.0" mnemonicParsing="false" onAction="#onActionLoadGame" prefHeight="25.0" prefWidth="156.0" text="Load Game" textAlignment="CENTER" />
-      <Button fx:id="buttonOptions" layoutX="222.0" layoutY="267.0" mnemonicParsing="false" onAction="#onActionOptions" prefHeight="25.0" prefWidth="156.0" text="Options" textAlignment="CENTER" />
-      <Button fx:id="buttonQuit" layoutX="222.0" layoutY="300.0" mnemonicParsing="false" onAction="#onActionQuit" prefHeight="25.0" prefWidth="156.0" text="Quit" textAlignment="CENTER" />
+      <Button fx:id="buttonOptions" layoutX="222.0" layoutY="301.0" mnemonicParsing="false" onAction="#onActionOptions" prefHeight="25.0" prefWidth="156.0" text="Options" textAlignment="CENTER" />
+      <Button fx:id="buttonQuit" layoutX="222.0" layoutY="334.0" mnemonicParsing="false" onAction="#onActionQuit" prefHeight="25.0" prefWidth="156.0" text="Quit" textAlignment="CENTER" />
+      <Button fx:id="buttonMapEditor" layoutX="222.0" layoutY="269.0" mnemonicParsing="false" onAction="#onActionOpenMapEditor" prefHeight="25.0" prefWidth="156.0" text="Map Editor" textAlignment="CENTER" />
       <Text layoutX="196.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="KUTowerDefense" textAlignment="CENTER" wrappingWidth="208.0">
          <font>
             <Font size="24.0" />
