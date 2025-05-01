@@ -10,8 +10,17 @@ public class MageTower extends Tower {
     public void attack(Enemy target) {
         if (target != null && canAttack()) {
             // Create a new magic spell that will manage itself
-            new MagicSpell(target.getX(), target.getY(),20,target);
+            // spell is created by tower and it goes from tower to enemy, so we should say this.getX() etc. (tower's position)
+            MagicSpell spell = new MagicSpell(this.getX(), this.getY(),20,target);
+            // here we should add spell to the game via a method..
+            // then update time
             updateLastAttackTime();
         }
     }
+
+    @Override
+    public void update(double deltaTime) {
+
+    }
+
 } 
