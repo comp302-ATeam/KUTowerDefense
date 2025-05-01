@@ -1,6 +1,7 @@
 package UI;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -58,5 +59,6 @@ public class StartSceneController {
     @FXML
     private void onActionQuit() {
         System.out.println("Quit");
+        System.exit(0);
     }
 }
