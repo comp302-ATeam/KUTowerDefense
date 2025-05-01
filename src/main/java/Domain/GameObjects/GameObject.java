@@ -1,7 +1,10 @@
 package Domain.GameObjects;
+import javafx.scene.image.Image;
+
 import java.util.Vector;
 
 public abstract class GameObject {
+    protected Image ObjectImage;
     protected Vector<Integer> position ;
     protected Vector<Float> scale ;
     protected float rotation = 0.0f;
