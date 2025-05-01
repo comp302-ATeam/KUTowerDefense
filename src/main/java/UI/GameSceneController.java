@@ -27,5 +27,3 @@ public class GameSceneController {
         System.out.println("Speed Up Game");
     }
 }
-
-}
