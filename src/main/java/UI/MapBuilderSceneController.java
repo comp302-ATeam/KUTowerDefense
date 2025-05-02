@@ -41,20 +41,16 @@ public class MapBuilderSceneController {
     }
 
     @FXML
-    public void onReturn(ActionEvent event)  {
-        try {
-            Parent startRoot = FXMLLoader.load(
-                    getClass().getResource("/StartScene.fxml")
-            );
-            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(startRoot));
-            stage.centerOnScreen();
+    public void onReturn(ActionEvent event)  throws Exception {
+
+        Parent startRoot = FXMLLoader.load(
+                getClass().getResource("/StartScene.fxml")
+        );
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(startRoot));
+        stage.centerOnScreen();
 
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
