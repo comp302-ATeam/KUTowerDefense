@@ -23,12 +23,12 @@ public class GameSceneController {
         System.out.println("Game Paused");
     }
     @FXML
-    private void handleResumeButton(ActionEvent event) {
+    private void handleResumeGame(ActionEvent event) {
         gameActionController.resumeGame();
         System.out.println("Resumed Game");
     }
     @FXML
-    private void handleSpeedUpButton(ActionEvent event) {
+    private void handleSpeedUp(ActionEvent event) {
         gameActionController.speedUpGame();
         System.out.println("Speed Up Game");
     }
