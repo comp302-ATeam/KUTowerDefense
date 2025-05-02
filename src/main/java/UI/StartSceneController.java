@@ -38,8 +38,13 @@ public class StartSceneController {
     }
 
     @FXML
-    private void onActionLoadGame() {
+    private void onActionLoadGame(ActionEvent event) throws Exception {
         System.out.println("LoadGame");
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("/LoadGameScreen.fxml"));
+        stage.setScene(new Scene(root));
+        stage.show();
 
     }
 
