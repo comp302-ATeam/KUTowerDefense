@@ -2,11 +2,19 @@ package UI;
 
 import Domain.GameFlow.TileSetLoader;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.TilePane;
+import javafx.stage.Stage;
+import javafx.scene.image.Image;
 
-import java.awt.event.ActionEvent;
+
+import java.io.IOException;
 
 public class MapBuilderSceneController {
 
@@ -33,8 +41,20 @@ public class MapBuilderSceneController {
     }
 
     @FXML
-    public void onReturn() {
+    public void onReturn(ActionEvent event)  {
+        try {
+            Parent startRoot = FXMLLoader.load(
+                    getClass().getResource("/StartScene.fxml")
+            );
+            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(startRoot));
+            stage.centerOnScreen();
 
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
