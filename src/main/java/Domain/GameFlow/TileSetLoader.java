@@ -93,8 +93,8 @@ public class TileSetLoader {
             selectedTile = tile.getTileIndex();
         }
         else {
-            addToGrid(5,tile.position);
-            addToGrid(selectedTile,tile.position);
+            addToGrid(5,tile.getPosition());
+            addToGrid(selectedTile,tile.getPosition());
         }
     }
 
