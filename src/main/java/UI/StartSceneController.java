@@ -28,8 +28,7 @@ public class StartSceneController {
     @FXML
     private void onActionStartNew(ActionEvent event) throws Exception {
         System.out.println("StartNew");
-        Stage stage1 = (Stage)((Node)event.getSource()).getScene().getWindow();
-        stage1.hide();
+        //Stage stage1 = (Stage)((Node)event.getSource()).getScene().getWindow();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/InGameScene.fxml"));
         stage.setScene(new Scene(root));
@@ -40,7 +39,6 @@ public class StartSceneController {
     @FXML
     private void onActionLoadGame(ActionEvent event) throws Exception {
         System.out.println("LoadGame");
-
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/LoadGameScreen.fxml"));
         stage.setScene(new Scene(root));
