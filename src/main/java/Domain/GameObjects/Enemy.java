@@ -1,5 +1,8 @@
 package Domain.GameObjects;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 public abstract class Enemy extends GameObject {
     /* enemy has 3 attributes, it has its own enemy type (goblin or knight)
     *  its health points and its speed.
@@ -8,8 +11,8 @@ public abstract class Enemy extends GameObject {
     int healthPoints;
     double speed;
     // constructor for the enemy superclass
-    public Enemy(int xPos, int yPos, String enemyType, int healthPoints, double speed) {
-        super(xPos, yPos);
+    public Enemy(int xPos, int yPos, ImageView imageObject, String enemyType, int healthPoints, double speed) {
+        super(xPos, yPos,imageObject);
         this.enemyType = enemyType;
         this.healthPoints = healthPoints;
         this.speed = speed;
