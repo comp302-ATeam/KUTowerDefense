@@ -4,10 +4,15 @@ import Domain.GameFlow.Tile;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Queue;
 
 public abstract class Enemy extends GameObject {
     /* enemy has 4 attributes, it has its own enemy type (goblin or knight)
@@ -17,6 +22,9 @@ public abstract class Enemy extends GameObject {
     int healthPoints;
     double speed;
     private final ImageView view;
+    protected double targetX, targetY;
+    protected boolean movingToTarget = false;
+    private final Queue<Point2D> waypoints = new ArrayDeque<>();
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -33,7 +41,7 @@ public abstract class Enemy extends GameObject {
 
 
     // constructor for the enemy superclass
-    public Enemy(int xPos, int yPos, ImageView imageObject, String enemyType, int healthPoints, double speed, int frameCount, int frameColumns, double fps) {
+    public Enemy(double xPos, double yPos, ImageView imageObject, String enemyType, int healthPoints, double speed, int frameCount, int frameColumns, double fps) {
         super(xPos, yPos,imageObject);
         this.enemyType = enemyType;
         this.healthPoints = healthPoints;
@@ -68,9 +76,48 @@ public abstract class Enemy extends GameObject {
     //endregion
 
 
+    public void moveTo(double x, double y) {
+        this.targetX = x;
+        this.targetY = y;
+        this.movingToTarget = true;
+    }
+    public void moveAlong(Collection<Point2D> points) {
+        waypoints.clear();
+        waypoints.addAll(points);
+        advanceWaypoint();
+    }
+    private void advanceWaypoint() {
+        Point2D next = waypoints.poll();
+        if (next != null) {
+            moveTo(next.getX(), next.getY());
+        } else {
+            movingToTarget = false;  // no more points
+        }
+    }
+    protected void onArrive() {
+        advanceWaypoint();
+    }
+
     @Override
     public void update(double deltaTime) {
-
+        if (movingToTarget) {
+            double dx = targetX - x, dy = targetY - y;
+            double dist = Math.hypot(dx, dy), step = speed * deltaTime;
+            if (dist <= step) {
+                x = targetX;
+                y = targetY;
+                onArrive();   // automatically advances to the next waypoint
+            } else {
+                x += (dx / dist) * step;
+                y += (dy / dist) * step;
+            }
+            updateViewTransform();
+        }
+        if (healthPoints <= 0 && isAlive()) {
+            Die();
+        }
+        // 3) Push transforms to the view
+        updateViewTransform();
     }
     // calculate damage method is an abstract method which will be used accordingly for each class goblin or knight
     // this abstract method is used for calculating the damage took by
