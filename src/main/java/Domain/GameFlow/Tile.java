@@ -5,17 +5,22 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 
-public class Tile extends ImageView {
 
-    public enum TileType {EMPTY,PATH,TOWER,DECOR,} /// TYPES OF TILES FOR LOADING LATER ON
+public class Tile  implements Serializable {
+
+    public enum TileType {EMPTY,PATH,TOWER_LOT,TOWER_MAGE,TOWER_ARTILLERY,TOWER_ARCHER,DECOR,} /// TYPES OF TILES FOR LOADING LATER ON
     public enum Dtype {UP,DOWN,LEFT,RIGHT};
+
+    public Vector2<Integer> position;
 
     private TileType tileType;
     private int tileIndex;
 
+    private static final long serialVersionUID = 1L;
 
-    public Vector2<Integer> position;
+
 
 /// WIP
     public Dtype[][] dirLookUp = {
@@ -36,8 +41,8 @@ public class Tile extends ImageView {
 
 
 
-    public Tile(Image image, int index, TileType tileType, Vector2<Integer> position) {
-        super(image);
+    public Tile( int index, TileType tileType, Vector2<Integer> position) {
+
         this.tileIndex = index;
         this.tileType = tileType;
 
