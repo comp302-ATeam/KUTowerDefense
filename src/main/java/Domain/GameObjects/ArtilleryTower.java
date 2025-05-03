@@ -6,11 +6,11 @@ public class ArtilleryTower extends Tower {
     private int splashRadius;  // Radius of AOE damage
     private List<Enemy> allEnemies;  // Reference to all enemies for AOE damage
 
-    public ArtilleryTower(int x, int y, List<Enemy> allEnemies) {
+    public ArtilleryTower(int x, int y) {
         // Artillery tower has low fire rate but high damage and AOE
         super(x, y, 250, 40, 0.5, 200);  // range=250, damage=40, fireRate=0.5, cost=200
         this.splashRadius = 100;  // AOE radius
-        this.allEnemies = allEnemies;
+        //this.allEnemies = allEnemies;
     }
 
     @Override

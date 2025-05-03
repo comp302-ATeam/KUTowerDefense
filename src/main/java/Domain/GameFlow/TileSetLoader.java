@@ -1,5 +1,9 @@
 package Domain.GameFlow;
 
+import Domain.GameObjects.ArcherTower;
+import Domain.GameObjects.ArtilleryTower;
+import Domain.GameObjects.MageTower;
+import Domain.GameObjects.Tower;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -8,23 +12,60 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+
 public class TileSetLoader {
 
-    private Image tileset = new Image(getClass().getResource("/Assets/Tiles/Tileset 96x96.png").toExternalForm());
-    private GridPane root ;
+    protected Image tileset = new Image(getClass().getResource("/Assets/Tiles/Tileset 96x96.png").toExternalForm());
+    protected GridPane root ;
+    private Tile[][] tileGrid;
+    private Tile[] path;
+    protected String directoryPath = "saves";
+
+    private Vector2<Integer> mapSize ;
 
 
     static int selectedTile = 0;
 
-    private int tileHeight = 96 ; /// DEPENDS ON the size of tileset
-    private int tileWidth = 96;
-    private int rowNum = 4;
+    protected int tileHeight = 96 ; /// DEPENDS ON the size of tileset
+    protected int tileWidth = 96;
+    protected int rowNum = 4;
 
-    private Tile[][] tileGrid;
+
 
     private boolean isMenu = false;
 
-///  CONSTRUCTS THE EDITABLE TILEMAP
+
+
+
+    public void saveGrid(){
+
+
+         // or use relative path like "saves/"
+        File directory = new File(directoryPath);
+
+        // Create directory if it doesn't exist
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        File saveFile = new File(directory, "mapSave.ser");
+
+
+        TileMap tileMap = new TileMap(tileGrid,path,mapSize.x,mapSize.y);
+
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile))) {
+            out.writeObject(tileMap);
+            System.out.println("Map saved to: " + saveFile.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    ///  CONSTRUCTS THE EDITABLE TILEMAP
     public void constructGrid (int xLength, int yLength){
 
         tileGrid = new Tile[xLength][yLength];
@@ -35,6 +76,7 @@ public class TileSetLoader {
             }
         }
     }
+
 /// ADDS EVERY POSSIBLE TILESET INTO SELECTABLE TILES
     public void constructMenuGrid (int xLength, int yLength){
 
@@ -50,13 +92,15 @@ public class TileSetLoader {
 
     ///  GRID PANE SET UP FOR CORRECT LAYOUT
 
-    public void setUpGrid (GridPane grid){
+    public void setUpGrid (GridPane grid , int xLength , int yLength){
         root = grid;
         root.getChildren().clear();
         root.getColumnConstraints().clear();
         root.getRowConstraints().clear();
         root.getColumnConstraints().add(new ColumnConstraints(tileWidth));
         root.getRowConstraints().add(new RowConstraints(tileHeight));
+
+        mapSize = new Vector2<Integer>(xLength,yLength);
     }
 
 
@@ -64,7 +108,7 @@ public class TileSetLoader {
 
     public TileSetLoader(GridPane pane, int xLength, int yLength ) {
 
-        setUpGrid(pane);
+        setUpGrid(pane,xLength,yLength);
         //rowNum = xLength;
         constructGrid(xLength,yLength);
 
@@ -75,12 +119,17 @@ public class TileSetLoader {
 
     public TileSetLoader(GridPane pane, int xLength, int yLength , boolean isMenu ) {
 
-        setUpGrid(pane);
+        setUpGrid(pane,xLength,yLength);
         //rowNum = xLength;
         constructMenuGrid(xLength,yLength);
 
         this.isMenu = isMenu;
 
+    }
+
+    public TileSetLoader(GridPane pane) {
+
+        return;
     }
 
 
@@ -112,30 +161,32 @@ public class TileSetLoader {
 
 
 
+
+
+
     // INITALIZE A NEW TILE AND ADD TO GRID PANE
-
-
     public void addToGrid(int index , Vector2<Integer> position ){
 
-        Tile tile = new Tile(tileset,index ,Tile.TileType.PATH,position);
+        ImageView imageView = new ImageView(tileset);
+        Tile tile = new Tile(index ,Tile.TileType.PATH,position);
 
         int col = index % rowNum;
         int row = index / rowNum;
-        tile.setViewport(new Rectangle2D(col * tileWidth, row * tileHeight, tileWidth, tileHeight));
+        imageView.setViewport(new Rectangle2D(col * tileWidth, row * tileHeight, tileWidth, tileHeight));
 
-        tile.setFitWidth(tileWidth);
-        tile.setFitHeight(tileHeight);
-        tile.setPreserveRatio(false);
-
-
-
-        tile.setOnMouseEntered(e -> mOnHover(tile));
-        tile.setOnMouseExited(e ->mOffHover(tile) );
-        tile.setOnMousePressed(e -> mOnClick(tile));
+        imageView.setFitWidth(tileWidth);
+        imageView.setFitHeight(tileHeight);
+        imageView.setPreserveRatio(false);
 
 
 
-        root.add(tile, tile.position.x,tile.position.y);
+        imageView.setOnMouseEntered(e -> mOnHover(imageView));
+        imageView.setOnMouseExited(e ->mOffHover(imageView) );
+        imageView.setOnMousePressed(e -> mOnClick(tile));
+
+
+
+        root.add(imageView, tile.position.x,tile.position.y);
         tileGrid[position.x][position.y] = tile;
     }
 }
