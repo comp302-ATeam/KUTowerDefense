@@ -21,7 +21,7 @@ public class Goblin extends Enemy {
     private int currentFrame = 0;
     private final Timeline animation;
 
-    
+
     // goblin class is faster than knight class so it should have a greater speed multiplier.
     double speedMultiplier = 1.25;
     public Goblin(int xPos, int yPos, String enemyType, int healthPoints, int speed, ImageView imageObject) {
