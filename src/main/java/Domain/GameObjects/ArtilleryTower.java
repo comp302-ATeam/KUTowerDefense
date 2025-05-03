@@ -17,7 +17,7 @@ public class ArtilleryTower extends Tower {
     public void attack(Enemy target) {
         if (target != null && canAttack()) {
             // Create a new artillery shell that will manage itself
-            new ArtilleryShell(x, y, target, this, splashRadius, allEnemies);
+            //new ArtilleryShell(this.x, y, target, this, splashRadius, allEnemies);
             updateLastAttackTime();
         }
     }
@@ -33,4 +33,9 @@ public class ArtilleryTower extends Tower {
         super.upgrade();
         splashRadius = (int)(splashRadius * 1.2);  // 20% increase in splash radius
     }
-} 
+
+    @Override
+    public void update(double deltaTime) {
+
+    }
+}

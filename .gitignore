@@ -5,6 +5,8 @@ out/
 
 
 
+
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -29,4 +31,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-
+/javafx-sdk-21.0.7/
