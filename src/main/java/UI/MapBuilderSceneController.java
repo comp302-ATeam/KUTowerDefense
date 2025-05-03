@@ -2,21 +2,16 @@ package UI;
 
 import Domain.GameFlow.MapLoader;
 import Domain.GameFlow.TileSetLoader;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.awt.event.ActionEvent;
 
 public class MapBuilderSceneController {
 
@@ -28,8 +23,6 @@ public class MapBuilderSceneController {
     @FXML private Button returnButton;
     @FXML private Button saveButton;
 
-    public Scene currentScene;
-
     private TileSetLoader mainTileSetLoader;
 
     @FXML
@@ -39,23 +32,6 @@ public class MapBuilderSceneController {
 
         TileSetLoader loader2 = new TileSetLoader(selectGrid,4,10,true);
 
-        mainGrid.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    if (event.getCode() == KeyCode.T) {
-                        mainTileSetLoader.changePathMode();
-                    }
-                });
-            }
-        });
-
-
-
-//        currentScene.setOnKeyPressed(event -> {
-//            if (event.getCode() == KeyCode.W) {
-//                System.out.println("W key pressed");
-//            }
-//        });
     }
 
     @FXML
@@ -64,14 +40,8 @@ public class MapBuilderSceneController {
     }
 
     @FXML
-    public void onReturn(ActionEvent event) throws IOException {
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/StartScene.fxml"));
-        stage.setScene(new Scene(root));
-        stage.show();
-        //stage.setMaximized(true);
-
+    public void onReturn() {
+        showTemporaryWindow();
     }
 
 
