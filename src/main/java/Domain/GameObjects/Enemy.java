@@ -1,5 +1,6 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.Tile;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
