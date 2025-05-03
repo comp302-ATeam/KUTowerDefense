@@ -1,4 +1,6 @@
 package Domain.GameObjects;
+import javafx.scene.image.ImageView;
+
 import java.util.List;
 
 public abstract class Tower extends GameObject {
@@ -10,6 +12,7 @@ public abstract class Tower extends GameObject {
     protected double fireRate;      // Attacks per second
     protected double sellRatio;     // Ratio of cost returned when selling
     protected long lastAttackTime;  // Time of last attack in milliseconds
+    protected ImageView towerImage;
 
     /**
      * Constructor for Tower class.
@@ -23,8 +26,8 @@ public abstract class Tower extends GameObject {
      * @param fireRate Attacks per second
      * @param cost Construction cost
      */
-    public Tower(int x, int y, int attackRange, int damage, double fireRate, int cost) {
-        super(x, y);
+    public Tower(int x, int y, int attackRange, int damage, double fireRate, int cost, ImageView towerImage) {
+        super(x, y, towerImage);
         this.attackRange = attackRange;
         this.damage = damage;
         this.fireRate = fireRate;

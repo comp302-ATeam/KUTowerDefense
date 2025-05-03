@@ -1,4 +1,9 @@
 package Domain.GameObjects;
+
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 /**
  * GameObject is the base class for all game objects in the tower defense game.
  * It provides basic functionality for position, scale, rotation, and life state.
@@ -15,16 +20,19 @@ public abstract class GameObject {
     protected float rotation = 0.0f;
     // Whether the object is active in the game
     protected boolean isAlive;
+    protected ImageView imageObject;
 
     /**
      * Creates a new game object at the specified position.
      * @param xPos X coordinate of the object
      * @param yPos Y coordinate of the object
      */
-    public GameObject(int xPos, int yPos) {
+    public GameObject(int xPos, int yPos, ImageView imageObject) {
         this.x = xPos;
         this.y = yPos;
         this.isAlive = true;
+        this.imageObject = imageObject;
+
     }
 
     // Getters for object properties
@@ -61,4 +69,8 @@ public abstract class GameObject {
                         Math.pow(this.y - other.y, 2)
         );
     }
-} 
+
+    public Node getView() {
+        return imageObject;
+    }
+}

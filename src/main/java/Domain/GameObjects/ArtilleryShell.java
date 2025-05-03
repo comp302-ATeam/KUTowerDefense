@@ -1,13 +1,15 @@
 package Domain.GameObjects;
 
+import javafx.scene.image.ImageView;
+
 import java.util.List;
 
 public class ArtilleryShell extends Projectile {
     private int splashRadius;  // Radius of splash damage
     private List<Enemy> allEnemies;  // List of all enemies for AOE damage
 
-    public ArtilleryShell(int xPos, int yPos, int damage, Enemy target, int splashRadius, List<Enemy> allEnemies) {
-        super(xPos, yPos, damage, "ArtilleryShell", target);
+    public ArtilleryShell(int xPos, int yPos, int damage, Enemy target, int splashRadius, List<Enemy> allEnemies, ImageView projectileImage) {
+        super(xPos, yPos, damage, "ArtilleryShell", target,projectileImage);
         this.splashRadius = splashRadius;
         this.allEnemies = allEnemies;
     }
