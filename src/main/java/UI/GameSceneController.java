@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -34,6 +35,23 @@ public class GameSceneController {
     GridPane gameGrid;
 
     MapLoader mapLoader;
+
+    @FXML private Label labelGold;
+    @FXML private Label labelLives;
+    @FXML private Label labelWave;
+
+    public void updateGold(int gold) {
+        labelGold.setText(String.valueOf(gold));
+    }
+
+    public void updateLives(int lives) {
+        labelLives.setText(String.valueOf(lives));
+    }
+
+    public void updateWave(int wave) {
+        labelWave.setText(String.valueOf(wave));
+    }
+
 
 
     @FXML
