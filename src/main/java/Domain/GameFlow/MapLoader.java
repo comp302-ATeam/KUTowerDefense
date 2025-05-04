@@ -32,35 +32,13 @@ public class MapLoader extends TileSetLoader {
         }
     }
 
-    public Tile.TileType getTileType(int tileIndex,Vector2<Integer> position){
-        if (tileIndex < 14) {
-            return Tile.TileType.PATH;
-        }
-        else if(tileIndex == 15){
-            return Tile.TileType.TOWER_LOT;
-        }
-        else if(tileIndex == 20){
-            ArtilleryTower artilleryTower = new ArtilleryTower(position.x,position.y);
-            return Tile.TileType.TOWER_ARTILLERY;
-        }
-        else if (tileIndex == 21){
-            MageTower mageTower = new MageTower(position.x,position.y);
-            return Tile.TileType.TOWER_MAGE;
-        }
-        else if (tileIndex == 26){
-            ArcherTower archerTower = new ArcherTower(position.x,position.y);
-            return Tile.TileType.TOWER_ARCHER;
-        }
-        else {
-            return Tile.TileType.DECOR;
-        }
-    }
+
 
 
     @Override
     public void addToGrid(int index,Vector2<Integer> position){
         ImageView imageView = new ImageView(tileset);
-        Tile tile = new Tile(index ,getTileType(index, position),position);
+        Tile tile = new Tile(index ,getTileType(index),position);
 
         int col = index % rowNum;
         int row = index / rowNum;
