@@ -23,7 +23,8 @@ public class StartSceneController {
 //    @FXML
 //    private Button buttonQuit;
 
-
+    @FXML
+    private Button buttonOptions;
 
     @FXML
     private void onActionStartNew(ActionEvent event) throws Exception {
@@ -49,7 +50,16 @@ public class StartSceneController {
 
     @FXML
     private void onActionOptions() {
-        System.out.println("Options");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/OptionsScene.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Button) buttonOptions).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+            stage.centerOnScreen();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
