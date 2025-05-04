@@ -1,8 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
 
+<AnchorPane prefHeight="929.0" prefWidth="918.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.OptionsSceneController">
+    <children>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.OptionsSceneController">
+        <!-- Back Button -->
+        <Button fx:id="backButton" layoutX="20.0" layoutY="20.0" onAction="#handleBackButton" text="Back to Main Menu" />
 
+        <GridPane hgap="50" layoutX="30.0" layoutY="70.0" vgap="10">
+
+            <!-- Section Titles -->
+            <Text style="-fx-font-weight: bold;" text="Wave Settings" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Text style="-fx-font-weight: bold;" text="Enemy Settings" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Text style="-fx-font-weight: bold;" text="Tower Settings" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <Text style="-fx-font-weight: bold;" text="Player Settings" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+
+            <!-- Column 1: Wave Settings -->
+            <Label text="Number of Waves:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Spinner fx:id="spinnerNumWaves" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+
+            <Label text="Groups per Wave:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Spinner fx:id="spinnerGroupsPerWave" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+
+            <Label text="Enemies per Group:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Spinner fx:id="spinnerEnemiesPerGroup" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+
+            <Label text="Goblins per Group:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+            <Spinner fx:id="spinnerGoblinsPerGroup" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+
+            <Label text="Knights per Group:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+            <Spinner fx:id="spinnerKnightsPerGroup" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+
+            <Label text="Delay Between Waves:" GridPane.columnIndex="0" GridPane.rowIndex="11" />
+            <Spinner fx:id="spinnerDelayBetweenWaves" GridPane.columnIndex="0" GridPane.rowIndex="12" />
+
+            <Label text="Delay Between Groups:" GridPane.columnIndex="0" GridPane.rowIndex="13" />
+            <Spinner fx:id="spinnerDelayBetweenGroups" GridPane.columnIndex="0" GridPane.rowIndex="14" />
+
+            <Label text="Delay Between Enemies:" GridPane.columnIndex="0" GridPane.rowIndex="15" />
+            <Spinner fx:id="spinnerDelayBetweenEnemies" GridPane.columnIndex="0" GridPane.rowIndex="16" />
+
+            <!-- Column 2: Enemy Settings -->
+            <Label text="Goblin HP:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Spinner fx:id="spinnerGoblinHP" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+            <Label text="Knight HP:" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Spinner fx:id="spinnerKnightHP" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+            <Label text="Goblin Gold Reward:" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Spinner fx:id="spinnerGoblinGold" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+            <Label text="Knight Gold Reward:" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Spinner fx:id="spinnerKnightGold" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+            <Label text="Goblin Speed:" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Spinner fx:id="spinnerGoblinSpeed" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+
+            <Label text="Knight Speed:" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+            <Spinner fx:id="spinnerKnightSpeed" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+
+            <!-- Column 3: Tower Settings -->
+            <Label text="Archer Tower Cost:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Spinner fx:id="spinnerArcherCost" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+            <Label text="Artillery Tower Cost:" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+            <Spinner fx:id="spinnerArtilleryCost" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+
+            <Label text="Mage Tower Cost:" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <Spinner fx:id="spinnerMageCost" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+
+            <Label text="Archer Range:" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <Spinner fx:id="spinnerArcherRange" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+
+            <Label text="Artillery Range:" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <Spinner fx:id="spinnerArtilleryRange" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+
+            <Label text="Mage Range:" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+            <Spinner fx:id="spinnerMageRange" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+
+            <Label text="AOE Radius:" GridPane.columnIndex="2" GridPane.rowIndex="13" />
+            <Spinner fx:id="spinnerAoeRadius" GridPane.columnIndex="2" GridPane.rowIndex="14" />
+
+            <Label text="Arrow Damage:" GridPane.columnIndex="2" GridPane.rowIndex="15" />
+            <Spinner fx:id="spinnerArrowDamage" GridPane.columnIndex="2" GridPane.rowIndex="16" />
+
+            <Label text="Artillery Damage:" GridPane.columnIndex="2" GridPane.rowIndex="17" />
+            <Spinner fx:id="spinnerArtilleryDamage" GridPane.columnIndex="2" GridPane.rowIndex="18" />
+
+            <Label text="Magic Damage:" GridPane.columnIndex="2" GridPane.rowIndex="19" />
+            <Spinner fx:id="spinnerMagicDamage" GridPane.columnIndex="2" GridPane.rowIndex="20" />
+
+            <Label text="Archer Fire Rate:" GridPane.columnIndex="2" GridPane.rowIndex="21" />
+            <Spinner fx:id="spinnerArcherFireRate" GridPane.columnIndex="2" GridPane.rowIndex="22" />
+
+            <Label text="Artillery Fire Rate:" GridPane.columnIndex="2" GridPane.rowIndex="23" />
+            <Spinner fx:id="spinnerArtilleryFireRate" GridPane.columnIndex="2" GridPane.rowIndex="24" />
+
+            <Label text="Mage Fire Rate:" GridPane.columnIndex="2" GridPane.rowIndex="25" />
+            <Spinner fx:id="spinnerMageFireRate" GridPane.columnIndex="2" GridPane.rowIndex="26" />
+
+            <!-- Column 4: Player Settings -->
+            <Label text="Starting HP:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Spinner fx:id="spinnerPlayerHP" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
+            <!-- Future expansion example -->
+
+            <Label text="Starting Gold:" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+            <Spinner fx:id="spinnerPlayerGold" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+
+        </GridPane>
+
+        <!-- Save / Restore Buttons -->
+        <Button fx:id="saveButton" layoutX="781.0" layoutY="736.0" text="Save Settings" onAction="#handleSaveButton" />
+        <Button fx:id="restoreDefaultsButton" layoutX="774.0" layoutY="783.0" text="Restore Defaults" onAction="#handleRestoreDefaults" />
+
+        <Button fx:id="musicToggleButton" layoutX="774.0" layoutY="830.0" text="Music: ON" onAction="#handleMusicToggle" />
+        <Button fx:id="soundEffectsToggleButton" layoutX="774.0" layoutY="877.0" text="SFX: ON" onAction="#handleSfxToggle" />
+
+    </children>
 </AnchorPane>
