@@ -73,50 +73,49 @@ public class GameSceneController {
 
     @FXML
     public void initialize() {
-
-
         Platform.runLater(() -> {
             mapLoader = new MapLoader(gameGrid);
-
         });
 
-
-        // mapLoader.getPath();   not using right now
-
+        // Create Goblin
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);
-        Goblin goblin = new Goblin(-100,0,"Goblin",100,100,goblinView);
+        Goblin goblin = new Goblin(-100, 0, "Goblin", 100, 100, goblinView);
+
+        // Create Knight
         Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
         ImageView knightView = new ImageView(knightImg);
-        Knight knight = new Knight(100,0,"Knight",100,100,knightView);
+        Knight knight = new Knight(100, 0, "Knight", 100, 100, knightView);
 
+        // Add enemies and their health bars to the gamePane
         gamePane.getChildren().addAll(
-                goblin.getView(),
-                knight.getView()
+                goblin.getView(), goblin.getHealthBar(),
+                knight.getView(), knight.getHealthBar()
         );
 
-        // 4) Sync their initial transforms
+        // Sync their initial transforms
         goblin.updateViewTransform();
         knight.updateViewTransform();
 
-        //Example list for goblin to move on.
-
+        // Example routes for movement
         List<Point2D> route = List.of(
                 new Point2D(100, 0),
                 new Point2D(100, -50),
-                new Point2D(250,-100 )
+                new Point2D(250, -100)
         );
         List<Point2D> route2 = List.of(
                 new Point2D(150, 0),
                 new Point2D(150, 50),
-                new Point2D(200,100 )
+                new Point2D(200, 100)
         );
 
         goblin.moveAlong(route);
         knight.moveAlong(route2);
-// 4) In your AnimationTimer:
+
+        // AnimationTimer to update enemies and health bars
         new AnimationTimer() {
             private long lastTime = 0;
+
             @Override
             public void handle(long now) {
                 if (lastTime > 0) {
