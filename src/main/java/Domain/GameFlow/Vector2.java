@@ -15,5 +15,19 @@ public class Vector2<T> implements Serializable { ///  BASIC VECTOR CLASS
         this.y = y;
     }
 
+    
 
+    @Override
+    public String toString() {
+        return "Vector2 [x=" + x + ", y=" + y + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Vector2) {
+            Vector2 other = (Vector2)obj;
+            return x.equals(other.x) && y.equals(other.y);
+        }
+        return false;
+    }
 }
