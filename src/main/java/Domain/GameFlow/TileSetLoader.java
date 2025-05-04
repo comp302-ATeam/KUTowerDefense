@@ -93,6 +93,10 @@ public class TileSetLoader {
 
         TileMap tileMap = new TileMap(tileGrid, pathArray,mapSize.x,mapSize.y);
 
+//        for (Vector2<Double> pos : tileMap.getPath(root,tileHeight)){
+//            System.out.println(pos);
+//        }
+
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile))) {
             out.writeObject(tileMap);
             System.out.println("Map saved to: " + saveFile.getAbsolutePath());

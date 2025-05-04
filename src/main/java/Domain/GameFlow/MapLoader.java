@@ -11,12 +11,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 
+
+
+
 public class MapLoader extends TileSetLoader {
 
 
 
     private TileMap tilemap;
 
+    private Vector2<Double>[] path;
+
+
+    public Vector2<Double>[] getPath() {
+        return path;
+    }
 
     public void constructGrid (){
 
@@ -68,6 +77,9 @@ public class MapLoader extends TileSetLoader {
 
 
         this.tilemap = loadedMap;
+
+        path = tilemap.getPath(gridPane,tileHeight);
+
         setUpGrid(gridPane,tilemap.getSize().x,tilemap.getSize().y);
         constructGrid();
     }
