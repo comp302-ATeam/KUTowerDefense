@@ -78,56 +78,47 @@ public class GameSceneController {
 
         Platform.runLater(() -> {
             mapLoader = new MapLoader(gameGrid);
-            //Vector2<Double>[] mainPath = mapLoader.getPath();
-            //int startingX = mainPath[0].x.intValue();
-            //int startingY = mainPath[0].y.intValue();
+            Vector2<Double>[] mainPath = mapLoader.getPath();
+            int startingX = mainPath[0].x.intValue();
+            int startingY = mainPath[0].y.intValue();
+            Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
+            ImageView goblinView = new ImageView(goblinImg);
+            Goblin goblin = new Goblin(startingX,startingY,"Goblin",100,100,goblinView);
+            Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
+            ImageView knightView = new ImageView(knightImg);
+            Knight knight = new Knight(startingX,startingY,"Knight",100,100,knightView);
 
+            gamePane.getChildren().addAll(
+                    goblin.getView(),
+                    knight.getView()
+            );
+
+            // 4) Sync their initial transforms
+            goblin.updateViewTransform();
+            knight.updateViewTransform();
+
+            //Example list for goblin to move on.
+
+
+            goblin.moveAlong(mainPath);
+            knight.moveAlong(mainPath);
+// 4) In your AnimationTimer:
+            new AnimationTimer() {
+                private long lastTime = 0;
+                @Override
+                public void handle(long now) {
+                    if (lastTime > 0) {
+                        double deltaSec = (now - lastTime) / 1_000_000_000.0;
+                        goblin.update(deltaSec);
+                        knight.update(deltaSec);
+                    }
+                    lastTime = now;
+                }
+            }.start();
         });
-
-
-
 
 
         // mapLoader.getPath();   not using right now
 
-        Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
-        ImageView goblinView = new ImageView(goblinImg);
-        Goblin goblin = new Goblin(0,0,"Goblin",100,100,goblinView);
-        Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
-        ImageView knightView = new ImageView(knightImg);
-        Knight knight = new Knight(100,0,"Knight",100,100,knightView);
-
-        gamePane.getChildren().addAll(
-                goblin.getView(),
-                knight.getView()
-        );
-
-        // 4) Sync their initial transforms
-        goblin.updateViewTransform();
-        knight.updateViewTransform();
-
-        //Example list for goblin to move on.
-
-        Vector2<Double>[] route2 = new Vector2[] {
-                new Vector2<>(150.0,  0.0),
-                new Vector2<>(150.0, 50.0),
-                new Vector2<>(200.0, 100.0)
-        };
-
-        goblin.moveAlong(route2);
-        knight.moveAlong(route2);
-// 4) In your AnimationTimer:
-        new AnimationTimer() {
-            private long lastTime = 0;
-            @Override
-            public void handle(long now) {
-                if (lastTime > 0) {
-                    double deltaSec = (now - lastTime) / 1_000_000_000.0;
-                    goblin.update(deltaSec);
-                    knight.update(deltaSec);
-                }
-                lastTime = now;
-            }
-        }.start();
     }
 }
