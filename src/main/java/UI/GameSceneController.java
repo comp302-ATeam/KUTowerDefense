@@ -2,7 +2,6 @@ package UI;
 
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.MapLoader;
-import Domain.GameFlow.Vector2;
 import Domain.GameObjects.Goblin;
 import Domain.GameObjects.Knight;
 import javafx.animation.AnimationTimer;
@@ -11,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -36,6 +36,23 @@ public class GameSceneController {
 
     MapLoader mapLoader;
 
+    @FXML private Label labelGold;
+    @FXML private Label labelLives;
+    @FXML private Label labelWave;
+
+    public void updateGold(int gold) {
+        labelGold.setText(String.valueOf(gold));
+    }
+
+    public void updateLives(int lives) {
+        labelLives.setText(String.valueOf(lives));
+    }
+
+    public void updateWave(int wave) {
+        labelWave.setText(String.valueOf(wave));
+    }
+
+
 
     @FXML
     private void handlePauseButton(ActionEvent event) {
@@ -57,11 +74,14 @@ public class GameSceneController {
     @FXML
     public void initialize() {
 
+
         Platform.runLater(() -> {
             mapLoader = new MapLoader(gameGrid);
+
         });
 
 
+        // mapLoader.getPath();   not using right now
 
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);
@@ -81,15 +101,19 @@ public class GameSceneController {
 
         //Example list for goblin to move on.
 
-        Vector2<Double>[] route3 = new Vector2[] {
-                new Vector2<>(100.0,  0.0),
-                new Vector2<>(100.0, -50.0),
-                new Vector2<>(250.0, -100.0)
-        };
+        List<Point2D> route = List.of(
+                new Point2D(100, 0),
+                new Point2D(100, -50),
+                new Point2D(250,-100 )
+        );
+        List<Point2D> route2 = List.of(
+                new Point2D(150, 0),
+                new Point2D(150, 50),
+                new Point2D(200,100 )
+        );
 
-
-        goblin.moveAlong(route3);
-        knight.moveAlong(route3);
+        goblin.moveAlong(route);
+        knight.moveAlong(route2);
 // 4) In your AnimationTimer:
         new AnimationTimer() {
             private long lastTime = 0;
