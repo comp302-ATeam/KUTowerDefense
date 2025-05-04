@@ -1,5 +1,6 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.Tile;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -29,7 +30,7 @@ public abstract class Enemy extends GameObject {
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
     private static final int FRAME_COUNT   = 6;
-    private static final double FPS        = 8.0;
+    private static double FPS        = 8.0;
     private final int frameWidth;
     private final int frameHeight;
     private int currentFrame = 0;
@@ -67,6 +68,7 @@ public abstract class Enemy extends GameObject {
         animation.play();
         //endregion
     }
+    public void setFPS(double FPS){this.FPS =FPS;}
     public double getSpeed() {return speed;}
     public void setSpeed(double speed) {this.speed = speed;}
     //region Animation AdvanceFrame Method
@@ -102,7 +104,8 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void update(double deltaTime) {
-        if (movingToTarget) {
+        FPS = GameActionController.getFPS();
+        if (movingToTarget && !GameActionController.isPaused()) {
             double dx = targetX - x, dy = targetY - y;
             double dist = Math.hypot(dx, dy), step = speed * deltaTime;
             if (dist <= step) {
