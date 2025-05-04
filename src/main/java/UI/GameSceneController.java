@@ -81,7 +81,7 @@ public class GameSceneController {
         });
 
 
-
+        mapLoader.getPath();
 
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);

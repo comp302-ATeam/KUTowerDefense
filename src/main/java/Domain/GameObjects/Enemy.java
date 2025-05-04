@@ -67,6 +67,8 @@ public abstract class Enemy extends GameObject {
         animation.play();
         //endregion
     }
+    public double getSpeed() {return speed;}
+    public void setSpeed(double speed) {this.speed = speed;}
     //region Animation AdvanceFrame Method
     private void advanceFrame() {
         currentFrame = (currentFrame + 1) % FRAME_COUNT;
