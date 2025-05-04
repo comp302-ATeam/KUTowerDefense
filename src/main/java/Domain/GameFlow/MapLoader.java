@@ -96,7 +96,7 @@ public class MapLoader extends TileSetLoader {
         super(gridPane);
 
          // or relative like "saves/"
-        File file = new File(directoryPath, "saves/mapSave.ser");
+        File file = new File(directoryPath, "mapSave.ser");
 
         TileMap loadedMap = null;
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
