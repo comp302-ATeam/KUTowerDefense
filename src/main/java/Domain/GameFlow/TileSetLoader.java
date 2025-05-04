@@ -306,6 +306,14 @@ public class TileSetLoader {
                 System.out.println(startTile.getNextPathTile(dirType).x + "___" + startTile.getNextPathTile(dirType).y);
             }
         }
+
+        if(startTile != null && endTile != null){
+            System.out.println(startTile.position + " " + endTile.position);
+            Tile.Dtype[] dtype = startTile.getPossibleDir();
+            for (Tile.Dtype dirType : dtype) {
+                System.out.println(startTile.getNextPathTile(dirType).x + "___" + startTile.getNextPathTile(dirType).y);
+            }
+        }
     }
 
 
