@@ -63,8 +63,6 @@ public class GameSceneController {
         });
 
 
-        mapLoader.getPath();
-
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);
         Goblin goblin = new Goblin(-100,0,"Goblin",100,100,goblinView);
@@ -91,7 +89,7 @@ public class GameSceneController {
         List<Point2D> route2 = List.of(
                 new Point2D(150, 0),
                 new Point2D(150, 50),
-                new Point2D(200,100 )
+                new Point2D(1000,100 )
         );
 
         goblin.moveAlong(route);
