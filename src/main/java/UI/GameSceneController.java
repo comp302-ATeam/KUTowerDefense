@@ -80,15 +80,12 @@ public class GameSceneController {
             Vector2<Double>[] mainPath = mapLoader.getPath();
             int startingX = mainPath[0].x.intValue();
             int startingY = mainPath[0].y.intValue();
-            // Create Goblin
             Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
             ImageView goblinView = new ImageView(goblinImg);
-            Goblin goblin = new Goblin(-100, 0, "Goblin", 100, 100, goblinView);
-
-            // Create Knight
+            Goblin goblin = new Goblin(startingX,startingY,"Goblin",100,100,goblinView);
             Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
             ImageView knightView = new ImageView(knightImg);
-            Knight knight = new Knight(100, 0, "Knight", 100, 100, knightView);
+            Knight knight = new Knight(startingX,startingY,"Knight",100,100,knightView);
 
             Node goblinHealth   = goblin.getHealthBar();
             goblinHealth.setVisible(false);
