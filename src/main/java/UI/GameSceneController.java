@@ -61,7 +61,6 @@ public class GameSceneController {
             mapLoader = new MapLoader(gameGrid);
         });
 
-        //mapLoader.getPath();
 
 
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
