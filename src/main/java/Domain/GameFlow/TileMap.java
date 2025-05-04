@@ -19,6 +19,10 @@ public class TileMap implements Serializable {
         this.tileGrid = tileGrid;
         this.path = path;
 
+        for (Tile tile : path) {
+            System.out.println(tile.position);
+        }
+
     }
 
     public Tile[][] getTileGrid() {
