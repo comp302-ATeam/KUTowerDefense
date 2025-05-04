@@ -1,11 +1,14 @@
 package UI;
+import Domain.GameFlow.MapLoader;
 import Domain.GameObjects.Goblin;
 import Domain.GameObjects.Knight;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 import java.util.List;
@@ -16,7 +19,24 @@ public class InGameSceneController {
     private Pane gamePane;
 
     @FXML
+    GridPane gameGrid;
+
+    MapLoader mapLoader;
+
+
+
+    @FXML
     public void initialize() {
+
+
+        Platform.runLater(() -> {
+            mapLoader = new MapLoader(gameGrid);
+
+        });
+
+
+
+
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);
         Goblin goblin = new Goblin(-100,0,"Goblin",100,100,goblinView);
