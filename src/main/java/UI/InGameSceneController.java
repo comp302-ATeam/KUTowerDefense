@@ -29,10 +29,10 @@ public class InGameSceneController {
     public void initialize() {
 
 
-        Platform.runLater(() -> {
-            mapLoader = new MapLoader(gameGrid);
-
-        });
+//        Platform.runLater(() -> {
+//            mapLoader = new MapLoader(gameGrid);
+//
+//        });
 
 
 
@@ -66,8 +66,8 @@ public class InGameSceneController {
                 new Point2D(200,100 )
         );
 
-        goblin.moveAlong(route);
-        knight.moveAlong(route2);
+        //goblin.moveAlong(route);
+        //knight.moveAlong(route2);
 // 4) In your AnimationTimer:
         new AnimationTimer() {
             private long lastTime = 0;

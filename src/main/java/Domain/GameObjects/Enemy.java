@@ -1,6 +1,8 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.Tile;
+import Domain.GameFlow.Vector2;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -10,9 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Queue;
+import java.util.*;
 
 public abstract class Enemy extends GameObject {
     /* enemy has 4 attributes, it has its own enemy type (goblin or knight)
@@ -24,7 +24,7 @@ public abstract class Enemy extends GameObject {
     private final ImageView view;
     protected double targetX, targetY;
     protected boolean movingToTarget = false;
-    private final Queue<Point2D> waypoints = new ArrayDeque<>();
+    private final Queue<Vector2<Double>> waypoints = new LinkedList<>();
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -83,17 +83,20 @@ public abstract class Enemy extends GameObject {
         this.targetY = y;
         this.movingToTarget = true;
     }
-    public void moveAlong(Collection<Point2D> points) {
+    public void moveAlong(Vector2<Double>[] points) {
         waypoints.clear();
-        waypoints.addAll(points);
+        // Arrays.asList wraps the array into a List for easy bulk-add
+        waypoints.addAll(Arrays.asList(points));
+        movingToTarget = true;
         advanceWaypoint();
     }
     private void advanceWaypoint() {
-        Point2D next = waypoints.poll();
+        Vector2<Double> next = waypoints.poll();
         if (next != null) {
-            moveTo(next.getX(), next.getY());
+            // Double auto-unboxes to double
+            moveTo(next.x, next.y);
         } else {
-            movingToTarget = false;  // no more points
+            movingToTarget = false;  // no more waypoints
         }
     }
     protected void onArrive() {

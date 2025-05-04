@@ -2,6 +2,7 @@ package UI;
 
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.MapLoader;
+import Domain.GameFlow.Vector2;
 import Domain.GameObjects.Goblin;
 import Domain.GameObjects.Knight;
 import javafx.animation.AnimationTimer;
@@ -56,14 +57,12 @@ public class GameSceneController {
     @FXML
     public void initialize() {
 
-
         Platform.runLater(() -> {
             mapLoader = new MapLoader(gameGrid);
-
         });
 
+        //mapLoader.getPath();
 
-        mapLoader.getPath();
 
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);
@@ -83,19 +82,15 @@ public class GameSceneController {
 
         //Example list for goblin to move on.
 
-        List<Point2D> route = List.of(
-                new Point2D(100, 0),
-                new Point2D(100, -50),
-                new Point2D(250,-100 )
-        );
-        List<Point2D> route2 = List.of(
-                new Point2D(150, 0),
-                new Point2D(150, 50),
-                new Point2D(200,100 )
-        );
+        Vector2<Double>[] route3 = new Vector2[] {
+                new Vector2<>(100.0,  0.0),
+                new Vector2<>(100.0, -50.0),
+                new Vector2<>(250.0, -100.0)
+        };
 
-        goblin.moveAlong(route);
-        knight.moveAlong(route2);
+
+        goblin.moveAlong(route3);
+        knight.moveAlong(route3);
 // 4) In your AnimationTimer:
         new AnimationTimer() {
             private long lastTime = 0;
