@@ -3,6 +3,8 @@ package Domain.GameFlow;
 import Domain.GameObjects.Enemy;
 import Domain.GameObjects.Goblin;
 import Domain.GameObjects.Knight;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 
@@ -17,6 +19,12 @@ public class Wave {
     int enemyCount;
     int xPos;
     int yPos;
+    //region Images
+    Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
+    ImageView goblinView = new ImageView(goblinImg);
+    Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
+    ImageView knightView = new ImageView(knightImg);
+    //endregion
     public Wave(int knightCount, int goblinCount,int groupCount,int xPos, int yPos) {
         this.knightCount = knightCount;
         this.goblinCount = goblinCount;
@@ -31,10 +39,10 @@ public class Wave {
     public ArrayList<Enemy> createGoblinKnightWave(int goblinCount, int knightCount, int xPos, int yPos) {
         for (int j = 0; j < groupCount; j++) {
             for (int i = 0; i < goblinCount; i++) {
-                enemyWave.add(new Goblin(xPos, yPos, "Goblin", 100, 1));
+                enemyWave.add(new Goblin(xPos, yPos,"Goblin", 100, 1, goblinView));
             }
             for (int i = 0; i < knightCount; i++) {
-                enemyWave.add(new Knight(xPos, yPos, "Knight", 100, 1));
+                enemyWave.add(new Knight(xPos, yPos, "Knight", 100, 1,knightView));
             }
         }
         return enemyWave;

@@ -1,4 +1,9 @@
 package Domain.GameObjects;
+
+import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 /**
  * GameObject is the base class for all game objects in the tower defense game.
  * It provides basic functionality for position, scale, rotation, and life state.
@@ -6,8 +11,8 @@ package Domain.GameObjects;
  */
 public abstract class GameObject {
     // Position of the object in the game world
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
     // Scale factors for the object's size (not sure if we need, but let's keep it)
     protected float scaleX = 1.0f;
     protected float scaleY = 1.0f;
@@ -15,21 +20,25 @@ public abstract class GameObject {
     protected float rotation = 0.0f;
     // Whether the object is active in the game
     protected boolean isAlive;
+    protected ImageView imageObject;
 
     /**
      * Creates a new game object at the specified position.
      * @param xPos X coordinate of the object
      * @param yPos Y coordinate of the object
      */
-    public GameObject(int xPos, int yPos) {
+    public GameObject(double xPos, double yPos, ImageView imageObject) {
         this.x = xPos;
         this.y = yPos;
         this.isAlive = true;
+        this.imageObject = imageObject;
+        updateViewTransform();
+
     }
 
     // Getters for object properties
-    public int getX() { return x; }
-    public int getY() { return y; }
+    public double getX() { return x; }
+    public double getY() { return y; }
     public float getScaleX() { return scaleX; }
     public float getScaleY() { return scaleY; }
     public float getRotation() { return rotation; }
@@ -61,4 +70,15 @@ public abstract class GameObject {
                         Math.pow(this.y - other.y, 2)
         );
     }
-} 
+
+    public Node getView() {
+        return imageObject;
+    }
+    public void updateViewTransform() {
+        imageObject.setTranslateX(x);
+        imageObject.setTranslateY(y);
+        imageObject.setScaleX(scaleX);
+        imageObject.setScaleY(scaleY);
+        imageObject.setRotate(rotation);
+    }
+}
