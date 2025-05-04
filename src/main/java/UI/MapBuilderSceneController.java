@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
@@ -27,6 +28,8 @@ public class MapBuilderSceneController {
     @FXML private Button returnButton;
     @FXML private Button saveButton;
 
+    public Scene currentScene;
+
     private TileSetLoader mainTileSetLoader;
 
     @FXML
@@ -36,6 +39,23 @@ public class MapBuilderSceneController {
 
         TileSetLoader loader2 = new TileSetLoader(selectGrid,4,10,true);
 
+        mainGrid.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.setOnKeyPressed(event -> {
+                    if (event.getCode() == KeyCode.T) {
+                        mainTileSetLoader.changePathMode();
+                    }
+                });
+            }
+        });
+
+
+
+//        currentScene.setOnKeyPressed(event -> {
+//            if (event.getCode() == KeyCode.W) {
+//                System.out.println("W key pressed");
+//            }
+//        });
     }
 
     @FXML
