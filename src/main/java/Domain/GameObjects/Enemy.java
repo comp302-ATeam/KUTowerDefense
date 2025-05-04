@@ -107,7 +107,8 @@ public abstract class Enemy extends GameObject {
         FPS = GameActionController.getFPS();
         if (movingToTarget && !GameActionController.isPaused()) {
             double dx = targetX - x, dy = targetY - y;
-            double dist = Math.hypot(dx, dy), step = speed * deltaTime;
+            double dist = Math.hypot(dx, dy), step = speed * deltaTime * GameActionController.getGameSpeed();
+
             if (dist <= step) {
                 x = targetX;
                 y = targetY;

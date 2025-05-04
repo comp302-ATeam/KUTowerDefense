@@ -2,7 +2,7 @@ package Domain.GameFlow;
 
 public class GameActionController {
     private static boolean isPaused; // we will be depending on this to check if game is Paused
-    private double gameSpeed;
+    private static double gameSpeed;
     private static final double maxSpeed = 8.0;
     private static final double defaultSpeed = 1.0;
     private static final double doubleSpeed = 2.0;
@@ -26,7 +26,7 @@ public class GameActionController {
         this.isPaused = isPaused;
     }
 
-    public double getGameSpeed() {
+    public static double getGameSpeed() {
         return gameSpeed;
     }
 
