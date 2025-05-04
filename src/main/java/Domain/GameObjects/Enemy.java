@@ -2,6 +2,7 @@ package Domain.GameObjects;
 
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.Tile;
+import Domain.GameFlow.Vector2;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -9,11 +10,11 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Queue;
+import java.util.*;
 
 public abstract class Enemy extends GameObject {
     /* enemy has 4 attributes, it has its own enemy type (goblin or knight)
@@ -25,7 +26,9 @@ public abstract class Enemy extends GameObject {
     private final ImageView view;
     protected double targetX, targetY;
     protected boolean movingToTarget = false;
-    private final Queue<Point2D> waypoints = new ArrayDeque<>();
+    private final Queue<Vector2<Double>> waypoints = new LinkedList<>();
+    private final Rectangle healthBar;
+    private final double maxHealthPoints;
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -46,7 +49,14 @@ public abstract class Enemy extends GameObject {
         super(xPos, yPos,imageObject);
         this.enemyType = enemyType;
         this.healthPoints = healthPoints;
+        this.maxHealthPoints = healthPoints;
         this.speed = speed;
+
+        // Initialize health bar
+        this.healthBar = new Rectangle(50, 5); // Width: 50, Height: 5
+        this.healthBar.setFill(Color.RED);
+        this.healthBar.setTranslateX(xPos);
+        this.healthBar.setTranslateY(yPos - 10); // Position above the enemy
 
         //region Animation Setup
         Image spriteSheet = imageObject.getImage();
@@ -85,17 +95,20 @@ public abstract class Enemy extends GameObject {
         this.targetY = y;
         this.movingToTarget = true;
     }
-    public void moveAlong(Collection<Point2D> points) {
+    public void moveAlong(Vector2<Double>[] points) {
         waypoints.clear();
-        waypoints.addAll(points);
+        // Arrays.asList wraps the array into a List for easy bulk-add
+        waypoints.addAll(Arrays.asList(points));
+        movingToTarget = true;
         advanceWaypoint();
     }
     private void advanceWaypoint() {
-        Point2D next = waypoints.poll();
+        Vector2<Double> next = waypoints.poll();
         if (next != null) {
-            moveTo(next.getX(), next.getY());
+            // Double auto-unboxes to double
+            moveTo(next.x, next.y);
         } else {
-            movingToTarget = false;  // no more points
+            movingToTarget = false;  // no more waypoints
         }
     }
     protected void onArrive() {
@@ -122,8 +135,18 @@ public abstract class Enemy extends GameObject {
         if (healthPoints <= 0 && isAlive()) {
             Die();
         }
+        // 1) Update the health bar position
+        healthBar.setTranslateX(x);
+        healthBar.setTranslateY(y - 10); // Position above the enemy
+        healthBar.setFill(Color.GREEN);
+        healthBar.toFront();
+
+        // 2) Update the health bar width based on the current health points
+        double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
+        healthBar.setWidth(healthBarWidth);
         // 3) Push transforms to the view
         updateViewTransform();
+
     }
     // calculate damage method is an abstract method which will be used accordingly for each class goblin or knight
     // this abstract method is used for calculating the damage took by
@@ -140,7 +163,17 @@ public abstract class Enemy extends GameObject {
         if( healthPoints <= 0 ) {
             Die();
         }
+        // Update the health bar width based on the current health points
+        double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
+        healthBar.setWidth(healthBarWidth);
+
+
     }
+
+    public Rectangle getHealthBar () {
+        return healthBar;
+    }
+
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
     public void Die(){}

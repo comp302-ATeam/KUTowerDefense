@@ -2,12 +2,14 @@ package UI;
 
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.MapLoader;
+import Domain.GameFlow.Vector2;
 import Domain.GameObjects.Goblin;
 import Domain.GameObjects.Knight;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
@@ -73,59 +75,60 @@ public class GameSceneController {
 
     @FXML
     public void initialize() {
-
-
         Platform.runLater(() -> {
             mapLoader = new MapLoader(gameGrid);
+            Vector2<Double>[] mainPath = mapLoader.getPath();
+            int startingX = mainPath[0].x.intValue();
+            int startingY = mainPath[0].y.intValue();
+            Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
+            ImageView goblinView = new ImageView(goblinImg);
+            Goblin goblin = new Goblin(startingX,startingY,"Goblin",100,100,goblinView);
+            Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
+            ImageView knightView = new ImageView(knightImg);
+            Knight knight = new Knight(startingX,startingY,"Knight",100,100,knightView);
 
-        });
+            Node goblinHealth   = goblin.getHealthBar();
+            goblinHealth.setVisible(false);
+            goblinView.setPickOnBounds(true);
+            goblinView.setOnMouseEntered(e -> goblinHealth.setVisible(true));
+            goblinView.setOnMouseExited(e -> goblinHealth.setVisible(false));
+
+            Node knightHealth = knight.getHealthBar();
+            knightHealth.setVisible(false);
+            knightView.setPickOnBounds(true);
+            knightView.setOnMouseEntered(e -> knightHealth.setVisible(true));
+            knightView.setOnMouseExited(e -> knightHealth.setVisible(false));
 
 
-        // mapLoader.getPath();   not using right now
 
-        Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
-        ImageView goblinView = new ImageView(goblinImg);
-        Goblin goblin = new Goblin(-100,0,"Goblin",100,100,goblinView);
-        Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
-        ImageView knightView = new ImageView(knightImg);
-        Knight knight = new Knight(100,0,"Knight",100,100,knightView);
+            // Add enemies and their health bars to the gamePane
+            gamePane.getChildren().addAll(
+                    goblin.getView(), goblin.getHealthBar(),
+                    knight.getView(), knight.getHealthBar()
+            );
 
-        gamePane.getChildren().addAll(
-                goblin.getView(),
-                knight.getView()
-        );
+            // Sync their initial transforms
+            goblin.updateViewTransform();
+            knight.updateViewTransform();
 
-        // 4) Sync their initial transforms
-        goblin.updateViewTransform();
-        knight.updateViewTransform();
 
-        //Example list for goblin to move on.
+            goblin.moveAlong(mainPath);
+            knight.moveAlong(mainPath);
 
-        List<Point2D> route = List.of(
-                new Point2D(100, 0),
-                new Point2D(100, -50),
-                new Point2D(250,-100 )
-        );
-        List<Point2D> route2 = List.of(
-                new Point2D(150, 0),
-                new Point2D(150, 50),
-                new Point2D(200,100 )
-        );
+            // AnimationTimer to update enemies and health bars
+            new AnimationTimer() {
+                private long lastTime = 0;
 
-        goblin.moveAlong(route);
-        knight.moveAlong(route2);
-// 4) In your AnimationTimer:
-        new AnimationTimer() {
-            private long lastTime = 0;
-            @Override
-            public void handle(long now) {
-                if (lastTime > 0) {
-                    double deltaSec = (now - lastTime) / 1_000_000_000.0;
-                    goblin.update(deltaSec);
-                    knight.update(deltaSec);
+                @Override
+                public void handle(long now) {
+                    if (lastTime > 0) {
+                        double deltaSec = (now - lastTime) / 1_000_000_000.0;
+                        goblin.update(deltaSec);
+                        knight.update(deltaSec);
+                    }
+                    lastTime = now;
                 }
-                lastTime = now;
-            }
-        }.start();
+            }.start();
+        });
     }
 }

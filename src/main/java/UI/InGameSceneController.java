@@ -55,19 +55,7 @@ public class InGameSceneController {
 
         //Example list for goblin to move on.
 
-        List<Point2D> route = List.of(
-                new Point2D(100, 0),
-                new Point2D(100, -50),
-                new Point2D(250,-100 )
-        );
-        List<Point2D> route2 = List.of(
-                new Point2D(150, 0),
-                new Point2D(150, 50),
-                new Point2D(200,100 )
-        );
 
-        goblin.moveAlong(route);
-        knight.moveAlong(route2);
 // 4) In your AnimationTimer:
         new AnimationTimer() {
             private long lastTime = 0;
