@@ -31,7 +31,7 @@ public class StartSceneController {
         System.out.println("StartNew");
         //Stage stage1 = (Stage)((Node)event.getSource()).getScene().getWindow();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/InGameScene.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/GameSceneController.fxml"));
         stage.setScene(new Scene(root));
         stage.setMaximized(true);
         stage.show();
