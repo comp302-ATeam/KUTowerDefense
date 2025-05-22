@@ -14,7 +14,6 @@ public class GoldDrop extends ImageView {
     private final int goldAmount;
 
     public GoldDrop(double x, double y, int archerCost, Pane parentPane, Runnable onPickup) {
-        super(new Image("Assets/items/goldbag.png")); // use correct path
         setFitWidth(20);
         setFitHeight(20);
         setLayoutX(x);
