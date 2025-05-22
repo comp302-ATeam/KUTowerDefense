@@ -30,7 +30,7 @@ public class InGameSceneController {
 
 
         Platform.runLater(() -> {
-            mapLoader = new MapLoader(gameGrid);
+            mapLoader = new MapLoader(gameGrid,gamePane);
 
         });
 

@@ -27,6 +27,8 @@ public class Tile  implements Serializable {
 
     public Vector2<Integer> position;
 
+    public Vector2<Double> realPosition;
+
     private TileType tileType;
     private int tileIndex;
 

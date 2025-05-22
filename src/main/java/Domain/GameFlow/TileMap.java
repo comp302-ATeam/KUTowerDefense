@@ -39,6 +39,7 @@ public class TileMap implements Serializable {
         Bounds screenBounds = gridPane.localToScreen(gridPane.getBoundsInLocal());
 
         Vector2<Double> factor = new Vector2<>(screenBounds.getMinX() + (tileSize /2) ,screenBounds.getMinY() + (tileSize /2));
+        factor = new Vector2<Double>(-tileSize * .75,-tileSize * 2.0);
 
         Vector2<Double>[] new_path = new Vector2[this.path.length];
 
@@ -46,7 +47,8 @@ public class TileMap implements Serializable {
 
         for (int i = 0; i < this.path.length; i++) {
             Vector2<Integer> relativePos = path[i].position;
-            new_path[i] = new Vector2<>(factor.x + relativePos.x * tileSize ,factor.y +  relativePos.y * tileSize);
+            path[i].realPosition = new Vector2<>(factor.x + relativePos.x * tileSize ,factor.y +  relativePos.y * tileSize);
+            new_path[i] = path[i].realPosition;
         }
         return new_path;
     }
