@@ -1,11 +1,17 @@
 package Domain.GameObjects;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 public class MageTower extends Tower {
-    public MageTower(int x, int y, ImageView towerImage) {
+
+    private static final String PATH = "/Assets/Towers/Castle128.png";
+
+    public MageTower(int x, int y, Pane mapPane) {
         // Mage tower has medium fire rate but high damage
-        super(x, y, 180, 25, 1.0, 150,towerImage);  // range=180, damage=25, fireRate=1.0, cost=150
+        super(x, y, 180, 25, 1.0, 150,mapPane);  // range=180, damage=25, fireRate=1.0, cost=150
+        renderTower(PATH);
     }
 
     @Override

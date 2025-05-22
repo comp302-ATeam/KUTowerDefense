@@ -1,18 +1,25 @@
 package Domain.GameObjects;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 import java.util.List;
 
 public class ArtilleryTower extends Tower {
+
+    private static final String PATH = "/Assets/Towers/Tower_bomb128.png";
+
     private int splashRadius;  // Radius of AOE damage
     private List<Enemy> allEnemies;  // Reference to all enemies for AOE damage
 
-    public ArtilleryTower(int x, int y, ImageView imageView) {
+
+    public ArtilleryTower(int x, int y, Pane mapPane) {
         // Artillery tower has low fire rate but high damage and AOE
-        super(x, y, 250, 40, 0.5, 200,imageView);  // range=250, damage=40, fireRate=0.5, cost=200
+        super(x, y, 250, 40, 0.5, 200,mapPane);  // range=250, damage=40, fireRate=0.5, cost=200
         this.splashRadius = 100;  // AOE radius
         //this.allEnemies = allEnemies;
+        renderTower(PATH);
     }
 
     @Override

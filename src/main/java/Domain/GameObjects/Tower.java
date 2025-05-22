@@ -1,10 +1,16 @@
 package Domain.GameObjects;
+
+import UI.TowerMenu;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 import java.util.List;
 
 public abstract class Tower extends GameObject {
 
+    private static final String PATH = "images/tower.png";
     protected int attackRange;      // Attack range, distance
     protected int cost;             // cost of the tower
     protected int currentLevel;     // we can upgrade the tower so we should keep the current level of it.
@@ -13,6 +19,8 @@ public abstract class Tower extends GameObject {
     protected double sellRatio;     // Ratio of cost returned when selling
     protected long lastAttackTime;  // Time of last attack in milliseconds
     protected ImageView towerImage;
+
+    public Pane mapPane;
 
     /**
      * Constructor for Tower class.
@@ -26,8 +34,8 @@ public abstract class Tower extends GameObject {
      * @param fireRate Attacks per second
      * @param cost Construction cost
      */
-    public Tower(int x, int y, int attackRange, int damage, double fireRate, int cost, ImageView towerImage) {
-        super(x, y, towerImage);
+    public Tower(int x, int y, int attackRange, int damage, double fireRate, int cost , Pane mapPane) {
+        super(x, y, new ImageView());
         this.attackRange = attackRange;
         this.damage = damage;
         this.fireRate = fireRate;
@@ -37,11 +45,35 @@ public abstract class Tower extends GameObject {
         this.currentLevel = 1;        // All towers start at level 1
         this.sellRatio = 0.4;       // All towers return 40% of cost when sold
         this.lastAttackTime = 0;    // All towers start with no attack cooldown
+
+        this.mapPane = mapPane;
+
+        TowerMenu towerMenu = new TowerMenu(this);
+
+
     }
 
 
     // Abstract method for attacking enemies
     public abstract void attack(Enemy target);
+
+    // Render Method
+    protected void renderTower(String path){
+        System.out.println(path);
+        Image image = new Image(getClass().getResource(path).toExternalForm());
+        towerImage = new ImageView(image);
+
+        System.out.println("x=" + x + ", y=" + y);
+
+        towerImage.setFitWidth(96);
+        towerImage.setFitHeight(96);
+        towerImage.setPreserveRatio(true);
+
+        towerImage.setLayoutX(x);
+        towerImage.setLayoutY(y);
+
+        mapPane.getChildren().add(towerImage);
+    }
 
     // Method to upgrade the tower
     public void upgrade() {

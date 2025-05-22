@@ -76,7 +76,7 @@ public class GameSceneController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            mapLoader = new MapLoader(gameGrid);
+            mapLoader = new MapLoader(gameGrid,gamePane);
             Vector2<Double>[] mainPath = mapLoader.getPath();
             int startingX = mainPath[0].x.intValue();
             int startingY = mainPath[0].y.intValue();

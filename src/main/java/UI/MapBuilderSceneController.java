@@ -74,33 +74,33 @@ public class MapBuilderSceneController {
 
     }
 
-
-    public void showTemporaryWindow() {
-        // Create a new Stage (window)
-        Stage tempStage = new Stage();
-        tempStage.setTitle("Temporary Test Window");
-
-        // Content for the window
-        Label label = new Label("This is a test!");
-        StackPane root = new StackPane(label);
-
-        GridPane gridPane = new GridPane();
-
-
-        root.getChildren().add(gridPane);
-
-        MapLoader mapLoader = new MapLoader(gridPane);
-
-        // Set scene
-        Scene scene = new Scene(root, 300, 200);
-        tempStage.setScene(scene);
-
-        // Show the new window
-        tempStage.show();
-
-
-
-
-    }
+//
+//    public void showTemporaryWindow() {
+//        // Create a new Stage (window)
+//        Stage tempStage = new Stage();
+//        tempStage.setTitle("Temporary Test Window");
+//
+//        // Content for the window
+//        Label label = new Label("This is a test!");
+//        StackPane root = new StackPane(label);
+//
+//        GridPane gridPane = new GridPane();
+//
+//
+//        root.getChildren().add(gridPane);
+//
+//        MapLoader mapLoader = new MapLoader(gridPane);
+//
+//        // Set scene
+//        Scene scene = new Scene(root, 300, 200);
+//        tempStage.setScene(scene);
+//
+//        // Show the new window
+//        tempStage.show();
+//
+//
+//
+//
+//    }
 
 }
