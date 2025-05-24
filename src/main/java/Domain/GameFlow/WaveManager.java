@@ -5,6 +5,8 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 /**
  * WaveManager class manages multiple waves of enemies in the game.
  * It handles wave spawning, timing, and tracking of all active enemies.
@@ -15,6 +17,7 @@ public class WaveManager {
     private int currentWaveIndex;       // Tracks which wave is currently active
     private final int xPos;
     private final int yPos;
+    private final Timeline waveSpawner;
     private boolean isGameComplete;     // Flag to track if all waves are complete
 
     public WaveManager(int xPos, int yPos) {

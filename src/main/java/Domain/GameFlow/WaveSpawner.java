@@ -26,6 +26,20 @@ public class WaveSpawner {
         gameLoop.start();
     }
 
+    private void setupGameLoop() {
+        gameLoop = new AnimationTimer() {
+            private long lastTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (lastTime > 0) {
+                    double deltaTime = (now - lastTime) / 1_000_000_000.0;
+                    update(deltaTime);
+                }
+                lastTime = now;
+            }
+        };
+    }
 
 
 
