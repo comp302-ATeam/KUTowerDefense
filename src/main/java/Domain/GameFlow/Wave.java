@@ -98,4 +98,44 @@ public class Wave {
         }
     }
 
+    // create enemies
+    // At 0 seconds: calls spawnEnemy() method (creates a new enemy)
+    //Wait 0.5 seconds
+    //Repeats this loop for the total number of enemies
+    private void spawnEnemy() {
+        // Spawn goblins first
+        if (activeEnemies.size() < goblinCount) {
+            Goblin goblin = new Goblin(xPos, yPos, "Goblin", 100, 1, new ImageView(goblinImg));
+            activeEnemies.add(goblin);
+        }
+        // Then spawn knights
+        else if (activeEnemies.size() < (goblinCount + knightCount)) {
+            Knight knight = new Knight(xPos, yPos, "Knight", 100, 1, new ImageView(knightImg));
+            activeEnemies.add(knight);
+        }
+    }
+    // Returns the list of all currently active enemies
+    public List<Enemy> getActiveEnemies() {
+        return activeEnemies;
+    }
+    // isWaveComplete: All groups have been spawned
+    //activeEnemies.isEmpty(): All enemies have been defeated
+    //Only returns true when BOTH conditions are met
+    public boolean isWaveComplete() {
+        return isWaveComplete && activeEnemies.isEmpty();
+    }
+    // Takes a deltaTime parameter (time since last update)
+    //Uses an Iterator to safely remove dead enemies
+    //Checks each enemy's status
+    //Removes any enemy that is no longer alive
+    public void update(double deltaTime) {
+        Iterator<Enemy> iterator = activeEnemies.iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            if (!enemy.isAlive()) {
+                iterator.remove();
+            }
+        }
+    }
+
 }
