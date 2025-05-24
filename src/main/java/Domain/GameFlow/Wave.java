@@ -3,48 +3,99 @@ package Domain.GameFlow;
 import Domain.GameObjects.Enemy;
 import Domain.GameObjects.Goblin;
 import Domain.GameObjects.Knight;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Wave {
-    /* store enemies in an arraylist of enemies. we have the total count and the distribution of goblins
-    * and knights. We also have the position x and y to spawn the wave.
-    * */
-    static ArrayList<Enemy> enemyWave = new ArrayList<>();
-    int knightCount;
-    int goblinCount;
-    int groupCount;
-    int enemyCount;
-    int xPos;
-    int yPos;
-    //region Images
-    Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
-    ImageView goblinView = new ImageView(goblinImg);
-    Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
-    ImageView knightView = new ImageView(knightImg);
-    //endregion
-    public Wave(int knightCount, int goblinCount,int groupCount,int xPos, int yPos) {
+    private final List<Enemy> activeEnemies;   // This list holds all enemies currently active in the game
+    private final int knightCount;             // number of knight in a group
+    private final int goblinCount;             // number of goblins in a group
+    private final int groupCount;              // number of groups
+    private final int xPos;
+    private final int yPos;
+    private int currentGroup;
+    private boolean isWaveComplete;
+    private final Timeline groupSpawner;        // Timer that spawns groups
+    private final Timeline enemySpawner;        // timer that spawns enemies
+
+    //Images
+    private final Image goblinImg;
+    private final ImageView goblinView;
+    private final Image knightImg;
+    private final ImageView knightView;
+
+    public Wave(int knightCount, int goblinCount, int groupCount, int xPos, int yPos) {
         this.knightCount = knightCount;
         this.goblinCount = goblinCount;
         this.groupCount = groupCount;
-        // we can figure out the enemy count by summation.
-        this.enemyCount = knightCount + goblinCount;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.currentGroup = 0;
+        this.isWaveComplete = false;
+        this.activeEnemies = new ArrayList<>();
+
+        // Initialize images
+        this.goblinImg = new Image("Assets/enemies/Goblin_Red.png");
+        this.goblinView = new ImageView(goblinImg);
+        this.knightImg = new Image("Assets/enemies/Warrior_Blue.png");
+        this.knightView = new ImageView(knightImg);
+
+        // Create timeline for spawning groups
+        this.groupSpawner = new Timeline(
+                new KeyFrame(Duration.seconds(0), new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        spawnGroup();
+                    }
+                }),
+                new KeyFrame(Duration.seconds(2.0), new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        //empty but necessary
+                    }
+                })
+        );
+        this.groupSpawner.setCycleCount(groupCount);
+
+        // Create timeline for spawning enemies within a group
+        this.enemySpawner = new Timeline(
+                new KeyFrame(Duration.seconds(0), new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        spawnEnemy();
+                    }
+                }),
+                new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        // empty but necessary
+                    }
+                })
+        );
+        this.enemySpawner.setCycleCount(knightCount + goblinCount);
     }
-    // this is the main method for creating a wave. We create a wave by adding the right amount of knights and
-    // goblins. We do this by the group count of times.
-    public ArrayList<Enemy> createGoblinKnightWave(int goblinCount, int knightCount, int xPos, int yPos) {
-        for (int j = 0; j < groupCount; j++) {
-            for (int i = 0; i < goblinCount; i++) {
-                enemyWave.add(new Goblin(xPos, yPos,"Goblin", 100, 1, goblinView));
-            }
-            for (int i = 0; i < knightCount; i++) {
-                enemyWave.add(new Knight(xPos, yPos, "Knight", 100, 1,knightView));
-            }
+
+    public void startWave() {
+        currentGroup = 0;
+        isWaveComplete = false;
+        groupSpawner.play();
+    }
+    // At second 0: calls spawnGroup() method (starts a new group)
+    //Wait 2 seconds
+    //Repeats this loop for groupCount
+    private void spawnGroup() {
+        if (currentGroup < groupCount) {
+            enemySpawner.play();
+            currentGroup++;
+        } else {
+            isWaveComplete = true;
         }
-        return enemyWave;
     }
+
 }
