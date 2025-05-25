@@ -5,10 +5,14 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import java.util.List;
 
+/**
+ * WaveSpawner class manages the game loop and wave spawning process.
+ * It coordinates between the game UI and wave management system.
+ */
 public class WaveSpawner {
-    private final WaveManager waveManager;
-    private final Pane gamePane;
-    private AnimationTimer gameLoop;
+    private final WaveManager waveManager; // Manages wave creation and timing
+    private final Pane gamePane;           // JavaFX pane where game elements are displayed
+    private AnimationTimer gameLoop;       // Controls the game loop timing and updates
 
     public WaveSpawner(int startX, int startY, Pane gamePane) {
         this.waveManager = new WaveManager(startX, startY);
@@ -22,10 +26,14 @@ public class WaveSpawner {
         waveManager.addWave(3, 2, 3);
         waveManager.addWave(4, 3, 2);
 
-        waveManager.startWaves();
-        gameLoop.start();
+        waveManager.startWaves();   // Start wave spawning
+        gameLoop.start();           // Start game loop
     }
 
+    /**
+     * Sets up the game loop using JavaFX AnimationTimer
+     * Calculates delta time between frames for smooth updates
+     */
     private void setupGameLoop() {
         gameLoop = new AnimationTimer() {
             private long lastTime = 0;
@@ -41,6 +49,34 @@ public class WaveSpawner {
         };
     }
 
+    //Updates game state every frame
+    private void update(double deltaTime) {
+        // Update wave manager state
+        waveManager.update(deltaTime);
+        // Update all active enemies
+        List<Enemy> activeEnemies = waveManager.getActiveEnemies();
+        for (Enemy enemy : activeEnemies) {
+            enemy.update(deltaTime);
+        }
+        // Check if game is complete
+        if (waveManager.isGameComplete()) {
+            gameLoop.stop();
+            // Handle game completion
+        }
+    }
+    // Gets all currently active enemies in the game
+    public List<Enemy> getActiveEnemies() {
+        return waveManager.getActiveEnemies();
+    }
 
+    /**
+     * Stops the game loop
+     * Called when game is paused or ended
+     */
+    public void stop() {
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+    }
 
 }

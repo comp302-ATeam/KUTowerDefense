@@ -45,8 +45,12 @@ public class WaveManager {
 
     }
     // Starts the wave spawning process
+    // Resets the wave index and starts the wave spawner timeline
     public void startWaves() {
-
+        currentWaveIndex = 0;
+        isGameComplete = false;
+        waveSpawner.setCycleCount(waves.size());  // Set number of cycles to number of waves
+        waveSpawner.play();                       // Start spawning waves
     }
     // Adds a new wave to the game
     public void addWave(int knightCount, int goblinCount, int groupCount) {
