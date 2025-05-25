@@ -13,10 +13,14 @@ public class WaveSpawner {
     private final WaveManager waveManager; // Manages wave creation and timing
     private final Pane gamePane;           // JavaFX pane where game elements are displayed
     private AnimationTimer gameLoop;       // Controls the game loop timing and updates
+    private final Vector2<Double>[] mainPath;
+    private final UI.GameSceneController gameSceneController;
 
-    public WaveSpawner(int startX, int startY, Pane gamePane) {
-        this.waveManager = new WaveManager(startX, startY);
+    public WaveSpawner(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, UI.GameSceneController gameSceneController) {
+        this.waveManager = new WaveManager(startX, startY, gamePane, mainPath, gameSceneController);
         this.gamePane = gamePane;
+        this.mainPath = mainPath;
+        this.gameSceneController = gameSceneController;
         setupGameLoop();
     }
 
@@ -77,6 +81,17 @@ public class WaveSpawner {
         if (gameLoop != null) {
             gameLoop.stop();
         }
+        waveManager.pauseAllWaves();
     }
 
+    public void resume() {
+        waveManager.resumeAllWaves();
+        if (gameLoop != null) {
+            gameLoop.start();
+        }
+    }
+
+    public int getCurrentWave() {
+        return waveManager.getCurrentWave();
+    }
 }
