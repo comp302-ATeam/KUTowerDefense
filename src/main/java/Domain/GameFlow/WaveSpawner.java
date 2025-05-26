@@ -10,9 +10,10 @@ import java.util.List;
  * It coordinates between the game UI and wave management system.
  */
 public class WaveSpawner {
-    private final WaveManager waveManager; // Manages wave creation and timing
+    public final WaveManager waveManager; // Manages wave creation and timing
     private final Pane gamePane;           // JavaFX pane where game elements are displayed
     private AnimationTimer gameLoop;       // Controls the game loop timing and updates
+    private boolean isPaused = false;
     private final Vector2<Double>[] mainPath;
     private final UI.GameSceneController gameSceneController;
 
@@ -23,7 +24,9 @@ public class WaveSpawner {
         this.gameSceneController = gameSceneController;
         setupGameLoop();
     }
-
+    // Adds predefined waves to the manager.
+    //Starts the wave logic.
+    //Sets isPaused to false and starts the animation timer
     public void startGame() {
         // Add some waves with different configurations
         waveManager.addWave(3, 3, 1);  // 3 knights 3 goblins 1 group
@@ -31,19 +34,23 @@ public class WaveSpawner {
         waveManager.addWave(4, 3, 2);
 
         waveManager.startWaves();   // Start wave spawning
-        gameLoop.start();           // Start game loop
+        isPaused = false;
+        if (gameLoop != null) {
+            gameLoop.start();
+        }
     }
 
-    /**
-     * Sets up the game loop using JavaFX AnimationTimer
-     * Calculates delta time between frames for smooth updates
-     */
+    //Uses AnimationTimer to call the handle() method every frame.
+    //Calculates deltaTime (time since last frame) in seconds.
+    //Calls update(deltaTime) to process game logic like moving enemies.
+    //Skips update if the game is paused.
     private void setupGameLoop() {
         gameLoop = new AnimationTimer() {
             private long lastTime = 0;
 
             @Override
             public void handle(long now) {
+                if (isPaused) return;
                 if (lastTime > 0) {
                     double deltaTime = (now - lastTime) / 1_000_000_000.0;
                     update(deltaTime);
@@ -54,9 +61,10 @@ public class WaveSpawner {
     }
 
     //Updates game state every frame
+    //Tells waveManager to update and potentially spawn the next wave.
+    // If all waves are done and enemies are defeated, stop the loop.
     private void update(double deltaTime) {
-        // Update wave manager state
-        waveManager.update(deltaTime);
+        waveManager.updateAndAdvanceWaves(gameSceneController, deltaTime);
         // Update all active enemies
         List<Enemy> activeEnemies = waveManager.getActiveEnemies();
         for (Enemy enemy : activeEnemies) {
@@ -78,6 +86,7 @@ public class WaveSpawner {
      * Called when game is paused or ended
      */
     public void stop() {
+        isPaused = true;
         if (gameLoop != null) {
             gameLoop.stop();
         }
@@ -85,6 +94,7 @@ public class WaveSpawner {
     }
 
     public void resume() {
+        isPaused = false;
         waveManager.resumeAllWaves();
         if (gameLoop != null) {
             gameLoop.start();

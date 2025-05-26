@@ -1,15 +1,10 @@
 package Domain.GameFlow;
 import Domain.GameObjects.Enemy;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
+import javafx.scene.layout.Pane;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.layout.Pane;
-import Domain.GameFlow.Vector2;
 import UI.GameSceneController;
+import Domain.GameFlow.Vector2;
 /**
  * WaveManager class manages multiple waves of enemies in the game.
  * It handles wave spawning, timing, and tracking of all active enemies.
@@ -20,11 +15,14 @@ public class WaveManager {
     private int currentWaveIndex;       // Tracks which wave is currently active
     private final int xPos;
     private final int yPos;
-    private final Timeline waveSpawner;
     private boolean isGameComplete;     // Flag to track if all waves are complete
     private final Pane gamePane;
     private final Vector2<Double>[] mainPath;
     private final GameSceneController gameSceneController;
+    private boolean waveJustStarted = false;
+    private double waveTimer = 0;
+    private static final double WAVE_INTERVAL = 30.0;
+    private int nextWaveToStart = 0;
 
     public WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
         this.waves = new ArrayList<>();
@@ -35,76 +33,59 @@ public class WaveManager {
         this.mainPath = mainPath;
         this.isGameComplete = false;
         this.gameSceneController = gameSceneController;
-
-        // Create timeline for spawning waves
-        this.waveSpawner = new Timeline(
-                new KeyFrame(Duration.seconds(0), new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        startNextWave();
-                    }
-                }),
-                new KeyFrame(Duration.seconds(2.0), new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        // empty but necessary for delay
-                    }
-                })
-        );
-
     }
-    // Starts the wave spawning process
-    // Resets the wave index and starts the wave spawner timeline
+    // Starts the wave sequence:
+    //Begins with wave 0.
+    //Calls startWave() on it.
+    //Updates UI to show Wave 1.
+    //Increments nextWaveToStart.
     public void startWaves() {
-        currentWaveIndex = 0;
-        isGameComplete = false;
-        waveSpawner.setCycleCount(waves.size());  // Set number of cycles to number of waves
-        waveSpawner.play();                       // Start spawning waves
+        nextWaveToStart = 0;
+        waveTimer = 0;
+        if (!waves.isEmpty()) {
+            System.out.println("[WaveManager] Starting wave 0");
+            waves.get(0).startWave();
+            gameSceneController.updateWave(1);
+            nextWaveToStart = 1;
+        }
     }
-    // Adds a new wave to the game
+
+    // Adds a new wave with given numbers of knights, goblins, and groups.
+    //Wave index is inferred by the size of the list.
     public void addWave(int knightCount, int goblinCount, int groupCount) {
         Wave wave = new Wave(waves.size(), knightCount, goblinCount, groupCount, xPos, yPos, gamePane, mainPath);
         waves.add(wave);
     }
-    // Starts the next wave in sequence, Called by the wave spawner timeline
-    private void startNextWave() {
-        if (currentWaveIndex < waves.size()) {
-            System.out.println("Starting wave " + (currentWaveIndex + 1));
-            waves.get(currentWaveIndex).startWave();
-            gameSceneController.showWaveMessage(currentWaveIndex);
-            gameSceneController.updateWave(currentWaveIndex);
-            currentWaveIndex++;
-        } else {
-            isGameComplete = true;
+
+    // Tracks time since last wave.
+    //If the interval has passed, starts the next wave and resets the timer.
+    //Updates all waves that have already been started.
+    public void updateAndAdvanceWaves(GameSceneController controller, double deltaTime) {
+        if (nextWaveToStart > 0) {
+            waveTimer += deltaTime;
+            if (nextWaveToStart < waves.size() && waveTimer >= WAVE_INTERVAL) {
+                System.out.println("[WaveManager] Starting wave " + nextWaveToStart);
+                waves.get(nextWaveToStart).startWave();
+                controller.updateWave(nextWaveToStart + 1);
+                nextWaveToStart++;
+                waveTimer = 0;
+            }
+        }
+        for (int i = 0; i < nextWaveToStart; i++) {
+            waves.get(i).update(deltaTime);
         }
     }
-    // Gets all currently active enemies from all waves
+
     public List<Enemy> getActiveEnemies() {
         List<Enemy> allActiveEnemies = new ArrayList<>();
-        for (Wave wave : waves) {
-            allActiveEnemies.addAll(wave.getActiveEnemies());
+        for (int i = 0; i < nextWaveToStart; i++) {
+            allActiveEnemies.addAll(waves.get(i).getActiveEnemies());
         }
         return allActiveEnemies;
     }
 
-    // Checks if the game is complete.
-    // Game is complete when all waves are finished and all enemies are defeated
     public boolean isGameComplete() {
-        if (isGameComplete) {
-            for (Wave wave : waves) {
-                if (!wave.isWaveComplete()) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-    // Updates all waves and their enemies
-    public void update(double deltaTime) {
-        for (Wave wave : waves) {
-            wave.update(deltaTime); // update each wave
-        }
+        return isGameComplete;
     }
 
     public int getCurrentWave() {
@@ -112,14 +93,10 @@ public class WaveManager {
     }
 
     public void pauseAllWaves() {
-        for (Wave wave : waves) {
-            wave.pause();
-        }
+        // No-op: Pause/resume handled by WaveSpawner
     }
 
     public void resumeAllWaves() {
-        for (Wave wave : waves) {
-            wave.resume();
-        }
+        // No-op: Pause/resume handled by WaveSpawner
     }
 }

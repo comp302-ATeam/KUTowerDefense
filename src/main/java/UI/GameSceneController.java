@@ -16,9 +16,11 @@ import javafx.scene.layout.Pane;
 import java.util.List;
 
 public class GameSceneController {
+    // Creates an instance of the game controller to handle pause, resume, and speed changes..
     private GameActionController gameActionController = new GameActionController();
     private WaveSpawner waveSpawner;
 
+    // Will manage the spawning of enemy waves
     @FXML
     private Button pauseButton;
     @FXML
@@ -36,7 +38,6 @@ public class GameSceneController {
     @FXML private Label labelGold;
     @FXML private Label labelLives;
     @FXML private Label labelWave;
-    @FXML private Label waveMessageLabel;
 
     public void updateGold(int gold) {
         labelGold.setText(String.valueOf(gold));
@@ -49,16 +50,7 @@ public class GameSceneController {
     public void updateWave(int wave) {
         labelWave.setText(String.valueOf(Math.max(1, wave)));
     }
-
-    public void showWaveMessage(int waveIndex) {
-        waveMessageLabel.setText("Wave " + (waveIndex + 1) + " Başladı!");
-        waveMessageLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: orange; -fx-background-color: rgba(0,0,0,0.5); -fx-padding: 10px; -fx-border-radius: 10px; -fx-background-radius: 10px;");
-        waveMessageLabel.setVisible(true);
-        new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(2), e -> waveMessageLabel.setVisible(false))
-        ).play();
-    }
-
+    // Pauses the game via gameActionController. Also stops the waveSpawner.
     @FXML
     private void handlePauseButton(ActionEvent event) {
         gameActionController.pauseGame();
@@ -67,6 +59,7 @@ public class GameSceneController {
         }
         System.out.println("Game Paused");
     }
+    // Resumes the game and resumes spawning waves.
     @FXML
     private void handleResumeGame(ActionEvent event) {
         gameActionController.resumeGame();
@@ -75,12 +68,17 @@ public class GameSceneController {
         }
         System.out.println("Resumed Game");
     }
+    // Speeds up the game
     @FXML
     private void handleSpeedUp(ActionEvent event) {
         gameActionController.speedUpGame();
         System.out.println("Speed Up Game");
     }
-
+    // Initializes MapLoader with the grid and pane to generate or load the map.
+    // Gets the path enemies will follow.
+    // Retrieves the starting point for the wave spawner from the first point of the path.
+    // Creates a new WaveSpawner with game data and UI references.
+    // Starts the wave spawning process.
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
@@ -92,24 +90,7 @@ public class GameSceneController {
             // Initialize WaveSpawner with wave system
             waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
             waveSpawner.startGame();
-
-            // AnimationTimer to update all active enemies
-            new AnimationTimer() {
-                private long lastTime = 0;
-                @Override
-                public void handle(long now) {
-                    if (lastTime > 0) {
-                        double deltaSec = (now - lastTime) / 1_000_000_000.0;
-                        List<Enemy> activeEnemies = waveSpawner.getActiveEnemies();
-                        for (Enemy enemy : activeEnemies) {
-                            enemy.update(deltaSec);
-                        }
-                        // Update wave label every frame
-                        updateWave(waveSpawner.getCurrentWave());
-                    }
-                    lastTime = now;
-                }
-            }.start();
+            // No AnimationTimer here for enemy or wave updates!
         });
     }
 }
