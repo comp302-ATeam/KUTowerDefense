@@ -92,11 +92,4 @@ public class WaveManager {
         return currentWaveIndex;
     }
 
-    public void pauseAllWaves() {
-        // No-op: Pause/resume handled by WaveSpawner
-    }
-
-    public void resumeAllWaves() {
-        // No-op: Pause/resume handled by WaveSpawner
-    }
 }

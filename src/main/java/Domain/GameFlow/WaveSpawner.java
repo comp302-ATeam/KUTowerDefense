@@ -90,7 +90,7 @@ public class WaveSpawner {
         if (gameLoop != null) {
             gameLoop.stop();
         }
-        waveManager.pauseAllWaves();
+
     }
 
     public void resume() {
