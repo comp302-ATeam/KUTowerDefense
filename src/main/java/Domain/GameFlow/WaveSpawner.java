@@ -95,7 +95,6 @@ public class WaveSpawner {
 
     public void resume() {
         isPaused = false;
-        waveManager.resumeAllWaves();
         if (gameLoop != null) {
             gameLoop.start();
         }
