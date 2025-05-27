@@ -76,6 +76,7 @@ public abstract class Enemy extends GameObject {
         );
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
+
         //endregion
     }
     public void setFPS(double FPS){this.FPS =FPS;}
@@ -118,6 +119,15 @@ public abstract class Enemy extends GameObject {
     @Override
     public void update(double deltaTime) {
         FPS = GameActionController.getFPS();
+        if (GameActionController.isPaused()) {
+            if (animation.getStatus() == Animation.Status.RUNNING) {
+                animation.pause();
+            }
+        } else {
+            if (animation.getStatus() != Animation.Status.RUNNING) {
+                animation.play();
+            }
+        }
         if (movingToTarget && !GameActionController.isPaused()) {
             double dx = targetX - x, dy = targetY - y;
             double dist = Math.hypot(dx, dy), step = speed * deltaTime * GameActionController.getGameSpeed();
