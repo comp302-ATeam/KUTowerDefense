@@ -172,17 +172,17 @@ public abstract class Enemy extends GameObject {
     // amount of damage from the health point of that enemy object
     // if the damage is lethal, then the enemy object calls the method Die()
     public void takeDamage(Projectile projectile) {
-        int damageTaken = CalcDamage(projectile);
-        healthPoints -= damageTaken;
+        if (this.isAlive){
+            int damageTaken = CalcDamage(projectile);
+            healthPoints -= damageTaken;
 
-        if( healthPoints <= 0 ) {
-            Die();
+            if( healthPoints <= 0 ) {
+                Die();
+            }
+            // Update the health bar width based on the current health points
+            double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
+            healthBar.setWidth(healthBarWidth);
         }
-        // Update the health bar width based on the current health points
-        double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
-        healthBar.setWidth(healthBarWidth);
-
-
     }
 
     public Rectangle getHealthBar () {
@@ -200,5 +200,9 @@ public abstract class Enemy extends GameObject {
     {
         // TO BE IMPLEMENTED
         return 0;
+    }
+
+    public int getHealth() {
+        return this.healthPoints;
     }
 }
