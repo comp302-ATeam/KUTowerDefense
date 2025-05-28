@@ -3,9 +3,8 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-
-
-
+# Keep IntelliJ library configurations for team sharing
+!.idea/libraries/
 
 ### Eclipse ###
 .apt_generated
@@ -31,4 +30,15 @@ bin/
 
 ### Mac OS ###
 .DS_Store
-/javafx-sdk-21.0.7/
+
+### JavaFX Dependencies ###
+# Exclude full SDK downloads but keep JAR files for team
+/libs/javafx-sdk-*/
+/libs/openjfx-*/
+# Keep the JAR files for team sharing
+!/libs/javafx-jars/
+!/libs/junit-jars/
+
+### Downloaded Archives ###
+/libs/*.zip
+/libs/*.tar.gz
