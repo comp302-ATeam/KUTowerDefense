@@ -11,8 +11,6 @@
     <content url="file://$MODULE_DIR$/out" />
     <orderEntry type="jdk" jdkName="openjdk-24" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    
-    <!-- JavaFX Dependencies -->
     <orderEntry type="module-library" exported="">
       <library name="JavaFX">
         <CLASSES>
@@ -29,8 +27,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    
-    <!-- JUnit 5 Dependencies -->
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5">
         <CLASSES>
@@ -45,5 +41,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="bluecatcode.mockito.1.10.19.extended" level="project" />
   </component>
 </module>

@@ -39,7 +39,7 @@ public class Wave {
     public ArrayList<Enemy> createGoblinKnightWave(int goblinCount, int knightCount, int xPos, int yPos) {
         for (int j = 0; j < groupCount; j++) {
             for (int i = 0; i < goblinCount; i++) {
-                enemyWave.add(new Goblin(xPos, yPos,"Goblin", 100, 1, goblinView));
+                enemyWave.add(new Goblin(xPos, yPos,"Goblin", 100, 1,goblinView));
             }
             for (int i = 0; i < knightCount; i++) {
                 enemyWave.add(new Knight(xPos, yPos, "Knight", 100, 1,knightView));

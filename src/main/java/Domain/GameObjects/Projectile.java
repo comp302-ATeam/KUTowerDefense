@@ -15,6 +15,7 @@ public class Projectile extends GameObject{
     }
 
 
+
     @Override
     public void update(double deltaTime) {
 

@@ -75,11 +75,12 @@ public abstract class GameObject {
         return imageObject;
     }
     public void updateViewTransform() {
-        imageObject.setTranslateX(x);
-        imageObject.setTranslateY(y);
-        imageObject.setScaleX(scaleX);
-        imageObject.setScaleY(scaleY);
-        imageObject.setRotate(rotation);
-
+        if(imageObject != null) {
+            imageObject.setTranslateX(x);
+            imageObject.setTranslateY(y);
+            imageObject.setScaleX(scaleX);
+            imageObject.setScaleY(scaleY);
+            imageObject.setRotate(rotation);
+        }
     }
 }
