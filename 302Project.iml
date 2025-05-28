@@ -12,6 +12,7 @@
     <orderEntry type="jdk" jdkName="openjdk-24" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="fx" level="project" />
+<<<<<<< Updated upstream
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit4">
         <CLASSES>
@@ -38,5 +39,8 @@
         <SOURCES />
       </library>
     </orderEntry>
+=======
+    <orderEntry type="library" name="junit.jupiter" level="project" />
+>>>>>>> Stashed changes
   </component>
 </module>
