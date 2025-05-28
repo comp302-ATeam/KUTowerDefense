@@ -1,76 +1,86 @@
-# KU Tower Defense - Development Setup
+# KU Tower Defense - Team Setup Guide
 
-## Quick Setup (No Downloads Required!)
+## 🎯 **Zero-Configuration Setup**
 
-**All required JAR files are already included in the repository!**
+This project is configured to work **automatically** for all team members. No manual library setup required!
 
-1. **Clone the repository**
+## 📋 **Quick Start**
+
+1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
+   git clone <repository-url>
    cd KUTowerDefense
    ```
 
-2. **Open in IntelliJ IDEA**
-   - The JavaFX and JUnit libraries should be automatically configured
-   - If not, follow the manual setup below
+2. **Open in IntelliJ IDEA:**
+   - File → Open → Select the `KUTowerDefense` folder
+   - IntelliJ will automatically detect and configure all dependencies
 
-## Manual Setup (If Auto-Configuration Fails)
+3. **Verify setup:**
+   - JavaFX imports should work immediately
+   - JUnit tests should run without configuration
 
-### JavaFX Setup
-1. **File → Project Structure → Libraries**
-2. **Click + → Java**
-3. **Navigate to `libs/javafx-jars/`**
-4. **Select all `.jar` files**
-5. **Click OK**
+## 🔧 **What's Included**
 
-### JUnit Setup
-1. **File → Project Structure → Libraries**
-2. **Click + → Java**
-3. **Navigate to `libs/junit-jars/`**
-4. **Select all `.jar` files**
-5. **Click OK**
+- **JavaFX 21** - All required JAR files in `libs/javafx-jars/`
+- **JUnit 5** - Testing framework in `libs/junit-jars/`
+- **Automatic Configuration** - Dependencies configured in `302Project.iml`
 
-### VM Options for Running
-Add these VM options when running JavaFX applications:
-```
---module-path libs/javafx-jars --add-modules javafx.controls,javafx.fxml,javafx.swing
+## ▶️ **Running the Project**
+
+### Main Application:
+```bash
+java --module-path libs/javafx-jars --add-modules javafx.controls,javafx.fxml -cp "out/production/302Project:libs/javafx-jars/*" main.java.Main
 ```
 
-## Project Structure
+### Tests:
+- Right-click any test class → "Run Tests"
+- Or use: Run → Run All Tests
+
+## 🚨 **Troubleshooting**
+
+### If JavaFX imports show errors:
+1. **Refresh project:** File → Reload Gradle Project (or equivalent)
+2. **Rebuild:** Build → Rebuild Project
+3. **Check JDK:** File → Project Structure → Project → ensure JDK 11+ is selected
+
+### If tests don't run:
+1. **Verify test scope:** Right-click `src/test/java` → Mark Directory as → Test Sources Root
+2. **Check JUnit:** The JUnit libraries should appear under External Libraries
+
+### If nothing works:
+1. **Close IntelliJ completely**
+2. **Delete `.idea` folder** (this will reset IntelliJ settings)
+3. **Reopen the project** - IntelliJ will recreate settings and detect dependencies
+
+## 📁 **Project Structure**
+
 ```
 KUTowerDefense/
-├── libs/
-│   ├── javafx-jars/          # JavaFX JAR files (committed)
-│   └── junit-jars/           # JUnit JAR files (committed)
 ├── src/
-│   ├── main/java/
-│   └── test/java/
-├── .idea/libraries/          # IntelliJ library configs (committed)
-└── SETUP.md                  # This file
+│   ├── main/java/          # Source code
+│   ├── main/resources/     # Assets, FXML files
+│   └── test/java/          # Test files
+├── libs/
+│   ├── javafx-jars/        # JavaFX dependencies (auto-configured)
+│   └── junit-jars/         # JUnit dependencies (auto-configured)
+├── 302Project.iml          # IntelliJ module file (contains all config)
+└── SETUP.md               # This file
 ```
 
-## What's Included
-- **JavaFX 21.0.2** - All required modules (base, controls, fxml, graphics, media, swing, web)
-- **JUnit 5.10.2** - Complete testing framework (api, engine, platform)
+## ✅ **Success Indicators**
 
-## Troubleshooting
+When setup is working correctly:
+- ✅ No red underlines on `import javafx.*` statements
+- ✅ No red underlines on `import org.junit.*` statements  
+- ✅ "External Libraries" shows JavaFX and JUnit entries
+- ✅ Tests run successfully
 
-### "JavaFX cannot be resolved" errors
-1. Make sure JavaFX library is added to Project Structure
-2. Check that `libs/javafx-jars/` contains the JAR files
-3. Manually add the library if auto-configuration failed
+## 🤝 **Team Workflow**
 
-### "JUnit cannot be resolved" errors
-1. Make sure JUnit library is added to Project Structure
-2. Check that `libs/junit-jars/` contains the JAR files
+1. **Pull latest changes:** `git pull`
+2. **Code your features**
+3. **Run tests:** Ensure all tests pass
+4. **Commit and push:** `git add . && git commit -m "message" && git push`
 
-### After pulling from Git
-If you get dependency errors after pulling:
-1. **File → Project Structure → Libraries**
-2. **Remove old JavaFX/JUnit libraries**
-3. **Re-add from `libs/javafx-jars/` and `libs/junit-jars/`**
-
-## For Team Members
-- **Always commit** changes to `.idea/libraries/` folder
-- **All dependencies are included** - no downloads needed!
-- **JAR files are committed** for consistent versions across team 
+**No additional setup steps needed!** 🎉 
