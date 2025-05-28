@@ -30,6 +30,8 @@ public abstract class Enemy extends GameObject {
     private final Rectangle healthBar;
     private final double maxHealthPoints;
 
+    protected boolean isAlive;
+
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
     private static final int FRAME_COUNT   = 6;
@@ -51,6 +53,9 @@ public abstract class Enemy extends GameObject {
         this.healthPoints = healthPoints;
         this.maxHealthPoints = healthPoints;
         this.speed = speed;
+        if (healthPoints > 0) {
+            isAlive = true;
+        }
 
         // Initialize health bar
         this.healthBar = new Rectangle(50, 5); // Width: 50, Height: 5
@@ -186,7 +191,10 @@ public abstract class Enemy extends GameObject {
 
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
-    public void Die(){}
+    public void Die(){
+        this.isAlive = false;
+        this.healthPoints = 0;
+    }
 
     public double getPathProgress()
     {
