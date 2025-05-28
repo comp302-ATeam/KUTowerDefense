@@ -1,10 +1,10 @@
-# KU Tower Defense - Team Setup Guide
+# KU Tower Defense - Setup Guide
 
-## 🎯 **Zero-Configuration Setup**
+## **Zero-Configuration Setup**
 
-This project is configured to work **automatically** for all team members. No manual library setup required!
+This project is configured to work **automatically** for all viewers. No manual library setup required!
 
-## 📋 **Quick Start**
+## **Quick Start**
 
 1. **Clone the repository:**
    ```bash
@@ -20,13 +20,13 @@ This project is configured to work **automatically** for all team members. No ma
    - JavaFX imports should work immediately
    - JUnit tests should run without configuration
 
-## 🔧 **What's Included**
+## **What's Included**
 
 - **JavaFX 21** - All required JAR files in `libs/javafx-jars/`
 - **JUnit 5** - Testing framework in `libs/junit-jars/`
 - **Automatic Configuration** - Dependencies configured in `302Project.iml`
 
-## ▶️ **Running the Project**
+## **Running the Project**
 
 ### Main Application:
 ```bash
@@ -37,7 +37,7 @@ java --module-path libs/javafx-jars --add-modules javafx.controls,javafx.fxml -c
 - Right-click any test class → "Run Tests"
 - Or use: Run → Run All Tests
 
-## 🚨 **Troubleshooting**
+## **Troubleshooting**
 
 ### If JavaFX imports show errors:
 1. **Refresh project:** File → Reload Gradle Project (or equivalent)
@@ -53,34 +53,3 @@ java --module-path libs/javafx-jars --add-modules javafx.controls,javafx.fxml -c
 2. **Delete `.idea` folder** (this will reset IntelliJ settings)
 3. **Reopen the project** - IntelliJ will recreate settings and detect dependencies
 
-## 📁 **Project Structure**
-
-```
-KUTowerDefense/
-├── src/
-│   ├── main/java/          # Source code
-│   ├── main/resources/     # Assets, FXML files
-│   └── test/java/          # Test files
-├── libs/
-│   ├── javafx-jars/        # JavaFX dependencies (auto-configured)
-│   └── junit-jars/         # JUnit dependencies (auto-configured)
-├── 302Project.iml          # IntelliJ module file (contains all config)
-└── SETUP.md               # This file
-```
-
-## ✅ **Success Indicators**
-
-When setup is working correctly:
-- ✅ No red underlines on `import javafx.*` statements
-- ✅ No red underlines on `import org.junit.*` statements  
-- ✅ "External Libraries" shows JavaFX and JUnit entries
-- ✅ Tests run successfully
-
-## 🤝 **Team Workflow**
-
-1. **Pull latest changes:** `git pull`
-2. **Code your features**
-3. **Run tests:** Ensure all tests pass
-4. **Commit and push:** `git add . && git commit -m "message" && git push`
-
-**No additional setup steps needed!** 🎉 
