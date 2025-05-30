@@ -35,4 +35,3 @@
 //        controller.speedUpGame(); // Should reset to default (1.0)
 //        assertEquals(controller.defaultSpeed, controller.gameSpeed);
 //    }
-//}
