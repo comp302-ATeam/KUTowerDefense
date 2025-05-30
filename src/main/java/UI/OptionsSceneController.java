@@ -163,6 +163,12 @@ public class OptionsSceneController {
         return s;
     }
 
+    /**
+     * Requires: s is not null and all fields in s (waves, enemy, tower, player) are not null.
+     * Modifies: The values of all Spinner controls in the UI, the text of musicToggleButton and soundEffectsToggleButton, and the fields isMusicOn and isSfxOn.
+     * Effects: Updates all UI controls to reflect the values in the provided GameSettings object s. Sets the toggle buttons' text to match the music and SFX state.
+     */
+
     private void applySettingsToUI(GameSettings s) {
         spinnerNumWaves.getValueFactory().setValue(s.waves.numWaves);
         spinnerGroupsPerWave.getValueFactory().setValue(s.waves.groupsPerWave);
