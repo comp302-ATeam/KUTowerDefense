@@ -1,24 +1,36 @@
 package Domain.GameFlow;
 
 public class GameActionController {
-    private static boolean isPaused; // we will be depending on this to check if game is Paused
-    private static double gameSpeed;
+    private static GameActionController instance;
+
+    private boolean isPaused;
+    private double gameSpeed;
     private static final double maxSpeed = 8.0;
     private static final double defaultSpeed = 1.0;
     private static final double doubleSpeed = 2.0;
-    private static double FPS = 8.0;
+    private double FPS = 8.0;
 
-    public GameActionController() {
-        this.isPaused = false;  // Game should be running as expected when this is false
-        this.gameSpeed = 1.0;   // To define a regular speed
+    private GameActionController() {
+        this.isPaused = false;
+        this.gameSpeed = defaultSpeed;
     }
-    public static double getFPS(){
+
+    public static synchronized GameActionController getInstance() {
+        if (instance == null) {
+            instance = new GameActionController();
+        }
+        return instance;
+    }
+
+    public double getFPS() {
         return FPS;
     }
-    public void setFPS(double FPS){
+
+    public void setFPS(double FPS) {
         this.FPS = FPS;
     }
-    public static boolean isPaused() {
+
+    public boolean isPaused() {
         return isPaused;
     }
 
@@ -26,33 +38,35 @@ public class GameActionController {
         this.isPaused = isPaused;
     }
 
-    public static double getGameSpeed() {
+    public double getGameSpeed() {
         return gameSpeed;
     }
 
     public void setGameSpeed(double gameSpeed) {
         this.gameSpeed = gameSpeed;
     }
+
     public void pauseGame() {
-        if (!isPaused) {  // Checks if it is not paused
+        if (!isPaused) {
             this.isPaused = true;
             FPS = 0;
             System.out.println("Game is Paused");
         }
     }
+
     public void resumeGame() {
-        if (isPaused) {  // Checks if it is paused
+        if (isPaused) {
             this.isPaused = false;
             FPS = 8.0;
             System.out.println("Game Resumes");
         }
     }
+
     public void speedUpGame() {
         if (isPaused) {
             System.out.println("You can't speed up the game while it is paused");
             return;
         }
-
         if (gameSpeed * doubleSpeed <= maxSpeed) {
             gameSpeed *= doubleSpeed;
         } else {

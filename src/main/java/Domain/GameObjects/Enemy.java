@@ -117,10 +117,11 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void update(double deltaTime) {
-        FPS = GameActionController.getFPS();
-        if (movingToTarget && !GameActionController.isPaused()) {
+        GameActionController gameActionController = GameActionController.getInstance();
+        FPS = gameActionController.getFPS();
+        if (movingToTarget && !gameActionController.isPaused()) {
             double dx = targetX - x, dy = targetY - y;
-            double dist = Math.hypot(dx, dy), step = speed * deltaTime * GameActionController.getGameSpeed();
+            double dist = Math.hypot(dx, dy), step = speed * deltaTime * gameActionController.getGameSpeed();
 
             if (dist <= step) {
                 x = targetX;
@@ -146,7 +147,6 @@ public abstract class Enemy extends GameObject {
         healthBar.setWidth(healthBarWidth);
         // 3) Push transforms to the view
         updateViewTransform();
-
     }
     // calculate damage method is an abstract method which will be used accordingly for each class goblin or knight
     // this abstract method is used for calculating the damage took by

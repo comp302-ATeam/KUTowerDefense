@@ -20,9 +20,8 @@ import javafx.scene.layout.Pane;
 
 import java.util.List;
 
-
 public class GameSceneController {
-    private GameActionController gameActionController = new GameActionController();
+    private final GameActionController gameActionController = GameActionController.getInstance();
 
     @FXML
     private Button pauseButton;
@@ -54,8 +53,6 @@ public class GameSceneController {
         labelWave.setText(String.valueOf(wave));
     }
 
-
-
     @FXML
     private void handlePauseButton(ActionEvent event) {
         gameActionController.pauseGame();
@@ -71,7 +68,6 @@ public class GameSceneController {
         gameActionController.speedUpGame();
         System.out.println("Speed Up Game");
     }
-
 
     @FXML
     public void initialize() {
@@ -99,8 +95,6 @@ public class GameSceneController {
             knightView.setOnMouseEntered(e -> knightHealth.setVisible(true));
             knightView.setOnMouseExited(e -> knightHealth.setVisible(false));
 
-
-
             // Add enemies and their health bars to the gamePane
             gamePane.getChildren().addAll(
                     goblin.getView(), goblin.getHealthBar(),
@@ -110,7 +104,6 @@ public class GameSceneController {
             // Sync their initial transforms
             goblin.updateViewTransform();
             knight.updateViewTransform();
-
 
             goblin.moveAlong(mainPath);
             knight.moveAlong(mainPath);
