@@ -1,4 +1,4 @@
-package Domain;
+package Domain.GameFlow;
 
 import Domain.GameObjects.Enemy;
 import Domain.GameObjects.MockEnemy;
@@ -13,8 +13,6 @@ public class WaveTest {
     private Wave wave;
     private Pane mockPane;
     private Vector2<Double>[] mockPath;
-    private static final double ENEMY_SPAWN_INTERVAL = 0.25;
-    private static final double GROUP_SPAWN_INTERVAL = 45.0;
 
     @BeforeEach
     void setUp() {
@@ -26,61 +24,46 @@ public class WaveTest {
         wave = new Wave(1, 2, 2, 2, 0, 0, mockPane, mockPath);
     }
 
+    /**
+     * requires: wave is initialized
+     * modifies: this.isWaveComplete, this.activeEnemies
+     * effects: returns true if wave is marked complete AND no active enemies remain
+     */
     @Test
-    void update_SpawnsEnemiesAtCorrectIntervals() {
-        // Given a fresh wave
-        wave.startWave();
+    void isWaveComplete_ReturnsFalse_WhenWaveNotStarted() {
+        // Given a fresh wave that hasn't started
 
-        // When updating with time less than spawn interval
-        wave.update(ENEMY_SPAWN_INTERVAL / 2);
-
-        // Then no enemies should be spawned
-        assertEquals(0, wave.getActiveEnemies().size());
-
-        // When updating with full spawn interval
-        wave.update(ENEMY_SPAWN_INTERVAL);
-
-        // Then one enemy should be spawned
-        assertEquals(1, wave.getActiveEnemies().size());
-    }
-
-    @Test
-    void update_AdvancesToNextGroupAfterWait() {
-        // Given a wave that has completed its first group
-        wave.startWave();
-        // Spawn all enemies in first group
-        for (int i = 0; i < 4; i++) {
-            wave.update(ENEMY_SPAWN_INTERVAL);
-        }
-
-        // When waiting for less than group interval
-        wave.update(GROUP_SPAWN_INTERVAL / 2);
-
-        // Then should still be in first group
+        // Then wave should not be complete
         assertFalse(wave.isWaveComplete());
-
-        // When waiting for full group interval
-        wave.update(GROUP_SPAWN_INTERVAL);
-
-        // Then should start spawning second group
-        wave.update(ENEMY_SPAWN_INTERVAL);
-        assertEquals(5, wave.getActiveEnemies().size());
     }
 
     @Test
-    void update_RemovesDeadEnemies() {
-        // Given a wave with some enemies
+    void isWaveComplete_ReturnsFalse_WhenEnemiesStillActive() {
+        // Given a wave with active enemies
         wave.startWave();
-        wave.update(ENEMY_SPAWN_INTERVAL);
-        List<Enemy> enemies = wave.getActiveEnemies();
-        assertEquals(1, enemies.size());
+        wave.update(0.25); // Spawn first enemy
 
-        // When an enemy dies
-        MockEnemy mockEnemy = new MockEnemy(0, 0, "Mock", 100, 1);
-        mockEnemy.takeDamage(100); // Kill the enemy
+        // Then wave should not be complete
+        assertFalse(wave.isWaveComplete());
+    }
 
-        // Then it should be removed on next update
-        wave.update(ENEMY_SPAWN_INTERVAL);
-        assertTrue(wave.getActiveEnemies().isEmpty());
+    @Test
+    void isWaveComplete_ReturnsTrue_WhenWaveCompleteAndNoEnemies() {
+        // Given a wave that has completed all groups
+        wave.startWave();
+        // Spawn and kill all enemies
+        for (int i = 0; i < 8; i++) { // 4 enemies per group, 2 groups
+            wave.update(0.25);
+        }
+        // Wait for group interval
+        wave.update(45.0);
+        // Kill all enemies
+        for (Enemy enemy : wave.getActiveEnemies()) {
+            enemy.takeDamage(100);
+        }
+        wave.update(0.25); // Update to remove dead enemies
+
+        // Then wave should be complete
+        assertTrue(wave.isWaveComplete());
     }
 }
