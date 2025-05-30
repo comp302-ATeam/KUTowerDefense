@@ -18,7 +18,7 @@ public abstract class Tower extends GameObject {
     protected double fireRate;      // Attacks per second
     protected double sellRatio;     // Ratio of cost returned when selling
     protected long lastAttackTime;  // Time of last attack in milliseconds
-    protected ImageView towerImage;
+    public ImageView towerImage;
 
     public Pane mapPane;
 
@@ -48,7 +48,9 @@ public abstract class Tower extends GameObject {
 
         this.mapPane = mapPane;
 
-        TowerMenu towerMenu = new TowerMenu(this);
+        //renderTower(PATH);
+
+        //TowerMenu towerMenu = new TowerMenu(this);
 
 
     }
@@ -102,6 +104,10 @@ public abstract class Tower extends GameObject {
     public double getFireRate() { return fireRate; }
     public int getCurrentLevel() { return currentLevel; }
     public int getCost() { return cost; }
+
+    public void Destroy(){
+        mapPane.getChildren().remove(towerImage);
+    }
 
     // Method to check if an enemy is in range
     // we already defined distanceTo method in GameObject class.

@@ -5,46 +5,148 @@ import Domain.GameObjects.Goblin;
 import Domain.GameObjects.Knight;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Wave {
-    /* store enemies in an arraylist of enemies. we have the total count and the distribution of goblins
-    * and knights. We also have the position x and y to spawn the wave.
-    * */
-    static ArrayList<Enemy> enemyWave = new ArrayList<>();
-    int knightCount;
-    int goblinCount;
-    int groupCount;
-    int enemyCount;
-    int xPos;
-    int yPos;
-    //region Images
-    Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
-    ImageView goblinView = new ImageView(goblinImg);
-    Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
-    ImageView knightView = new ImageView(knightImg);
-    //endregion
-    public Wave(int knightCount, int goblinCount,int groupCount,int xPos, int yPos) {
+    private final List<Enemy> activeEnemies;   // This list holds all enemies currently active in the game
+    private final int knightCount;             // number of knight in a group
+    private final int goblinCount;             // number of goblins in a group
+    private final int groupCount;              // number of groups
+    private final int xPos;
+    private final int yPos;
+    private int currentGroup;
+    private boolean isWaveComplete;
+    private int currentEnemyCount;
+    private double enemySpawnTimer;
+    private double groupWaitTimer;
+    private boolean waitingForNextGroup;
+    private static final double ENEMY_SPAWN_INTERVAL = 0.25;
+    private static final double GROUP_SPAWN_INTERVAL = 45.0;
+    private final Pane gamePane;
+    private final Vector2<Double>[] mainPath;
+    private final int waveIndex;
+
+    //Images
+    private final Image goblinImg;
+    private final ImageView goblinView;
+    private final Image knightImg;
+    private final ImageView knightView;
+
+    public Wave(int waveIndex, int knightCount, int goblinCount, int groupCount, int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath) {
+        this.waveIndex = waveIndex;
         this.knightCount = knightCount;
         this.goblinCount = goblinCount;
         this.groupCount = groupCount;
-        // we can figure out the enemy count by summation.
-        this.enemyCount = knightCount + goblinCount;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.gamePane = gamePane;
+        this.mainPath = mainPath;
+        this.currentGroup = 0;
+        this.currentEnemyCount = 0;
+        this.isWaveComplete = false;
+        this.activeEnemies = new ArrayList<>();
+        this.enemySpawnTimer = 0;
+        this.groupWaitTimer = 0;
+        this.waitingForNextGroup = false;
+
+        // Initialize images
+        this.goblinImg = new Image("Assets/enemies/Goblin_Red.png");
+        this.goblinView = new ImageView(goblinImg);
+        this.knightImg = new Image("Assets/enemies/Warrior_Blue.png");
+        this.knightView = new ImageView(knightImg);
     }
-    // this is the main method for creating a wave. We create a wave by adding the right amount of knights and
-    // goblins. We do this by the group count of times.
-    public ArrayList<Enemy> createGoblinKnightWave(int goblinCount, int knightCount, int xPos, int yPos) {
-        for (int j = 0; j < groupCount; j++) {
-            for (int i = 0; i < goblinCount; i++) {
-                enemyWave.add(new Goblin(xPos, yPos,"Goblin", 100, 1, goblinView));
+
+    public void startWave() {
+        System.out.println("[Wave] startWave called for waveIndex=" + waveIndex + ", groupCount=" + groupCount);
+        currentGroup = 0;
+        currentEnemyCount = 0;
+        isWaveComplete = false;
+        enemySpawnTimer = 0;
+        groupWaitTimer = 0;
+        waitingForNextGroup = false;
+    }
+
+    // This is the core game loop for this wave:
+    //It determines whether to spawn enemies or wait between groups.
+    //Once all groups have spawned, it marks the wave as complete.
+    //Also cleans up dead enemies from the screen and memory.
+    public void update(double deltaTime) {
+        if (currentGroup < groupCount) {
+            if (!waitingForNextGroup) {
+                if (currentEnemyCount < (knightCount + goblinCount)) {
+                    enemySpawnTimer += deltaTime;
+                    if (enemySpawnTimer >= ENEMY_SPAWN_INTERVAL) {
+                        spawnEnemy();
+                        enemySpawnTimer = 0;
+                    }
+                } else {
+                    // All enemies for this group spawned, start waiting for next group
+                    System.out.println("[Wave] Group " + currentGroup + " finished in waveIndex=" + waveIndex);
+                    waitingForNextGroup = true;
+                    groupWaitTimer = 0;
+                }
+            } else {
+                groupWaitTimer += deltaTime;
+                if (groupWaitTimer >= GROUP_SPAWN_INTERVAL) {
+                    currentGroup++;
+                    if (currentGroup < groupCount) {
+                        System.out.println("[Wave] Starting group " + currentGroup + " in waveIndex=" + waveIndex);
+                    }
+                    currentEnemyCount = 0;
+                    enemySpawnTimer = 0;
+                    waitingForNextGroup = false;
+                }
             }
-            for (int i = 0; i < knightCount; i++) {
-                enemyWave.add(new Knight(xPos, yPos, "Knight", 100, 1,knightView));
+        } else {
+            isWaveComplete = true;
+        }
+
+        // Update existing enemies
+        Iterator<Enemy> iterator = activeEnemies.iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            if (!enemy.isAlive()) {
+                gamePane.getChildren().removeAll(enemy.getView(), enemy.getHealthBar());
+                iterator.remove();
             }
         }
-        return enemyWave;
     }
+
+    // Spawns a single goblin or knight depending on currentEnemyCount.
+    private void spawnEnemy() {
+        System.out.println("[Wave] spawnEnemy called for waveIndex=" + waveIndex + ", currentGroup=" + currentGroup + ", currentEnemyCount=" + currentEnemyCount);
+        int offset = activeEnemies.size() * 20;
+        if (currentEnemyCount < goblinCount) {
+            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", 100, 5, new ImageView(goblinImg));
+            activeEnemies.add(goblin);
+            gamePane.getChildren().addAll(goblin.getView(), goblin.getHealthBar());
+            goblin.getView().setPickOnBounds(true);
+            goblin.getView().setOnMouseEntered(e -> goblin.getHealthBar().setVisible(true));
+            goblin.getView().setOnMouseExited(e -> goblin.getHealthBar().setVisible(false));
+            goblin.moveAlong(mainPath);
+            currentEnemyCount++;
+        } else if (currentEnemyCount < (goblinCount + knightCount)) {
+            Knight knight = new Knight(xPos + offset, yPos, "Knight", 100, 5, new ImageView(knightImg));
+            activeEnemies.add(knight);
+            gamePane.getChildren().addAll(knight.getView(), knight.getHealthBar());
+            knight.getView().setPickOnBounds(true);
+            knight.getView().setOnMouseEntered(e -> knight.getHealthBar().setVisible(true));
+            knight.getView().setOnMouseExited(e -> knight.getHealthBar().setVisible(false));
+            knight.moveAlong(mainPath);
+            currentEnemyCount++;
+        }
+    }
+
+    public List<Enemy> getActiveEnemies() {
+        return activeEnemies;
+    }
+
+    public boolean isWaveComplete() {
+        return isWaveComplete && activeEnemies.isEmpty();
+    }
+
 }

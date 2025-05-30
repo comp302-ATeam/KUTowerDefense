@@ -3,26 +3,24 @@ package UI;
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.MapLoader;
 import Domain.GameFlow.Vector2;
-import Domain.GameObjects.Goblin;
-import Domain.GameObjects.Knight;
+import Domain.GameFlow.WaveSpawner;
+import Domain.GameObjects.Enemy;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-
 import java.util.List;
 
 public class GameSceneController {
-    private final GameActionController gameActionController = GameActionController.getInstance();
+    // Creates an instance of the game controller to handle pause, resume, and speed changes..
+    private GameActionController gameActionController = new GameActionController();
+    private WaveSpawner waveSpawner;
 
+    // Will manage the spawning of enemy waves
     @FXML
     private Button pauseButton;
     @FXML
@@ -50,78 +48,49 @@ public class GameSceneController {
     }
 
     public void updateWave(int wave) {
-        labelWave.setText(String.valueOf(wave));
+        labelWave.setText(String.valueOf(Math.max(1, wave)));
     }
-
+    // Pauses the game via gameActionController. Also stops the waveSpawner.
     @FXML
     private void handlePauseButton(ActionEvent event) {
         gameActionController.pauseGame();
+        if (waveSpawner != null) {
+            waveSpawner.stop();
+        }
         System.out.println("Game Paused");
     }
+    // Resumes the game and resumes spawning waves.
     @FXML
     private void handleResumeGame(ActionEvent event) {
         gameActionController.resumeGame();
+        if (waveSpawner != null) {
+            waveSpawner.resume();
+        }
         System.out.println("Resumed Game");
     }
+    // Speeds up the game
     @FXML
     private void handleSpeedUp(ActionEvent event) {
         gameActionController.speedUpGame();
         System.out.println("Speed Up Game");
     }
-
+    // Initializes MapLoader with the grid and pane to generate or load the map.
+    // Gets the path enemies will follow.
+    // Retrieves the starting point for the wave spawner from the first point of the path.
+    // Creates a new WaveSpawner with game data and UI references.
+    // Starts the wave spawning process.
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            mapLoader = new MapLoader(gameGrid,gamePane);
+            mapLoader = new MapLoader(gameGrid, gamePane);
             Vector2<Double>[] mainPath = mapLoader.getPath();
             int startingX = mainPath[0].x.intValue();
             int startingY = mainPath[0].y.intValue();
-            Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
-            ImageView goblinView = new ImageView(goblinImg);
-            Goblin goblin = new Goblin(startingX,startingY,"Goblin",100,100,goblinView);
-            Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
-            ImageView knightView = new ImageView(knightImg);
-            Knight knight = new Knight(startingX,startingY,"Knight",100,100,knightView);
 
-            Node goblinHealth   = goblin.getHealthBar();
-            goblinHealth.setVisible(false);
-            goblinView.setPickOnBounds(true);
-            goblinView.setOnMouseEntered(e -> goblinHealth.setVisible(true));
-            goblinView.setOnMouseExited(e -> goblinHealth.setVisible(false));
-
-            Node knightHealth = knight.getHealthBar();
-            knightHealth.setVisible(false);
-            knightView.setPickOnBounds(true);
-            knightView.setOnMouseEntered(e -> knightHealth.setVisible(true));
-            knightView.setOnMouseExited(e -> knightHealth.setVisible(false));
-
-            // Add enemies and their health bars to the gamePane
-            gamePane.getChildren().addAll(
-                    goblin.getView(), goblin.getHealthBar(),
-                    knight.getView(), knight.getHealthBar()
-            );
-
-            // Sync their initial transforms
-            goblin.updateViewTransform();
-            knight.updateViewTransform();
-
-            goblin.moveAlong(mainPath);
-            knight.moveAlong(mainPath);
-
-            // AnimationTimer to update enemies and health bars
-            new AnimationTimer() {
-                private long lastTime = 0;
-
-                @Override
-                public void handle(long now) {
-                    if (lastTime > 0) {
-                        double deltaSec = (now - lastTime) / 1_000_000_000.0;
-                        goblin.update(deltaSec);
-                        knight.update(deltaSec);
-                    }
-                    lastTime = now;
-                }
-            }.start();
+            // Initialize WaveSpawner with wave system
+            waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
+            waveSpawner.startGame();
+            // No AnimationTimer here for enemy or wave updates!
         });
     }
 }
