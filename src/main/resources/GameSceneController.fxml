@@ -9,6 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Rectangle2D?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="473.0" prefWidth="710.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.GameSceneController">
 
@@ -49,11 +52,56 @@
         <AnchorPane fx:id="gamePane" layoutX="200.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" />
 
         <!-- Game Control Buttons -->
-        <Button fx:id="pauseButton" layoutX="24.0" layoutY="65.0" onAction="#handlePauseButton" prefHeight="31.0" prefWidth="69.0" text="Pause" />
+        <Button fx:id="pauseButton" layoutX="24.0" layoutY="100.0" onAction="#handlePauseButton" prefHeight="64.0" prefWidth="64.0">
+            <graphic>
+                <ImageView fx:id="pauseImageView" fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../out/production/302Project/Assets/UI/kutowerbuttons4.png"/>
+                    </image>
+                    <viewport>
+                        <Rectangle2D minX="0" minY="64" width="64" height="64"/>
+                    </viewport>
+                </ImageView>
+            </graphic>
+            <style>
+                -fx-background-color: transparent;
+                -fx-padding: 0;
+            </style>
+        </Button>
 
-        <Button fx:id="resumeGame" layoutX="24.0" layoutY="99.0" onAction="#handleResumeGame" prefHeight="40.0" prefWidth="69.0" text="Resume" />
+        <Button fx:id="resumeGame" layoutX="24.0" layoutY="174.0" onAction="#handleResumeGame" prefHeight="64.0" prefWidth="64.0">
+            <graphic>
+                <ImageView fx:id="resumeImageView" fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../out/production/302Project/Assets/UI/kutowerbuttons4.png"/>
+                    </image>
+                    <viewport>
+                        <Rectangle2D minX="128" minY="64" width="64" height="64"/>
+                    </viewport>
+                </ImageView>
+            </graphic>
+            <style>
+                -fx-background-color: transparent;
+                -fx-padding: 0;
+            </style>
+        </Button>
 
-        <Button fx:id="speedUp" layoutX="24.0" layoutY="33.0" onAction="#handleSpeedUp" text="Speed-Up" />
+        <Button fx:id="speedUp" layoutX="24.0" layoutY="248.0" onAction="#handleSpeedUp" prefHeight="64.0" prefWidth="64.0">
+            <graphic>
+                <ImageView fx:id="speedUpImageView" fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
+                    <image>
+                        <Image url="@../../../out/production/302Project/Assets/UI/kutowerbuttons4.png"/>
+                    </image>
+                    <viewport>
+                        <Rectangle2D minX="64" minY="64" width="64" height="64"/>
+                    </viewport>
+                </ImageView>
+            </graphic>
+            <style>
+                -fx-background-color: transparent;
+                -fx-padding: 0;
+            </style>
+        </Button>
 
     </children>
 </Pane>
