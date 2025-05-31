@@ -60,6 +60,16 @@ public class Wave {
         this.knightView = new ImageView(knightImg);
     }
 
+    // Getter methods for testing
+    public int getWaveIndex() { return waveIndex; }
+    public int getKnightCount() { return knightCount; }
+    public int getGoblinCount() { return goblinCount; }
+    public int getGroupCount() { return groupCount; }
+    public int getCurrentGroup() { return currentGroup; }
+    public int getCurrentEnemyCount() { return currentEnemyCount; }
+    public double getEnemySpawnTimer() { return enemySpawnTimer; }
+    public double getGroupWaitTimer() { return groupWaitTimer; }
+
     public void startWave() {
         System.out.println("[Wave] startWave called for waveIndex=" + waveIndex + ", groupCount=" + groupCount);
         currentGroup = 0;
