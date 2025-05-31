@@ -1,6 +1,9 @@
 package Domain.GameFlow;
 
 public class GameActionController {
+    // Singleton instance
+    private static GameActionController instance;
+
     public static boolean isPaused; // we will be depending on this to check if game is Paused
     public static double gameSpeed;
     private static final double maxSpeed = 8.0;
@@ -8,10 +11,20 @@ public class GameActionController {
     private static final double doubleSpeed = 2.0;
     private static double FPS = 8.0;
 
-    public GameActionController() {
+    // Private constructor to prevent direct instantiation
+    private GameActionController() {
         this.isPaused = false;  // Game should be running as expected when this is false
         this.gameSpeed = 1.0;   // To define a regular speed
     }
+
+    // Singleton getInstance method
+    public static GameActionController getInstance() {
+        if (instance == null) {
+            instance = new GameActionController();
+        }
+        return instance;
+    }
+
     public static double getFPS(){
         return FPS;
     }
