@@ -16,8 +16,8 @@ import javafx.scene.layout.Pane;
 import java.util.List;
 
 public class GameSceneController {
-    // Creates an instance of the game controller to handle pause, resume, and speed changes..
-    private GameActionController gameActionController = new GameActionController();
+    // Use singleton instance of the game controller to handle pause, resume, and speed changes..
+    private GameActionController gameActionController = GameActionController.getInstance();
     private WaveSpawner waveSpawner;
 
     // Will manage the spawning of enemy waves
