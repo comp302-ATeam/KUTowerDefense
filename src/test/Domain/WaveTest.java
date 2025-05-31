@@ -1,7 +1,10 @@
-package Domain.GameFlow;
-
+package Domain;
+import Domain.GameFlow.Vector2;
+import Domain.GameFlow.Wave;
 import Domain.GameObjects.Enemy;
-import Domain.GameObjects.MockEnemy;
+import Domain.GameObjects.Arrow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ public class WaveTest {
     private Wave wave;
     private Pane mockPane;
     private Vector2<Double>[] mockPath;
+    private ImageView arrowImageView;
 
     @BeforeEach
     void setUp() {
@@ -22,6 +26,8 @@ public class WaveTest {
         mockPath[0] = new Vector2<>(0.0, 0.0);
         mockPath[1] = new Vector2<>(100.0, 100.0);
         wave = new Wave(1, 2, 2, 2, 0, 0, mockPane, mockPath);
+        Image arrowImage = new Image(getClass().getResourceAsStream("/images/arrow.png"));
+        arrowImageView = new ImageView(arrowImage);
     }
 
     /**
@@ -57,9 +63,11 @@ public class WaveTest {
         }
         // Wait for group interval
         wave.update(45.0);
+
         // Kill all enemies
         for (Enemy enemy : wave.getActiveEnemies()) {
-            enemy.takeDamage(100);
+            Arrow arrow = new Arrow(0, 0, 100, enemy, arrowImageView);
+            enemy.takeDamage(arrow);
         }
         wave.update(0.25); // Update to remove dead enemies
 
