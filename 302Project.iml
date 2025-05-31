@@ -41,6 +41,20 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="bluecatcode.mockito.1.10.19.extended" level="project" />
+    <orderEntry type="module-library" scope="TEST">
+      <library name="TextFX">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/TextFX/hamcrest-core-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/TextFX/hamcrest-library-1.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/TextFX/junit-jupiter-api-5.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/TextFX/junit-jupiter-engine-5.8.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/TextFX/opentest4j-1.2.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/TextFX/testfx-core-4.0.16-alpha.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/TextFX/testfx-junit5-4.0.16-alpha.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

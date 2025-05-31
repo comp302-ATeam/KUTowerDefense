@@ -1,18 +1,28 @@
-package Domain.GameFlow;
+package Domain;
 
+import Domain.GameFlow.Vector2;
+import Domain.GameFlow.Wave;
+import Domain.GameObjects.Arrow;
 import Domain.GameObjects.Enemy;
 import Domain.GameObjects.MockEnemy;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
-public class WaveTest {
+public class WaveTest extends ApplicationTest {
     private Wave wave;
     private Pane mockPane;
     private Vector2<Double>[] mockPath;
+
+
 
     @BeforeEach
     void setUp() {
@@ -23,6 +33,12 @@ public class WaveTest {
         mockPath[1] = new Vector2<>(100.0, 100.0);
         wave = new Wave(1, 2, 2, 2, 0, 0, mockPane, mockPath);
     }
+
+    @Override
+    public void start(javafx.stage.Stage stage) throws Exception {
+
+    }
+
 
     /**
      * requires: wave is initialized
@@ -59,7 +75,7 @@ public class WaveTest {
         wave.update(45.0);
         // Kill all enemies
         for (Enemy enemy : wave.getActiveEnemies()) {
-            enemy.takeDamage(100);
+            enemy.takeDamage(new Arrow(0,0,1000,null));
         }
         wave.update(0.25); // Update to remove dead enemies
 
