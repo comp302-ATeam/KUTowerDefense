@@ -17,7 +17,6 @@ public class WaveTest {
         mockPath[1] = new Vector2<>(100.0, 100.0);
         wave = new MockWave(1, 2, 2, 2, 0, 0, mockPath);
     }
-
     /**
      * requires: wave is initialized
      * modifies: this.isWaveComplete, this.activeEnemies
