@@ -23,6 +23,17 @@ public abstract class MockEnemy extends GameObject {
         }
     }
 
+    public String getEnemyType() {
+        return enemyType;
+    }
+    public int getHealthPoints() {
+        return healthPoints;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
     // Override update to skip animation logic
     @Override
     public void update(double deltaTime) {
