@@ -1,6 +1,6 @@
 // Test file for GameActionController using Singleton pattern
 // Uncomment and ensure JUnit dependencies are available in your project
-package java;
+package Domain;
 
 import Domain.GameFlow.GameActionController;
 import org.junit.jupiter.api.BeforeEach;

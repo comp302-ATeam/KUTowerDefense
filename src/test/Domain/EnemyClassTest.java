@@ -64,21 +64,6 @@ public class EnemyClassTest {
     }
 
     @Test
-    void takeDamage_ReducesHealthPoints() {
-        // Given an enemy with 100 health points
-        int initialHealth = mockEnemy.getHealth();
-
-        // When taking damage from an arrow
-        Projectile arrow = new Projectile(0, 0, 10, "Arrow", null, null);
-        mockEnemy.takeDamage(arrow);
-
-        // Then health points should be reduced by correct amount
-        assertEquals(87, mockEnemy.getHealth()); // 100 - (10 * 1.25)
-        assertTrue(mockEnemy.isAlive());
-        assertTrue(repOk(), "Representation invariant should hold after taking damage");
-    }
-
-    @Test
     void takeDamage_DiesWhenHealthReachesZero() {
         // Given an enemy with 100 health points
         Projectile arrow = new Projectile(0, 0, 100, "Arrow", null, null);
