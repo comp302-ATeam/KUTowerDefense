@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +22,16 @@ public class OptionsSceneControllerTest {
 
     private OptionsSceneController controller;
 
+    static boolean javafxInitialized = false;
+
     @BeforeAll
-    static void initJavaFX() {
-        // Initialize JavaFX toolkit for testing
-        new JFXPanel();
+    static void initJFX() throws Exception {
+        if (!javafxInitialized) {
+            javafxInitialized = true;
+            CountDownLatch latch = new CountDownLatch(1);
+            Platform.startup(latch::countDown);
+            latch.await();
+        }
     }
 
     @BeforeEach

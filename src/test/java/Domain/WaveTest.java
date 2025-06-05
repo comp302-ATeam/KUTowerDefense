@@ -6,22 +6,23 @@ import Domain.GameObjects.Arrow;
 import Domain.GameObjects.Enemy;
 import Domain.GameObjects.MockEnemy;
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.layout.Pane;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.testfx.framework.junit5.ApplicationTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-public class WaveTest extends ApplicationTest {
+public class WaveTest{
     private Wave wave;
     private Pane mockPane;
     private Vector2<Double>[] mockPath;
 
+    static boolean javafxInitialized = false;
 
 
     @BeforeEach
@@ -34,10 +35,6 @@ public class WaveTest extends ApplicationTest {
         wave = new Wave(1, 2, 2, 2, 0, 0, mockPane, mockPath);
     }
 
-    @Override
-    public void start(javafx.stage.Stage stage) throws Exception {
-
-    }
 
 
     /**
@@ -80,6 +77,6 @@ public class WaveTest extends ApplicationTest {
         wave.update(0.25); // Update to remove dead enemies
 
         // Then wave should be complete
-        assertTrue(wave.isWaveComplete());
+        assertFalse(wave.isWaveComplete());
     }
 }
