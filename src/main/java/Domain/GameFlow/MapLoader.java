@@ -3,6 +3,8 @@ package Domain.GameFlow;
 import Domain.GameObjects.ArcherTower;
 import Domain.GameObjects.ArtilleryTower;
 import Domain.GameObjects.MageTower;
+import Domain.GameObjects.Tower;
+import UI.TowerMenu;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
@@ -38,7 +40,11 @@ public class MapLoader extends TileSetLoader {
             for (int y = 0; y < tilemap.getSize().y; y++) {
                 Tile tile = tileGrid[x][y];
                 addToGrid(5,tile.position);
-                addToGrid(tile.getTileIndex(),tile.position);
+                if (tile.getTileType() == Tile.TileType.PATH || tile.getTileType() == Tile.TileType.DECOR){
+                    addToGrid(tile.getTileIndex(),tile.position);
+                }
+
+
                 setTilePos(tile);
                 addTower(tile);
             }
@@ -59,28 +65,35 @@ public class MapLoader extends TileSetLoader {
     public void addTower(Tile tile) {
         int x = (int)(tile.realPosition.x.doubleValue());
         int y = (int)(tile.realPosition.y.doubleValue());
-
+        
+        Tower cur_tower = null;
+        
         switch (tile.getTileType()) {
             case TOWER_ARCHER:
-                new ArcherTower(x, y, gamePane);
+                cur_tower = new ArcherTower(x, y, gamePane);
                 break;
             case TOWER_MAGE:
-                new MageTower(x, y, gamePane);
+                cur_tower = new MageTower(x, y, gamePane);
                 break;
             case TOWER_ARTILLERY:
-                new ArtilleryTower(x, y, gamePane);
+                cur_tower = new ArtilleryTower(x, y, gamePane);
                 break;
             case TOWER_LOT:
-                // No tower to add
+                cur_tower = new MageTower(x, y, gamePane);
                 break;
+            default:
+                return;
+
         }
+        new TowerMenu(cur_tower);
+        
     }
 
     @Override
     public void addToGrid(int index,Vector2<Integer> position){
         ImageView imageView = new ImageView(tileset);
         Tile tile = new Tile(index ,getTileType(index),position);
-
+        
         int col = index % rowNum;
         int row = index / rowNum;
         imageView.setViewport(new Rectangle2D(col * tileWidth, row * tileHeight, tileWidth, tileHeight));

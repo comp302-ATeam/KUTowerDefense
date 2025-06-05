@@ -5,41 +5,14 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/javafx-sdk-21.0.7" />
     </content>
     <content url="file://$MODULE_DIR$/out" />
     <orderEntry type="jdk" jdkName="openjdk-24" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" exported="">
-      <library name="JavaFX">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx.base.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx.controls.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx.fxml.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx.graphics.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx.media.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx.swing.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx.web.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/javafx-jars/javafx-swt.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="" scope="TEST">
-      <library name="JUnit5">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/junit-jars/junit-jupiter-api-5.10.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/junit-jars/junit-jupiter-engine-5.10.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/junit-jars/junit-platform-commons-1.10.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/junit-jars/junit-platform-engine-1.10.2.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/junit-jars/opentest4j-1.3.0.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/junit-jars/apiguardian-api-1.1.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="junit.jupiter" level="project" />
+    <orderEntry type="library" exported="" name="fx" level="project" />
   </component>
 </module>

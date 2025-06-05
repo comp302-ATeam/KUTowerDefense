@@ -30,8 +30,6 @@ public abstract class Enemy extends GameObject {
     private final Rectangle healthBar;
     private final double maxHealthPoints;
 
-    protected boolean isAlive;
-
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
     private static final int FRAME_COUNT   = 6;
@@ -53,9 +51,6 @@ public abstract class Enemy extends GameObject {
         this.healthPoints = healthPoints;
         this.maxHealthPoints = healthPoints;
         this.speed = speed;
-        if (healthPoints > 0) {
-            isAlive = true;
-        }
 
         // Initialize health bar
         this.healthBar = new Rectangle(50, 5); // Width: 50, Height: 5
@@ -81,7 +76,6 @@ public abstract class Enemy extends GameObject {
         );
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
-
         //endregion
     }
     public void setFPS(double FPS){this.FPS =FPS;}
@@ -123,19 +117,11 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void update(double deltaTime) {
-        FPS = GameActionController.getFPS();
-        if (GameActionController.isPaused()) {
-            if (animation.getStatus() == Animation.Status.RUNNING) {
-                animation.pause();
-            }
-        } else {
-            if (animation.getStatus() != Animation.Status.RUNNING) {
-                animation.play();
-            }
-        }
-        if (movingToTarget && !GameActionController.isPaused()) {
+        GameActionController gameActionController = GameActionController.getInstance();
+        FPS = gameActionController.getFPS();
+        if (movingToTarget && !gameActionController.isPaused()) {
             double dx = targetX - x, dy = targetY - y;
-            double dist = Math.hypot(dx, dy), step = speed * deltaTime * GameActionController.getGameSpeed();
+            double dist = Math.hypot(dx, dy), step = speed * deltaTime * gameActionController.getGameSpeed();
 
             if (dist <= step) {
                 x = targetX;
@@ -161,7 +147,6 @@ public abstract class Enemy extends GameObject {
         healthBar.setWidth(healthBarWidth);
         // 3) Push transforms to the view
         updateViewTransform();
-
     }
     // calculate damage method is an abstract method which will be used accordingly for each class goblin or knight
     // this abstract method is used for calculating the damage took by
@@ -172,17 +157,17 @@ public abstract class Enemy extends GameObject {
     // amount of damage from the health point of that enemy object
     // if the damage is lethal, then the enemy object calls the method Die()
     public void takeDamage(Projectile projectile) {
-        if (this.isAlive){
-            int damageTaken = CalcDamage(projectile);
-            healthPoints -= damageTaken;
+        int damageTaken = CalcDamage(projectile);
+        healthPoints -= damageTaken;
 
-            if( healthPoints <= 0 ) {
-                Die();
-            }
-            // Update the health bar width based on the current health points
-            double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
-            healthBar.setWidth(healthBarWidth);
+        if( healthPoints <= 0 ) {
+            Die();
         }
+        // Update the health bar width based on the current health points
+        double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
+        healthBar.setWidth(healthBarWidth);
+
+
     }
 
     public Rectangle getHealthBar () {
@@ -191,18 +176,11 @@ public abstract class Enemy extends GameObject {
 
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
-    public void Die(){
-        this.isAlive = false;
-        this.healthPoints = 0;
-    }
+    public void Die(){}
 
     public double getPathProgress()
     {
         // TO BE IMPLEMENTED
         return 0;
-    }
-
-    public int getHealth() {
-        return this.healthPoints;
     }
 }

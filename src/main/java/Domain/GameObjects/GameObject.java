@@ -82,5 +82,7 @@ public abstract class GameObject {
             imageObject.setScaleY(scaleY);
             imageObject.setRotate(rotation);
         }
+
+
     }
 }

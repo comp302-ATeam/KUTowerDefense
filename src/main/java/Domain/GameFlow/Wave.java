@@ -60,6 +60,16 @@ public class Wave {
         this.knightView = new ImageView(knightImg);
     }
 
+    // Getter methods for testing
+    public int getWaveIndex() { return waveIndex; }
+    public int getKnightCount() { return knightCount; }
+    public int getGoblinCount() { return goblinCount; }
+    public int getGroupCount() { return groupCount; }
+    public int getCurrentGroup() { return currentGroup; }
+    public int getCurrentEnemyCount() { return currentEnemyCount; }
+    public double getEnemySpawnTimer() { return enemySpawnTimer; }
+    public double getGroupWaitTimer() { return groupWaitTimer; }
+
     public void startWave() {
         System.out.println("[Wave] startWave called for waveIndex=" + waveIndex + ", groupCount=" + groupCount);
         currentGroup = 0;
@@ -119,9 +129,9 @@ public class Wave {
     // Spawns a single goblin or knight depending on currentEnemyCount.
     private void spawnEnemy() {
         System.out.println("[Wave] spawnEnemy called for waveIndex=" + waveIndex + ", currentGroup=" + currentGroup + ", currentEnemyCount=" + currentEnemyCount);
-        int offset = activeEnemies.size() * 20;
+        int offset = activeEnemies.size() * 65;
         if (currentEnemyCount < goblinCount) {
-            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", 100, 5, new ImageView(goblinImg));
+            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", 100, 100, new ImageView(goblinImg));
             activeEnemies.add(goblin);
             gamePane.getChildren().addAll(goblin.getView(), goblin.getHealthBar());
             goblin.getView().setPickOnBounds(true);
@@ -130,7 +140,7 @@ public class Wave {
             goblin.moveAlong(mainPath);
             currentEnemyCount++;
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
-            Knight knight = new Knight(xPos + offset, yPos, "Knight", 100, 5, new ImageView(knightImg));
+            Knight knight = new Knight(xPos + offset, yPos, "Knight", 100, 100, new ImageView(knightImg));
             activeEnemies.add(knight);
             gamePane.getChildren().addAll(knight.getView(), knight.getHealthBar());
             knight.getView().setPickOnBounds(true);

@@ -1,12 +1,11 @@
 package Domain.GameObjects;
 
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+
 import javafx.scene.layout.Pane;
 
 public class MageTower extends Tower {
 
-    private static final String PATH = "/Assets/Towers/Castle128.png";
+    private static final String PATH = "/Assets/Towers/Tower_spell128.png";
 
     public MageTower(int x, int y, Pane mapPane) {
         // Mage tower has medium fire rate but high damage
