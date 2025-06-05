@@ -129,9 +129,9 @@ public class Wave {
     // Spawns a single goblin or knight depending on currentEnemyCount.
     private void spawnEnemy() {
         System.out.println("[Wave] spawnEnemy called for waveIndex=" + waveIndex + ", currentGroup=" + currentGroup + ", currentEnemyCount=" + currentEnemyCount);
-        int offset = activeEnemies.size() * 65;
+        int offset = activeEnemies.size() * 20;
         if (currentEnemyCount < goblinCount) {
-            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", 100, 100, new ImageView(goblinImg));
+            Goblin goblin = new Goblin(xPos, yPos-offset, "Goblin", 100, 100, new ImageView(goblinImg));
             activeEnemies.add(goblin);
             gamePane.getChildren().addAll(goblin.getView(), goblin.getHealthBar());
             goblin.getView().setPickOnBounds(true);
@@ -140,7 +140,7 @@ public class Wave {
             goblin.moveAlong(mainPath);
             currentEnemyCount++;
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
-            Knight knight = new Knight(xPos + offset, yPos, "Knight", 100, 100, new ImageView(knightImg));
+            Knight knight = new Knight(xPos, yPos-offset, "Knight", 100, 100, new ImageView(knightImg));
             activeEnemies.add(knight);
             gamePane.getChildren().addAll(knight.getView(), knight.getHealthBar());
             knight.getView().setPickOnBounds(true);

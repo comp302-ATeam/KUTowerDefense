@@ -118,6 +118,7 @@ public class GameSceneController {
         Platform.runLater(() -> {
             mapLoader = new MapLoader(gameGrid, gamePane);
             Vector2<Double>[] mainPath = mapLoader.getPath();
+            System.out.println(mainPath[0]);
             int startingX = mainPath[0].x.intValue();
             int startingY = mainPath[0].y.intValue();
 
