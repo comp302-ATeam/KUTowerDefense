@@ -1,5 +1,8 @@
-package Domain.GameFlow;
+package Domain;
 
+import Domain.GameFlow.Tile;
+import Domain.GameFlow.TileSetLoader;
+import Domain.GameFlow.Vector2;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.layout.GridPane;
 import org.junit.jupiter.api.BeforeAll;
@@ -97,24 +100,7 @@ public class TileSetLoaderTest {
         }
     }
 
-    private void createDisconnectedPath() {
-        // Create disconnected path segments
-        testGrid[0][0] = new Tile(1, Tile.TileType.PATH, new Vector2<>(0, 0)); // LEFT-RIGHT
-        testGrid[1][0] = new Tile(1, Tile.TileType.PATH, new Vector2<>(1, 0)); // LEFT-RIGHT
 
-        // Gap at (2,0)
-        testGrid[2][0] = new Tile(5, Tile.TileType.DECOR, new Vector2<>(2, 0)); // DECOR (gap)
-
-        testGrid[3][0] = new Tile(1, Tile.TileType.PATH, new Vector2<>(3, 0)); // LEFT-RIGHT
-        testGrid[4][0] = new Tile(1, Tile.TileType.PATH, new Vector2<>(4, 0)); // LEFT-RIGHT
-
-        // Fill remaining tiles
-        for (int x = 0; x < 5; x++) {
-            for (int y = 1; y < 5; y++) {
-                testGrid[x][y] = new Tile(5, Tile.TileType.DECOR, new Vector2<>(x, y));
-            }
-        }
-    }
 
     /**
      * Test Case 1: Base case - start and end tiles are the same
