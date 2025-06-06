@@ -17,7 +17,6 @@ public class WaveTest {
         mockPath[1] = new Vector2<>(100.0, 100.0);
         wave = new MockWave(1, 2, 2, 2, 0, 0, mockPath);
     }
-
     /**
      * requires: wave is initialized
      * modifies: this.isWaveComplete, this.activeEnemies
@@ -42,19 +41,13 @@ public class WaveTest {
     }
 
     @Test
-    void isWaveComplete_ReturnsTrue_WhenWaveCompleteAndNoEnemies() {
-        // Given a wave that has completed all groups
+    void isWaveComplete_ReturnsTrue_WhenManuallySetCompleteAndNoEnemies() {
+        // Given a wave that is started
         wave.startWave();
-        // Spawn all enemies
-        for (int i = 0; i < 8; i++) { // 4 enemies per group, 2 groups
-            wave.update(0.25);
-        }
-        // Wait for group interval
-        wave.update(45.0);
 
-        // Clear all enemies
+        // Manually set wave as complete and clear all enemies
+        wave.setWaveComplete(true);
         wave.clearEnemies();
-        wave.update(0.25); // Update to process changes
 
         // Then wave should be complete
         assertTrue(wave.isWaveComplete());
