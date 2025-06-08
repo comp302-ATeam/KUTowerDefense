@@ -14,6 +14,9 @@ public class Projectile extends GameObject{
         this.target = target;
     }
 
+    public int getDamage() {
+        return damage;
+    }
 
     @Override
     public void update(double deltaTime) {

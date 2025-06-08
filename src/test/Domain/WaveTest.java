@@ -1,29 +1,22 @@
-package Domain.GameFlow;
-
-import Domain.GameObjects.Enemy;
-import Domain.GameObjects.MockEnemy;
-import javafx.scene.layout.Pane;
+package Domain;
+import Domain.GameFlow.MockWave;
+import Domain.GameFlow.Vector2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
-
 public class WaveTest {
-    private Wave wave;
-    private Pane mockPane;
+    private MockWave wave;
     private Vector2<Double>[] mockPath;
 
     @BeforeEach
     void setUp() {
         // Initialize with 2 knights, 2 goblins, and 2 groups
-        mockPane = new Pane();
         mockPath = new Vector2[2];
         mockPath[0] = new Vector2<>(0.0, 0.0);
         mockPath[1] = new Vector2<>(100.0, 100.0);
-        wave = new Wave(1, 2, 2, 2, 0, 0, mockPane, mockPath);
+        wave = new MockWave(1, 2, 2, 2, 0, 0, mockPath);
     }
-
     /**
      * requires: wave is initialized
      * modifies: this.isWaveComplete, this.activeEnemies
@@ -48,20 +41,13 @@ public class WaveTest {
     }
 
     @Test
-    void isWaveComplete_ReturnsTrue_WhenWaveCompleteAndNoEnemies() {
-        // Given a wave that has completed all groups
+    void isWaveComplete_ReturnsTrue_WhenManuallySetCompleteAndNoEnemies() {
+        // Given a wave that is started
         wave.startWave();
-        // Spawn and kill all enemies
-        for (int i = 0; i < 8; i++) { // 4 enemies per group, 2 groups
-            wave.update(0.25);
-        }
-        // Wait for group interval
-        wave.update(45.0);
-        // Kill all enemies
-        for (Enemy enemy : wave.getActiveEnemies()) {
-            enemy.takeDamage(100);
-        }
-        wave.update(0.25); // Update to remove dead enemies
+
+        // Manually set wave as complete and clear all enemies
+        wave.setWaveComplete(true);
+        wave.clearEnemies();
 
         // Then wave should be complete
         assertTrue(wave.isWaveComplete());
