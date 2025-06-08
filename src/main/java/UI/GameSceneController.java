@@ -5,6 +5,7 @@ import Domain.GameFlow.MapLoader;
 import Domain.GameFlow.Vector2;
 import Domain.GameFlow.WaveSpawner;
 import Domain.GameObjects.Enemy;
+import Domain.PlayerData.PlayerStats;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -22,6 +23,7 @@ import java.util.List;
 public class GameSceneController {
     // Use singleton instance of the game controller to handle pause, resume, and speed changes..
     private GameActionController gameActionController = GameActionController.getInstance();
+    private PlayerStats playerStats = PlayerStats.getInstance();
     private WaveSpawner waveSpawner;
 
     // Will manage the spawning of enemy waves
@@ -126,5 +128,15 @@ public class GameSceneController {
             waveSpawner.startGame();
             // No AnimationTimer here for enemy or wave updates!
         });
+
+        // Set up callback for gold changes
+        playerStats.addGoldChangeListener(gold -> {
+            Platform.runLater(() -> labelGold.setText(String.valueOf(gold)));
+        });
+        
+        // Initialize the UI display
+        labelGold.setText(String.valueOf(playerStats.getGold()));
+        labelLives.setText(String.valueOf(playerStats.getLives()));
+        labelWave.setText(String.valueOf(playerStats.getCurrentWave()));
     }
 }

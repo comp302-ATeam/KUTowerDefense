@@ -2,6 +2,7 @@ package UI;
 
 import Domain.GameFlow.GameActionController;
 import Domain.GameObjects.*;
+import Domain.PlayerData.PlayerStats;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -24,7 +25,8 @@ public class TowerMenu extends Pane {
 
 
         downButton.setOnAction(e -> {
-            tower.Destroy();
+            tower.sell();
+            
             Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
             new TowerMenu(lotTower);
             tower.mapPane.getChildren().remove(this);
@@ -33,25 +35,45 @@ public class TowerMenu extends Pane {
 
     private void lotMode(){
         upButton.setOnAction(e -> {
-            tower.Destroy();
-            Tower cur_tower = new ArcherTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
-            tower.mapPane.getChildren().remove(this);
-            return;
+            PlayerStats playerStats = PlayerStats.getInstance();
+            int archerCost = 100; // Default archer tower cost - should match the cost in ArcherTower
+            
+            if (playerStats.spendGold(archerCost)) {
+                tower.Destroy();
+                Tower cur_tower = new ArcherTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+                new TowerMenu(cur_tower);
+                tower.mapPane.getChildren().remove(this);
+            } else {
+                System.out.println("Not enough gold to purchase Archer Tower!");
+            }
         });
+        
         leftButton.setOnAction(e -> {
-            tower.Destroy();
-            Tower cur_tower = new ArtilleryTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
-            tower.mapPane.getChildren().remove(this);
-            return;
+            PlayerStats playerStats = PlayerStats.getInstance();
+            int artilleryCost = 200; // Default artillery tower cost - should match the cost in ArtilleryTower
+            
+            if (playerStats.spendGold(artilleryCost)) {
+                tower.Destroy();
+                Tower cur_tower = new ArtilleryTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+                new TowerMenu(cur_tower);
+                tower.mapPane.getChildren().remove(this);
+            } else {
+                System.out.println("Not enough gold to purchase Artillery Tower!");
+            }
         });
+        
         downButton.setOnAction(e -> {
-            tower.Destroy();
-            Tower cur_tower = new MageTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
-            tower.mapPane.getChildren().remove(this);
-            return;
+            PlayerStats playerStats = PlayerStats.getInstance();
+            int mageCost = 150; // Default mage tower cost - should match the cost in MageTower
+            
+            if (playerStats.spendGold(mageCost)) {
+                tower.Destroy();
+                Tower cur_tower = new MageTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+                new TowerMenu(cur_tower);
+                tower.mapPane.getChildren().remove(this);
+            } else {
+                System.out.println("Not enough gold to purchase Mage Tower!");
+            }
         });
     }
 

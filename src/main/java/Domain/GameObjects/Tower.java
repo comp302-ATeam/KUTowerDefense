@@ -1,5 +1,6 @@
 package Domain.GameObjects;
 
+import Domain.PlayerData.PlayerStats;
 import UI.TowerMenu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -96,6 +97,24 @@ public abstract class Tower extends GameObject {
      */
     public int calculateRefundAmount() {
         return (int)(cost * sellRatio);
+    }
+
+    /**
+     * Sells this tower and returns gold to the player.
+     * The player receives a percentage of the tower's original cost based on sellRatio.
+     * 
+     * @return The amount of gold returned to the player
+     */
+    public int sell() {
+        int refundAmount = calculateRefundAmount();
+        PlayerStats playerStats = PlayerStats.getInstance();
+        playerStats.addGold(refundAmount);
+        
+        // Remove the tower from the game visually
+        Destroy();
+        
+        System.out.println("Tower sold for " + refundAmount + " gold!");
+        return refundAmount;
     }
 
     // Getters
