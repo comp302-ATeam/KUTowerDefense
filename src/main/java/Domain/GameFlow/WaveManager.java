@@ -24,7 +24,7 @@ public class WaveManager {
     private final GameSceneController gameSceneController;
     private boolean waveJustStarted = false;
     private double waveTimer = 0;
-    private static final double WAVE_INTERVAL = 2.0;
+    private static final double WAVE_INTERVAL = 10.0;
     private int nextWaveToStart = 0;
     private int playerLives = 10;  // Default starting lives
     private boolean gameOver = false;  // Flag to track if game is over
@@ -60,7 +60,7 @@ public class WaveManager {
             instance.waveJustStarted = false;
             instance.isGameComplete = false;
             instance.gameOver = false;
-            instance.playerLives = 20;  // Reset to starting lives
+            instance.playerLives = 10;  // Reset to starting lives
         }
         instance = null;
     }
