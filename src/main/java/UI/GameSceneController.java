@@ -6,6 +6,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.geometry.Rectangle2D;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -45,6 +46,10 @@ public class GameSceneController {
     private ImageView resumeImageView;
     @FXML
     private ImageView speedUpImageView;
+    @FXML
+    private Button pauseResumeButton;
+    @FXML
+    private ImageView pauseResumeImageView;
 
     private void setImageRed(ImageView imageView, boolean isRed) {
         if (isRed) {
@@ -69,6 +74,33 @@ public class GameSceneController {
 
     public void updateWave(int wave) {
         labelWave.setText(String.valueOf(Math.max(1, wave)));
+    }
+    @FXML
+    private void handlePauseResumeButton(ActionEvent event) {
+        if (GameActionController.isPaused()) {
+            // Checks if game is already pause
+            gameActionController.resumeGame();
+            if (waveSpawner != null) {
+                waveSpawner.resume();
+            }
+            setImageRed(speedUpImageView, false);
+            setImageRed(pauseResumeImageView, false);
+            // Pause Icon
+            pauseResumeImageView.setViewport(new Rectangle2D(128, 64, 64, 64));
+            System.out.println("Resumed Game");
+        } else {
+            // If game is already running, pauses it
+            gameActionController.pauseGame();
+            if (waveSpawner != null) {
+                waveSpawner.stop();
+            }
+            // Speed Icon turning red
+            setImageRed(speedUpImageView, true);
+            setImageRed(pauseResumeImageView, false);
+            // Show resume icon
+            pauseResumeImageView.setViewport(new Rectangle2D(0, 64, 64, 64));
+            System.out.println("Game Paused");
+        }
     }
     // Pauses the game via gameActionController. Also stops the waveSpawner.
     @FXML

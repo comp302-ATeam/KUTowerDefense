@@ -52,26 +52,9 @@
         <AnchorPane fx:id="gamePane" layoutX="200.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" />
 
         <!-- Game Control Buttons -->
-        <Button fx:id="pauseButton" layoutX="24.0" layoutY="100.0" onAction="#handlePauseButton" prefHeight="64.0" prefWidth="64.0">
+        <Button fx:id="pauseResumeButton" layoutX="24.0" layoutY="100.0" onAction="#handlePauseResumeButton" prefHeight="64.0" prefWidth="64.0">
             <graphic>
-                <ImageView fx:id="pauseImageView" fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
-                    <image>
-                        <Image url="@../../../out/production/302Project/Assets/UI/kutowerbuttons4.png"/>
-                    </image>
-                    <viewport>
-                        <Rectangle2D minX="0" minY="64" width="64" height="64"/>
-                    </viewport>
-                </ImageView>
-            </graphic>
-            <style>
-                -fx-background-color: transparent;
-                -fx-padding: 0;
-            </style>
-        </Button>
-
-        <Button fx:id="resumeGame" layoutX="24.0" layoutY="174.0" onAction="#handleResumeGame" prefHeight="64.0" prefWidth="64.0">
-            <graphic>
-                <ImageView fx:id="resumeImageView" fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
+                <ImageView fx:id="pauseResumeImageView" fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
                     <image>
                         <Image url="@../../../out/production/302Project/Assets/UI/kutowerbuttons4.png"/>
                     </image>
@@ -85,6 +68,7 @@
                 -fx-padding: 0;
             </style>
         </Button>
+
 
         <Button fx:id="speedUp" layoutX="24.0" layoutY="248.0" onAction="#handleSpeedUp" prefHeight="64.0" prefWidth="64.0">
             <graphic>
