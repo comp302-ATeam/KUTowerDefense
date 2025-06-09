@@ -26,6 +26,7 @@ public class WaveManager {
     private double waveTimer = 0;
     private static final double WAVE_INTERVAL = 15.0;
     private int nextWaveToStart = 0;
+    private int playerLives = 10;  // Default starting lives
 
     private WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
         this.waves = new ArrayList<>();
@@ -106,6 +107,17 @@ public class WaveManager {
 
     public int getCurrentWave() {
         return currentWaveIndex;
+    }
+
+    public void enemyReachedEnd() {
+        playerLives--;
+        gameSceneController.updateLives(playerLives);
+        
+        // Check if game over
+        if (playerLives <= 0) {
+            // TODO: Implement game over logic
+            System.out.println("Game Over!");
+        }
     }
 
 }
