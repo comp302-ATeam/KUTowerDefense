@@ -120,17 +120,33 @@ public abstract class Enemy extends GameObject {
                 hasReachedEnd = true;
                 // Notify game controller to deduct player health
                 Domain.GameFlow.WaveManager.getInstance().enemyReachedEnd();
+                // Stop the enemy's movement
+                movingToTarget = false;
+                // Remove the enemy from the game
+                Die();
             }
         } else {
-        advanceWaypoint();
+            advanceWaypoint();
         }
     }
 
     @Override
     public void update(double deltaTime) {
         GameActionController gameActionController = GameActionController.getInstance();
-        FPS = gameActionController.getFPS();
-        if (movingToTarget && !gameActionController.isPaused()) {
+        
+        // Handle animation based on pause state
+        if (gameActionController.isPaused()) {
+            if (animation != null) {
+                animation.pause();
+            }
+            return;  // Skip all other updates when paused
+        } else {
+            if (animation != null && animation.getStatus() == javafx.animation.Animation.Status.PAUSED) {
+                animation.play();
+            }
+        }
+
+        if (movingToTarget) {
             double dx = targetX - x, dy = targetY - y;
             double dist = Math.hypot(dx, dy), step = speed * deltaTime * gameActionController.getGameSpeed();
 
@@ -190,10 +206,20 @@ public abstract class Enemy extends GameObject {
     public void Die() {
         if (isAlive) {
             isAlive = false;
+            // Stop the animation
+            if (animation != null) {
+                animation.stop();
+            }
             // Remove the enemy from the game pane
             if (view != null && view.getParent() != null) {
-                ((javafx.scene.layout.Pane) view.getParent()).getChildren().removeAll(view, healthBar);
+                javafx.scene.layout.Pane parent = (javafx.scene.layout.Pane) view.getParent();
+                parent.getChildren().removeAll(view, healthBar);
+                // Force a layout update
+                parent.requestLayout();
             }
+            // Clear any remaining waypoints
+            waypoints.clear();
+            movingToTarget = false;
         }
     }
 
@@ -201,5 +227,9 @@ public abstract class Enemy extends GameObject {
     {
         // TO BE IMPLEMENTED
         return 0;
+    }
+
+    public boolean hasReachedEnd() {
+        return hasReachedEnd;
     }
 }

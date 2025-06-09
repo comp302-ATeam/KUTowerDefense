@@ -127,12 +127,10 @@ public class WaveManager {
 
     public void enemyReachedEnd() {
         if (gameOver) return;  // Don't process if game is already over
-        
-        playerLives--;
-        gameSceneController.updateLives(playerLives);
+
         
         // Check if game over
-        if (playerLives <= 0) {
+        if (playerLives <= 1) {
             gameOver = true;  // Set game over flag
             // Stop the game
             GameActionController.getInstance().pauseGame();
@@ -181,6 +179,16 @@ public class WaveManager {
                 });
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+        playerLives--;
+        gameSceneController.updateLives(playerLives);
+
+        // Remove all enemies that have reached the end
+        List<Enemy> activeEnemies = getActiveEnemies();
+        for (Enemy enemy : activeEnemies) {
+            if (enemy.hasReachedEnd()) {
+                enemy.Die();  // This will remove the enemy from the game pane
             }
         }
     }
