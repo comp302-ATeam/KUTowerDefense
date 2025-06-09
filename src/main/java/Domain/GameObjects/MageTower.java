@@ -27,7 +27,7 @@ public class MageTower extends Tower {
 
     @Override
     public void update(double deltaTime) {
-
+        System.out.println("huh");
     }
 
 } 

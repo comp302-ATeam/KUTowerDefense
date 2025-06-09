@@ -1,5 +1,11 @@
 package Domain.GameFlow;
 
+import Domain.GameObjects.Tower;
+import javafx.animation.AnimationTimer;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameActionController {
     // Singleton instance
     private static GameActionController instance;
@@ -11,10 +17,30 @@ public class GameActionController {
     private static final double doubleSpeed = 2.0;
     private static double FPS = 8.0;
 
+    public static List<Tower>  towerList =  new ArrayList<>();
+
+
     // Private constructor to prevent direct instantiation
     private GameActionController() {
         this.isPaused = false;  // Game should be running as expected when this is false
         this.gameSpeed = 1.0;   // To define a regular speed
+
+        new AnimationTimer() {
+            private long lastTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
+                }
+
+                double deltaTime = (now - lastTime) / 1_000_000_000.0; // convert to seconds
+                lastTime = now;
+
+                updateGame(deltaTime);
+            }
+        }.start();
     }
 
     // Singleton getInstance method
@@ -23,6 +49,12 @@ public class GameActionController {
             instance = new GameActionController();
         }
         return instance;
+    }
+
+    public void updateGame(double deltaTime) {
+        for (Tower tower : towerList) {
+            tower.update(deltaTime);
+        }
     }
 
     public static double getFPS(){

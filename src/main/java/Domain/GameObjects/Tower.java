@@ -1,5 +1,8 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.GameActionController;
+
+import Domain.GameObjects.GameObject;
 import UI.TowerMenu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,8 +21,8 @@ public abstract class Tower extends GameObject {
     protected double fireRate;      // Attacks per second
     protected double sellRatio;     // Ratio of cost returned when selling
     protected long lastAttackTime;  // Time of last attack in milliseconds
-    public ImageView towerImage;
 
+    public ImageView towerImage;
     public Pane mapPane;
 
     /**
@@ -48,19 +51,24 @@ public abstract class Tower extends GameObject {
 
         this.mapPane = mapPane;
 
-        //renderTower(PATH);
-
-        //TowerMenu towerMenu = new TowerMenu(this);
-
+        GameActionController.towerList.add(this);
 
     }
 
 
     // Abstract method for attacking enemies
-    public abstract void attack(Enemy target);
+    public void attack(Enemy target){
+        if (!canAttack()){
+            return;
+        }
+        if (true){
+            updateLastAttackTime();
+        }
+
+    }
 
     // Render Method
-    protected void renderTower(String path){
+    public void renderTower(String path){
         System.out.println(path);
         Image image = new Image(getClass().getResource(path).toExternalForm());
         towerImage = new ImageView(image);
@@ -106,6 +114,7 @@ public abstract class Tower extends GameObject {
     public int getCost() { return cost; }
 
     public void Destroy(){
+        GameActionController.towerList.remove(this);
         mapPane.getChildren().remove(towerImage);
     }
 
@@ -150,7 +159,9 @@ public abstract class Tower extends GameObject {
     }
 
     // Method to update last attack time
-    protected void updateLastAttackTime() {
+    public void updateLastAttackTime() {
         lastAttackTime = System.currentTimeMillis();
     }
+
+    public abstract void update(double deltaTime);
 }
