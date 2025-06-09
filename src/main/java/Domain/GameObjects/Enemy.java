@@ -29,6 +29,8 @@ public abstract class Enemy extends GameObject {
     private final Queue<Vector2<Double>> waypoints = new LinkedList<>();
     private final Rectangle healthBar;
     private final double maxHealthPoints;
+    private boolean hasReachedEnd = false;  // Track if enemy has reached the end
+    private boolean isAlive = true;
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -112,7 +114,16 @@ public abstract class Enemy extends GameObject {
         }
     }
     protected void onArrive() {
-        advanceWaypoint();
+        if (waypoints.isEmpty()) {
+            // Enemy has reached the last waypoint
+            if (!hasReachedEnd) {
+                hasReachedEnd = true;
+                // Notify game controller to deduct player health
+                Domain.GameFlow.WaveManager.getInstance().enemyReachedEnd();
+            }
+        } else {
+            advanceWaypoint();
+        }
     }
 
     @Override
@@ -176,7 +187,15 @@ public abstract class Enemy extends GameObject {
 
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
-    public void Die(){}
+    public void Die() {
+        if (isAlive) {
+            isAlive = false;
+            // Remove the enemy from the game pane
+            if (view != null && view.getParent() != null) {
+                ((javafx.scene.layout.Pane) view.getParent()).getChildren().removeAll(view, healthBar);
+            }
+        }
+    }
 
     public double getPathProgress()
     {
