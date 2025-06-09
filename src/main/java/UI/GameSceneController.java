@@ -113,15 +113,43 @@ public class GameSceneController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            mapLoader = new MapLoader(gameGrid, gamePane);
-            Vector2<Double>[] mainPath = mapLoader.getPath();
-            int startingX = mainPath[0].x.intValue();
-            int startingY = mainPath[0].y.intValue();
+            resetGame();
+        });
+    }
 
-            // Initialize WaveSpawner with wave system
-            waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
-            waveSpawner.startGame();
-            // No AnimationTimer here for enemy or wave updates!
+    private void resetGame() {
+        // Clear any existing game state
+        if (waveSpawner != null) {
+            waveSpawner.stop();
+        }
+        if (gamePane != null) {
+            gamePane.getChildren().clear();
+        }
+        if (gameGrid != null) {
+            gameGrid.getChildren().clear();
+        }
+
+        // Reset UI elements
+        updateGold(100);  // Reset to starting gold
+        updateLives(20);  // Reset to starting lives
+        updateWave(1);    // Reset to first wave
+
+        // Initialize new game
+        mapLoader = new MapLoader(gameGrid, gamePane);
+        Vector2<Double>[] mainPath = mapLoader.getPath();
+        int startingX = mainPath[0].x.intValue();
+        int startingY = mainPath[0].y.intValue();
+
+        // Reset WaveManager
+        WaveManager.reset();
+
+        // Initialize new WaveSpawner
+        waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
+        waveSpawner.startGame();
+
+        // Ensure wave index is reset in UI
+        Platform.runLater(() -> {
+            updateWave(1);
         });
     }
 }

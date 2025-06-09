@@ -24,9 +24,10 @@ public class WaveManager {
     private final GameSceneController gameSceneController;
     private boolean waveJustStarted = false;
     private double waveTimer = 0;
-    private static final double WAVE_INTERVAL = 15.0;
+    private static final double WAVE_INTERVAL = 2.0;
     private int nextWaveToStart = 0;
     private int playerLives = 10;  // Default starting lives
+    private boolean gameOver = false;  // Flag to track if game is over
 
     private WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
         this.waves = new ArrayList<>();
@@ -49,6 +50,19 @@ public class WaveManager {
         if (instance == null) {
             instance = new WaveManager(startX, startY, gamePane, mainPath, gameSceneController);
         }
+    }
+
+    public static void reset() {
+        if (instance != null) {
+            instance.waveTimer = 0;
+            instance.nextWaveToStart = 0;
+            instance.currentWaveIndex = 0;
+            instance.waveJustStarted = false;
+            instance.isGameComplete = false;
+            instance.gameOver = false;
+            instance.playerLives = 20;  // Reset to starting lives
+        }
+        instance = null;
     }
 
     // Starts the wave sequence:
@@ -78,6 +92,8 @@ public class WaveManager {
     //If the interval has passed, starts the next wave and resets the timer.
     //Updates all waves that have already been started.
     public void updateAndAdvanceWaves(GameSceneController controller, double deltaTime) {
+        if (gameOver) return;  // Don't update waves if game is over
+        
         if (nextWaveToStart > 0) {
             waveTimer += deltaTime;
             if (nextWaveToStart < waves.size() && waveTimer >= WAVE_INTERVAL) {
@@ -110,13 +126,62 @@ public class WaveManager {
     }
 
     public void enemyReachedEnd() {
+        if (gameOver) return;  // Don't process if game is already over
+        
         playerLives--;
         gameSceneController.updateLives(playerLives);
         
         // Check if game over
         if (playerLives <= 0) {
-            // TODO: Implement game over logic
-            System.out.println("Game Over!");
+            gameOver = true;  // Set game over flag
+            // Stop the game
+            GameActionController.getInstance().pauseGame();
+            
+            // Show game over screen
+            try {
+                javafx.application.Platform.runLater(() -> {
+                    try {
+                        // Create a container for the game content
+                        Pane gameContent = new Pane();
+                        gameContent.setPrefSize(gamePane.getWidth(), gamePane.getHeight());
+                        
+                        // Move all existing children to the game content pane
+                        while (!gamePane.getChildren().isEmpty()) {
+                            gameContent.getChildren().add(gamePane.getChildren().get(0));
+                        }
+                        
+                        // Add the game content pane to the main game pane
+                        gamePane.getChildren().add(gameContent);
+                        
+                        // Add blur effect to the game content
+                        javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(10);
+                        gameContent.setEffect(blur);
+                        
+                        // Load the game over screen
+                        javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(UI.GameOverScreenController.class.getResource("/GameOverScreen.fxml"));
+                        javafx.scene.Parent root = loader.load();
+                        
+                        // Get the controller and ensure it's initialized
+                        UI.GameOverScreenController controller = loader.getController();
+                        if (controller != null) {
+                            System.out.println("Game over screen controller loaded successfully");
+                        } else {
+                            System.out.println("Warning: Game over screen controller is null");
+                        }
+                        
+                        // Add the game over screen as an overlay to the game pane
+                        gamePane.getChildren().add(root);
+                        
+                        // Center the game over screen
+                        root.setLayoutX((gamePane.getWidth() - root.prefWidth(-1)) / 2);
+                        root.setLayoutY((gamePane.getHeight() - root.prefHeight(-1)) / 2);
+                    } catch (java.io.IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

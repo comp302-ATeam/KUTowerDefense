@@ -122,7 +122,7 @@ public abstract class Enemy extends GameObject {
                 Domain.GameFlow.WaveManager.getInstance().enemyReachedEnd();
             }
         } else {
-            advanceWaypoint();
+        advanceWaypoint();
         }
     }
 

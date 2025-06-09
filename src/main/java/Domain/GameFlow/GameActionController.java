@@ -73,4 +73,11 @@ public class GameActionController {
         }
         System.out.println("Game speed set to: " + gameSpeed + "x");
     }
+
+    public void resetGame() {
+        this.isPaused = false;
+        this.gameSpeed = defaultSpeed;
+        this.FPS = 8.0;
+        System.out.println("Game state reset");
+    }
 }
