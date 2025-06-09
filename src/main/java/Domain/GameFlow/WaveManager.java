@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import UI.GameSceneController;
 import Domain.GameFlow.Vector2;
+import javafx.animation.AnimationTimer;
+
 /**
  * WaveManager class manages multiple waves of enemies in the game.
  * It handles wave spawning, timing, and tracking of all active enemies.
  */
 
 public class WaveManager {
+    private static WaveManager instance;
     private final List<Wave> waves;     // List to store all waves in the game
     private int currentWaveIndex;       // Tracks which wave is currently active
     private final int xPos;
@@ -21,10 +24,10 @@ public class WaveManager {
     private final GameSceneController gameSceneController;
     private boolean waveJustStarted = false;
     private double waveTimer = 0;
-    private static final double WAVE_INTERVAL = 30.0;
+    private static final double WAVE_INTERVAL = 15.0;
     private int nextWaveToStart = 0;
 
-    public WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
+    private WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
         this.waves = new ArrayList<>();
         this.currentWaveIndex = 0;
         this.xPos = xPos;
@@ -33,7 +36,20 @@ public class WaveManager {
         this.mainPath = mainPath;
         this.isGameComplete = false;
         this.gameSceneController = gameSceneController;
+        this.nextWaveToStart = 0;
+        this.waveTimer = 0;
     }
+
+    public static WaveManager getInstance() {
+        return instance;
+    }
+
+    public static void initialize(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
+        if (instance == null) {
+            instance = new WaveManager(startX, startY, gamePane, mainPath, gameSceneController);
+        }
+    }
+
     // Starts the wave sequence:
     //Begins with wave 0.
     //Calls startWave() on it.

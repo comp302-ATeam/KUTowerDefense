@@ -18,7 +18,8 @@ public class WaveSpawner {
     private final UI.GameSceneController gameSceneController;
 
     public WaveSpawner(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, UI.GameSceneController gameSceneController) {
-        this.waveManager = new WaveManager(startX, startY, gamePane, mainPath, gameSceneController);
+        WaveManager.initialize(startX, startY, gamePane, mainPath, gameSceneController);
+        this.waveManager = WaveManager.getInstance();
         this.gamePane = gamePane;
         this.mainPath = mainPath;
         this.gameSceneController = gameSceneController;

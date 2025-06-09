@@ -6,6 +6,7 @@ import Domain.GameObjects.Knight;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.Node;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -142,10 +143,11 @@ public class Wave {
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
             Knight knight = new Knight(xPos + offset, yPos, "Knight", 100, 100, new ImageView(knightImg));
             activeEnemies.add(knight);
-            gamePane.getChildren().addAll(knight.getView(), knight.getHealthBar());
-            knight.getView().setPickOnBounds(true);
-            knight.getView().setOnMouseEntered(e -> knight.getHealthBar().setVisible(true));
-            knight.getView().setOnMouseExited(e -> knight.getHealthBar().setVisible(false));
+            Node knightView = knight.getView();
+            gamePane.getChildren().addAll(knightView, knight.getHealthBar());
+            knightView.setPickOnBounds(true);
+            knightView.setOnMouseEntered(e -> knight.getHealthBar().setVisible(true));
+            knightView.setOnMouseExited(e -> knight.getHealthBar().setVisible(false));
             knight.moveAlong(mainPath);
             currentEnemyCount++;
         }

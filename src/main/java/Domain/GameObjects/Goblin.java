@@ -13,7 +13,7 @@ public class Goblin extends Enemy {
     private static final int   COLS     = 6;
     private static final double FPS      = 8.0;
     // goblin class is faster than knight class so it should have a greater speed multiplier.
-    double speedMultiplier = 1.25;
+    double speedMultiplier = 1.10;
     public Goblin(int xPos, int yPos, String enemyType, int healthPoints, int speed, ImageView imageObject) {
         super(xPos, yPos, imageObject, enemyType,healthPoints,speed,FRAMES,COLS,FPS);
         this.speed *= speedMultiplier;
