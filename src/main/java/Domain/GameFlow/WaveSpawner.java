@@ -16,6 +16,7 @@ public class WaveSpawner {
     private boolean isPaused = false;
     private final Vector2<Double>[] mainPath;
     private final UI.GameSceneController gameSceneController;
+    private long lastTime = 0;
 
     public WaveSpawner(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, UI.GameSceneController gameSceneController) {
         WaveManager.initialize(startX, startY, gamePane, mainPath, gameSceneController);
@@ -47,8 +48,6 @@ public class WaveSpawner {
     //Skips update if the game is paused.
     private void setupGameLoop() {
         gameLoop = new AnimationTimer() {
-            private long lastTime = 0;
-
             @Override
             public void handle(long now) {
                 if (isPaused) return;
@@ -91,11 +90,11 @@ public class WaveSpawner {
         if (gameLoop != null) {
             gameLoop.stop();
         }
-
     }
 
     public void resume() {
         isPaused = false;
+        lastTime = 0;
         if (gameLoop != null) {
             gameLoop.start();
         }

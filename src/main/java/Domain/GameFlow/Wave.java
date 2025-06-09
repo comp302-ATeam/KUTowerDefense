@@ -116,13 +116,17 @@ public class Wave {
             isWaveComplete = true;
         }
 
-        // Update existing enemies
+        // Update existing enemies and remove dead ones
         Iterator<Enemy> iterator = activeEnemies.iterator();
         while (iterator.hasNext()) {
             Enemy enemy = iterator.next();
-            if (!enemy.isAlive()) {
-                gamePane.getChildren().removeAll(enemy.getView(), enemy.getHealthBar());
+            if (!enemy.isAlive() || enemy.hasReachedEnd()) {
+                // Remove from game pane if not already removed
+                if (enemy.getView() != null && enemy.getView().getParent() != null) {
+                    gamePane.getChildren().removeAll(enemy.getView(), enemy.getHealthBar());
+                }
                 iterator.remove();
+                System.out.println("[Wave] Removed enemy from wave " + waveIndex + (enemy.hasReachedEnd() ? " (reached end)" : " (dead)"));
             }
         }
     }

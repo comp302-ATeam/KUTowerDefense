@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.scene.Parent;
+import Domain.GameFlow.GameActionController;
 
 public class StartSceneController {
 
@@ -29,13 +30,28 @@ public class StartSceneController {
     @FXML
     private void onActionStartNew(ActionEvent event) throws Exception {
         System.out.println("StartNew");
-        //Stage stage1 = (Stage)((Node)event.getSource()).getScene().getWindow();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/GameSceneController.fxml"));
-        stage.setScene(new Scene(root));
-        stage.setMaximized(true);
+        
+        // Reset game state
+        GameActionController.getInstance().resetGame();
+        
+        // Load new game scene
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/GameSceneController.fxml"));
+        Parent root = loader.load();
+        
+        // Get the controller and ensure it's initialized
+        GameSceneController controller = loader.getController();
+        if (controller != null) {
+            System.out.println("Game scene controller loaded successfully");
+        } else {
+            System.out.println("Warning: Game scene controller is null");
+        }
+        
+        // Set up the new scene
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
-
     }
 
     @FXML

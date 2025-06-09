@@ -81,13 +81,14 @@ public class GameActionController {
     public void pauseGame() {
         if (!isPaused) {  // Checks if it is not paused
             this.isPaused = true;
-            FPS = 0;
+            // Don't set FPS to 0, just pause the game state
             System.out.println("Game is Paused");
         }
     }
     public void resumeGame() {
         if (isPaused) {  // Checks if it is paused
             this.isPaused = false;
+            // Restore default FPS
             FPS = 8.0;
             System.out.println("Game Resumes");
         }
@@ -104,5 +105,12 @@ public class GameActionController {
             gameSpeed = defaultSpeed;
         }
         System.out.println("Game speed set to: " + gameSpeed + "x");
+    }
+
+    public void resetGame() {
+        this.isPaused = false;
+        this.gameSpeed = defaultSpeed;
+        this.FPS = 8.0;
+        System.out.println("Game state reset");
     }
 }

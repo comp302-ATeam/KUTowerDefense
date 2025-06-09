@@ -6,6 +6,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.geometry.Rectangle2D;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -45,6 +46,10 @@ public class GameSceneController {
     private ImageView resumeImageView;
     @FXML
     private ImageView speedUpImageView;
+    @FXML
+    private Button pauseResumeButton;
+    @FXML
+    private ImageView pauseResumeImageView;
 
     private void setImageRed(ImageView imageView, boolean isRed) {
         if (isRed) {
@@ -69,6 +74,34 @@ public class GameSceneController {
 
     public void updateWave(int wave) {
         labelWave.setText(String.valueOf(Math.max(1, wave)));
+    }
+    @FXML
+    private void handlePauseResumeButton(ActionEvent event) {
+        // Always keep both controllers in sync
+        boolean currentlyPaused = GameActionController.isPaused();
+        if (currentlyPaused) {
+            // Resume everything
+            gameActionController.resumeGame();
+            if (waveSpawner != null) {
+                waveSpawner.resume();
+            }
+            setImageRed(speedUpImageView, false);
+            setImageRed(pauseResumeImageView, false);
+            // Show pause icon
+            pauseResumeImageView.setViewport(new Rectangle2D(128, 64, 64, 64));
+            System.out.println("Resumed Game");
+        } else {
+            // Pause everything
+            gameActionController.pauseGame();
+            if (waveSpawner != null) {
+                waveSpawner.stop();
+            }
+            setImageRed(speedUpImageView, true);
+            setImageRed(pauseResumeImageView, false);
+            // Show resume icon
+            pauseResumeImageView.setViewport(new Rectangle2D(0, 64, 64, 64));
+            System.out.println("Game Paused");
+        }
     }
     // Pauses the game via gameActionController. Also stops the waveSpawner.
     @FXML
@@ -113,15 +146,43 @@ public class GameSceneController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            mapLoader = new MapLoader(gameGrid, gamePane);
-            Vector2<Double>[] mainPath = mapLoader.getPath();
-            int startingX = mainPath[0].x.intValue();
-            int startingY = mainPath[0].y.intValue();
+            resetGame();
+        });
+    }
 
-            // Initialize WaveSpawner with wave system
-            waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
-            waveSpawner.startGame();
-            // No AnimationTimer here for enemy or wave updates!
+    private void resetGame() {
+        // Clear any existing game state
+        if (waveSpawner != null) {
+            waveSpawner.stop();
+        }
+        if (gamePane != null) {
+            gamePane.getChildren().clear();
+        }
+        if (gameGrid != null) {
+            gameGrid.getChildren().clear();
+        }
+
+        // Reset UI elements
+        updateGold(100);  // Reset to starting gold
+        updateLives(10);  // Reset to starting lives
+        updateWave(1);    // Reset to first wave
+
+        // Initialize new game
+        mapLoader = new MapLoader(gameGrid, gamePane);
+        Vector2<Double>[] mainPath = mapLoader.getPath();
+        int startingX = mainPath[0].x.intValue();
+        int startingY = mainPath[0].y.intValue();
+
+        // Reset WaveManager
+        WaveManager.reset();
+
+        // Initialize new WaveSpawner
+        waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
+        waveSpawner.startGame();
+
+        // Ensure wave index is reset in UI
+        Platform.runLater(() -> {
+            updateWave(1);
         });
     }
 }
