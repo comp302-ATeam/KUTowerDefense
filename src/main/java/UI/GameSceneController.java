@@ -77,24 +77,25 @@ public class GameSceneController {
     }
     @FXML
     private void handlePauseResumeButton(ActionEvent event) {
-        if (GameActionController.isPaused()) {
-            // Checks if game is already pause
+        // Always keep both controllers in sync
+        boolean currentlyPaused = GameActionController.isPaused();
+        if (currentlyPaused) {
+            // Resume everything
             gameActionController.resumeGame();
             if (waveSpawner != null) {
                 waveSpawner.resume();
             }
             setImageRed(speedUpImageView, false);
             setImageRed(pauseResumeImageView, false);
-            // Pause Icon
+            // Show pause icon
             pauseResumeImageView.setViewport(new Rectangle2D(128, 64, 64, 64));
             System.out.println("Resumed Game");
         } else {
-            // If game is already running, pauses it
+            // Pause everything
             gameActionController.pauseGame();
             if (waveSpawner != null) {
                 waveSpawner.stop();
             }
-            // Speed Icon turning red
             setImageRed(speedUpImageView, true);
             setImageRed(pauseResumeImageView, false);
             // Show resume icon

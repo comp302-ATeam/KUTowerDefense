@@ -40,23 +40,21 @@ public class InGameSceneController {
 
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);
-        Goblin goblin = new Goblin(-100,0,"Goblin",100,100,goblinView);
+        //Goblin goblin = new Goblin(-100,0,"Goblin",100,100,goblinView);
 
         Image knightImg = new Image("Assets/enemies/Warrior_Blue.png");
         ImageView knightView = new ImageView(knightImg);
-        Knight knight = new Knight(100,0,"Knight",100,100,knightView);
+        //Knight knight = new Knight(100,0,"Knight",100,100,knightView);
 
         Image goldImg = new Image("Assets/enemies/G_Spawn.png");
         ImageView goldView = new ImageView(goldImg);
 
         gamePane.getChildren().addAll(
-                goblin.getView(),
-                knight.getView()
+                
         );
 
         // 4) Sync their initial transforms
-        goblin.updateViewTransform();
-        knight.updateViewTransform();
+        
 
         //Example list for goblin to move on.
 
@@ -68,8 +66,7 @@ public class InGameSceneController {
             public void handle(long now) {
                 if (lastTime > 0) {
                     double deltaSec = (now - lastTime) / 1_000_000_000.0;
-                    goblin.update(deltaSec);
-                    knight.update(deltaSec);
+                    
                 }
                 lastTime = now;
             }
