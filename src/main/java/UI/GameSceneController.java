@@ -164,7 +164,7 @@ public class GameSceneController {
 
         // Reset UI elements
         updateGold(100);  // Reset to starting gold
-        updateLives(20);  // Reset to starting lives
+        updateLives(10);  // Reset to starting lives
         updateWave(1);    // Reset to first wave
 
         // Initialize new game
