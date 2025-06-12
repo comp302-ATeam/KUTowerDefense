@@ -74,6 +74,10 @@ public class GameSceneController {
         labelGold.setText(String.valueOf(gold));
     }
 
+    public Label getLabelGold() {
+        return labelGold;
+    }
+
     public void updateLives(int lives) {
         labelLives.setText(String.valueOf(lives));
     }
