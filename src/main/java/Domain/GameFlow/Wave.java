@@ -121,7 +121,11 @@ public class Wave {
         while (iterator.hasNext()) {
             Enemy enemy = iterator.next();
             if (!enemy.isAlive() || enemy.hasReachedEnd()) {
-                // Remove from game pane if not already removed
+                // Let Die() handle the gold pouch spawning first
+                if (!enemy.isAlive() && !enemy.hasReachedEnd()) {
+                    enemy.Die();
+                }
+                // Then remove from game pane if not already removed
                 if (enemy.getView() != null && enemy.getView().getParent() != null) {
                     gamePane.getChildren().removeAll(enemy.getView(), enemy.getHealthBar());
                 }
@@ -134,9 +138,15 @@ public class Wave {
     // Spawns a single goblin or knight depending on currentEnemyCount.
     private void spawnEnemy() {
         System.out.println("[Wave] spawnEnemy called for waveIndex=" + waveIndex + ", currentGroup=" + currentGroup + ", currentEnemyCount=" + currentEnemyCount);
+
+        // Calculate HP multiplier based on wave number (20% increase per wave)
+        double hpMultiplier = 1.0 + (waveIndex - 1) * 0.2;
+
         int offset = activeEnemies.size() * 65;
         if (currentEnemyCount < goblinCount) {
-            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", 100, 100, new ImageView(goblinImg));
+            // Base HP for goblin is 100, multiply by wave difficulty
+            int goblinHP = (int)(100 * hpMultiplier);
+            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", goblinHP, 100, new ImageView(goblinImg));
             activeEnemies.add(goblin);
             gamePane.getChildren().addAll(goblin.getView(), goblin.getHealthBar());
             goblin.getView().setPickOnBounds(true);
@@ -144,8 +154,16 @@ public class Wave {
             goblin.getView().setOnMouseExited(e -> goblin.getHealthBar().setVisible(false));
             goblin.moveAlong(mainPath);
             currentEnemyCount++;
+            // Kill after 8 seconds
+            javafx.animation.Timeline killTimer = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(8), e -> goblin.Die())
+            );
+            killTimer.setCycleCount(1);
+            killTimer.play();
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
-            Knight knight = new Knight(xPos + offset, yPos, "Knight", 100, 100, new ImageView(knightImg));
+            // Base HP for knight is 100, multiply by wave difficulty
+            int knightHP = (int)(100 * hpMultiplier);
+            Knight knight = new Knight(xPos + offset, yPos, "Knight", knightHP, 100, new ImageView(knightImg));
             activeEnemies.add(knight);
             Node knightView = knight.getView();
             gamePane.getChildren().addAll(knightView, knight.getHealthBar());
@@ -154,6 +172,12 @@ public class Wave {
             knightView.setOnMouseExited(e -> knight.getHealthBar().setVisible(false));
             knight.moveAlong(mainPath);
             currentEnemyCount++;
+            // Kill after 8 seconds
+            javafx.animation.Timeline killTimer = new javafx.animation.Timeline(
+                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(8), e -> knight.Die())
+            );
+            killTimer.setCycleCount(1);
+            killTimer.play();
         }
     }
 

@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -27,6 +28,7 @@ public class MapBuilderSceneController {
 
     @FXML private Button returnButton;
     @FXML private Button saveButton;
+    @FXML private TextField mapNameField;
 
     public Scene currentScene;
 
@@ -60,7 +62,11 @@ public class MapBuilderSceneController {
 
     @FXML
     public void onSave() {
-        mainTileSetLoader.saveGrid();
+        String mapName = mapNameField.getText().trim();
+        if (mapName.isEmpty()) {
+            mapName = "mapSave";  // Default name if none provided
+        }
+        mainTileSetLoader.saveGrid(mapName);
     }
 
     @FXML

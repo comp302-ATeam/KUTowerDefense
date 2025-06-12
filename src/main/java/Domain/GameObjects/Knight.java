@@ -120,4 +120,27 @@ public class Knight extends Enemy{
         return outputImage;
     }
 
+    @Override
+    public void Die() {
+        if (isAlive()) {
+            // Remove speed buff icon first
+            if (speedBuffIcon != null) {
+                speedBuffIcon.setDisable(true);
+                speedBuffIcon.setMouseTransparent(true);
+                speedBuffIcon.setVisible(false);
+                speedBuffIcon.setOpacity(0);
+                if (speedBuffIcon.getParent() != null) {
+                    if (speedBuffIcon.getParent() instanceof javafx.scene.layout.Pane) {
+                        ((javafx.scene.layout.Pane) speedBuffIcon.getParent()).getChildren().remove(speedBuffIcon);
+                    } else if (speedBuffIcon.getParent() instanceof javafx.scene.Group) {
+                        ((javafx.scene.Group) speedBuffIcon.getParent()).getChildren().remove(speedBuffIcon);
+                    }
+                }
+            }
+            
+            // Call parent's Die method
+            super.Die();
+        }
+    }
+
 }

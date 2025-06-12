@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import java.util.Random;
 
 import java.util.*;
 
@@ -31,6 +32,8 @@ public abstract class Enemy extends GameObject {
     private final double maxHealthPoints;
     private boolean hasReachedEnd = false;  // Track if enemy has reached the end
     private boolean isAlive = true;
+    private static final Random random = new Random();
+
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -126,14 +129,14 @@ public abstract class Enemy extends GameObject {
                 Die();
             }
         } else {
-            advanceWaypoint();
+        advanceWaypoint();
         }
     }
 
     @Override
     public void update(double deltaTime) {
         GameActionController gameActionController = GameActionController.getInstance();
-        
+
         // Handle animation based on pause state
         if (gameActionController.isPaused()) {
             if (animation != null) {
@@ -158,6 +161,8 @@ public abstract class Enemy extends GameObject {
                 x += (dx / dist) * step;
                 y += (dy / dist) * step;
             }
+            super.x = x;
+            super.y = y;
             updateViewTransform();
         }
         if (healthPoints <= 0 && isAlive()) {
@@ -210,16 +215,91 @@ public abstract class Enemy extends GameObject {
             if (animation != null) {
                 animation.stop();
             }
-            // Remove the enemy from the game pane
-            if (view != null && view.getParent() != null) {
-                javafx.scene.layout.Pane parent = (javafx.scene.layout.Pane) view.getParent();
-                parent.getChildren().removeAll(view, healthBar);
-                // Force a layout update
-                parent.requestLayout();
+
+            // Store parent reference before removing anything
+            javafx.scene.Parent parent = view != null ? view.getParent() : null;
+
+            // Remove the enemy and its UI elements from the game pane
+            if (view != null && parent != null) {
+                if (parent instanceof javafx.scene.layout.Pane) {
+                    javafx.scene.layout.Pane pane = (javafx.scene.layout.Pane) parent;
+                    // Remove all UI elements
+                    pane.getChildren().remove(view);
+                    
+                    // Remove health bar
+                    if (healthBar != null) {
+                        healthBar.setDisable(true);
+                        healthBar.setMouseTransparent(true);
+                        healthBar.setVisible(false);
+                        healthBar.setOpacity(0);
+                        pane.getChildren().remove(healthBar);
+                    }
+
+                    // Remove speed up icon if it exists - using a larger tolerance
+                    for (javafx.scene.Node node : new ArrayList<>(pane.getChildren())) {
+                        if (node instanceof javafx.scene.image.ImageView &&
+                            node != view &&
+                            Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
+                            Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
+                            node.setDisable(true);
+                            node.setMouseTransparent(true);
+                            node.setVisible(false);
+                            node.setOpacity(0);
+                            pane.getChildren().remove(node);
+                        }
+                    }
+                    pane.requestLayout();
+                } else if (parent instanceof javafx.scene.Group) {
+                    javafx.scene.Group group = (javafx.scene.Group) parent;
+                    // Remove all UI elements
+                    group.getChildren().remove(view);
+                    
+                    // Remove health bar
+                    if (healthBar != null) {
+                        healthBar.setDisable(true);
+                        healthBar.setMouseTransparent(true);
+                        healthBar.setVisible(false);
+                        healthBar.setOpacity(0);
+                        group.getChildren().remove(healthBar);
+                    }
+
+                    // Remove speed up icon if it exists - using a larger tolerance
+                    for (javafx.scene.Node node : new ArrayList<>(group.getChildren())) {
+                        if (node instanceof javafx.scene.image.ImageView &&
+                            node != view &&
+                            Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
+                            Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
+                            node.setDisable(true);
+                            node.setMouseTransparent(true);
+                            node.setVisible(false);
+                            node.setOpacity(0);
+                            group.getChildren().remove(node);
+                        }
+                    }
+                }
             }
+
             // Clear any remaining waypoints
             waypoints.clear();
             movingToTarget = false;
+
+            // Only spawn gold pouch if enemy died on the path (not at the end) and with 50% chance
+            if (!hasReachedEnd && parent != null && random.nextDouble() < 0.5) {
+                // Spawn gold pouch at the enemy's death position with a small random offset
+                double offsetX = (random.nextDouble() - 0.5) * 20; // ±10 pixels
+                double offsetY = (random.nextDouble() - 0.5) * 20; // ±10 pixels
+                
+                double pouchX = x + offsetX;
+                double pouchY = y + offsetY;
+
+                GoldPouch goldPouch = GoldPouch.spawnAt(pouchX, pouchY);
+
+                if (parent instanceof javafx.scene.layout.Pane) {
+                    ((javafx.scene.layout.Pane) parent).getChildren().add(goldPouch.getView());
+                } else if (parent instanceof javafx.scene.Group) {
+                    ((javafx.scene.Group) parent).getChildren().add(goldPouch.getView());
+                }
+            }
         }
     }
 
@@ -231,5 +311,27 @@ public abstract class Enemy extends GameObject {
 
     public boolean hasReachedEnd() {
         return hasReachedEnd;
+    }
+
+    public void ApplySpeedUpgrade() {
+        if (!isAlive) return; // Don't apply upgrade if enemy is dead
+        
+        // Increase speed by 50%
+        speed *= 1.5;
+        
+        // Create and add speed up icon
+        if (view != null && view.getParent() != null) {
+            javafx.scene.image.ImageView speedIcon = new javafx.scene.image.ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/speed_up.png")));
+            speedIcon.setFitWidth(20);
+            speedIcon.setFitHeight(20);
+            speedIcon.setTranslateX(x);
+            speedIcon.setTranslateY(y - 30); // Position above the enemy
+            
+            if (view.getParent() instanceof javafx.scene.layout.Pane) {
+                ((javafx.scene.layout.Pane) view.getParent()).getChildren().add(speedIcon);
+            } else if (view.getParent() instanceof javafx.scene.Group) {
+                ((javafx.scene.Group) view.getParent()).getChildren().add(speedIcon);
+            }
+        }
     }
 }

@@ -105,27 +105,40 @@ public class MapLoader extends TileSetLoader {
         root.add(imageView, tile.position.x,tile.position.y);
     }
 
-    public MapLoader(GridPane gridPane , Pane gamePane) {
+    public MapLoader(GridPane gridPane, Pane gamePane, String mapName) {
         super(gridPane);
+        this.gamePane = gamePane;
 
-         // or relative like "saves/"
-        File file = new File(directoryPath, "mapSave.ser");
-
+        // Load the specified map
+        File file = new File(directoryPath, mapName + ".ser");
         TileMap loadedMap = null;
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
             loadedMap = (TileMap) in.readObject();
-
         } catch (Exception e) {
             e.printStackTrace();
+            // If map loading fails, try loading the default map
+            try {
+                File defaultFile = new File(directoryPath, "mapSave.ser");
+                if (defaultFile.exists()) {
+                    try (ObjectInputStream defaultIn = new ObjectInputStream(new FileInputStream(defaultFile))) {
+                        loadedMap = (TileMap) defaultIn.readObject();
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
-        this.gamePane = gamePane;
-
         this.tilemap = loadedMap;
+        if (tilemap != null) {
+            path = tilemap.getPath(gridPane, tileHeight);
+            setUpGrid(gridPane, tilemap.getSize().x, tilemap.getSize().y);
+            constructGrid();
+        }
+    }
 
-        path = tilemap.getPath(gridPane,tileHeight);
-
-        setUpGrid(gridPane,tilemap.getSize().x,tilemap.getSize().y);
-        constructGrid();
+    // Constructor for backward compatibility
+    public MapLoader(GridPane gridPane, Pane gamePane) {
+        this(gridPane, gamePane, "mapSave");
     }
 }

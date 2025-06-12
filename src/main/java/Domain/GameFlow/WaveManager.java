@@ -13,7 +13,11 @@ import javafx.animation.AnimationTimer;
  */
 
 public class WaveManager {
+
+    // Private static instance of the singleton
     private static WaveManager instance;
+
+
     private final List<Wave> waves;     // List to store all waves in the game
     private int currentWaveIndex;       // Tracks which wave is currently active
     private final int xPos;
@@ -42,17 +46,25 @@ public class WaveManager {
         this.waveTimer = 0;
     }
 
-    public static WaveManager getInstance() {
+    // Public static method to get the singleton instance
+    public static synchronized WaveManager getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("WaveManager must be initialized before use. Call initialize() first.");
+        }
         return instance;
     }
 
-    public static void initialize(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
+    // Public static method to initialize the singleton
+    public static synchronized void initialize(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
         if (instance == null) {
             instance = new WaveManager(startX, startY, gamePane, mainPath, gameSceneController);
+        } else {
+            throw new IllegalStateException("WaveManager is already initialized.");
         }
     }
 
-    public static void reset() {
+    // Public static method to reset the singleton
+    public static synchronized void reset() {
         if (instance != null) {
             instance.waveTimer = 0;
             instance.nextWaveToStart = 0;
@@ -61,6 +73,7 @@ public class WaveManager {
             instance.isGameComplete = false;
             instance.gameOver = false;
             instance.playerLives = 10;  // Reset to starting lives
+            instance.waves.clear();     // Clear all waves
         }
         instance = null;
     }

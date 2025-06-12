@@ -25,6 +25,9 @@ public class WaveSpawner {
         this.mainPath = mainPath;
         this.gameSceneController = gameSceneController;
         setupGameLoop();
+        
+        // Set up GoldPouch with GameSceneController
+        Domain.GameObjects.GoldPouch.setGameSceneController(gameSceneController);
     }
     // Adds predefined waves to the manager.
     //Starts the wave logic.
