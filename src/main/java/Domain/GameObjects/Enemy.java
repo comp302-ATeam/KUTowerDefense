@@ -212,10 +212,13 @@ public abstract class Enemy extends GameObject {
             }
             // Remove the enemy from the game pane
             if (view != null && view.getParent() != null) {
-                javafx.scene.layout.Pane parent = (javafx.scene.layout.Pane) view.getParent();
-                parent.getChildren().removeAll(view, healthBar);
-                // Force a layout update
-                parent.requestLayout();
+                javafx.scene.Parent parent = view.getParent();
+                if (parent instanceof javafx.scene.layout.Pane) {
+                    ((javafx.scene.layout.Pane) parent).getChildren().removeAll(view, healthBar);
+                    ((javafx.scene.layout.Pane) parent).requestLayout();
+                } else if (parent instanceof javafx.scene.Group) {
+                    ((javafx.scene.Group) parent).getChildren().removeAll(view, healthBar);
+                }
             }
             // Clear any remaining waypoints
             waypoints.clear();

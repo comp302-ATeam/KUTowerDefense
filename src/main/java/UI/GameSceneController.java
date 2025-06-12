@@ -51,6 +51,12 @@ public class GameSceneController {
     @FXML
     private ImageView pauseResumeImageView;
 
+    private String mapName = "mapSave";  // Default map name
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
+
     private void setImageRed(ImageView imageView, boolean isRed) {
         if (isRed) {
             ColorAdjust colorAdjust = new ColorAdjust();
@@ -168,7 +174,7 @@ public class GameSceneController {
         updateWave(1);    // Reset to first wave
 
         // Initialize new game
-        mapLoader = new MapLoader(gameGrid, gamePane);
+        mapLoader = new MapLoader(gameGrid, gamePane, mapName);
         Vector2<Double>[] mainPath = mapLoader.getPath();
         int startingX = mainPath[0].x.intValue();
         int startingY = mainPath[0].y.intValue();
