@@ -194,6 +194,10 @@ public abstract class Enemy extends GameObject {
         int damageTaken = CalcDamage(projectile);
         healthPoints -= damageTaken;
 
+        if (projectile.type.equals("MagicSpell")){
+            this.speed *= 0.5;
+        }
+
         if( healthPoints <= 0 ) {
             Die();
         }
