@@ -2,6 +2,7 @@ package Domain.GameObjects;
 
 import Domain.GameFlow.GameActionController;
 
+import Domain.GameFlow.Vector2;
 import Domain.GameFlow.WaveManager;
 import Domain.GameObjects.GameObject;
 import UI.TowerMenu;
@@ -187,7 +188,7 @@ public abstract class Tower extends GameObject {
         for (Enemy enemy : Enemy.activeEnemies) {
             if (!enemy.isAlive() || enemy.hasReachedEnd()) continue;
 
-            double distance = distanceTo(enemy);
+            double distance = distanceTo(enemy, new Vector2<Double>((double) enemy.frameWidth / 2,(double) enemy.frameHeight / 2));
             if (distance <= attackRange && distance < shortestDistance) {
                 shortestDistance = distance;
                 closest = enemy;
