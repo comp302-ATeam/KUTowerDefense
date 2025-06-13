@@ -4,6 +4,7 @@ import Domain.GameObjects.Enemy;
 import Domain.GameObjects.Projectile;
 import Domain.GameObjects.Tower;
 import javafx.animation.AnimationTimer;
+import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public class GameActionController {
     // Singleton instance
     private static GameActionController instance;
+    private Pane gamePane;
 
     public static boolean isPaused; // we will be depending on this to check if game is Paused
     public static double gameSpeed;
@@ -129,5 +131,13 @@ public class GameActionController {
         this.gameSpeed = defaultSpeed;
         this.FPS = 8.0;
         System.out.println("Game state reset");
+    }
+
+    public void setGamePane(Pane gamePane) {
+        this.gamePane = gamePane;
+    }
+
+    public Pane getGamePane() {
+        return gamePane;
     }
 }

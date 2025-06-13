@@ -8,8 +8,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -34,7 +33,10 @@ public abstract class Enemy extends GameObject {
     private boolean isAlive = true;
     private static final Random random = new Random();
     protected static java.util.List<Enemy> activeEnemies = new java.util.ArrayList<>();
-
+    protected double baseSpeed;
+    protected double slowEndTime = 0; // Time when slow effect ends
+    protected ImageView slowIcon; // Snowflake icon for slow effect
+    protected boolean isSlowing = false;
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -84,6 +86,15 @@ public abstract class Enemy extends GameObject {
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
         //endregion
+
+        // Initialize slow icon with transparent background
+        Image originalImage = new Image(getClass().getResourceAsStream("/assets/phase2/snow flake icon.png"));
+        Image transparentImage = makeWhiteTransparent(originalImage);
+        this.slowIcon = new ImageView(transparentImage);
+        this.slowIcon.setFitWidth(20);
+        this.slowIcon.setFitHeight(20);
+        this.slowIcon.setVisible(false);
+        GameActionController.getInstance().getGamePane().getChildren().add(slowIcon);
     }
     public void setFPS(double FPS){this.FPS =FPS;}
     public double getSpeed() {return speed;}
@@ -137,6 +148,15 @@ public abstract class Enemy extends GameObject {
 
     @Override
     public void update(double deltaTime) {
+        if (!isAlive || hasReachedEnd) return;
+
+        // Check if slow effect has ended
+        if (slowEndTime > 0 && System.currentTimeMillis() > slowEndTime) {
+            speed = baseSpeed;
+            slowEndTime = 0;
+            slowIcon.setVisible(false);
+        }
+
         GameActionController gameActionController = GameActionController.getInstance();
 
         // Handle animation based on pause state
@@ -150,6 +170,10 @@ public abstract class Enemy extends GameObject {
                 animation.play();
             }
         }
+
+        // Update slow icon position
+        slowIcon.setTranslateX(x + 20); // Position to the right
+        slowIcon.setTranslateY(y + 20); // Position below
 
         if (movingToTarget) {
             double dx = targetX - x, dy = targetY - y;
@@ -191,11 +215,14 @@ public abstract class Enemy extends GameObject {
     // amount of damage from the health point of that enemy object
     // if the damage is lethal, then the enemy object calls the method Die()
     public void takeDamage(Projectile projectile) {
+        if (!isAlive) return;
         int damageTaken = CalcDamage(projectile);
         healthPoints -= damageTaken;
 
-        if (projectile.type.equals("MagicSpell")){
-            this.speed *= 0.5;
+        if (projectile.type.equals("MagicSpell") && !isSlowing) {
+            //slowEndTime = System.currentTimeMillis() + 2000; // Set slow effect to end in 2 seconds
+            slowIcon.setVisible(true);
+            isSlowing = true;
         }
 
         if( healthPoints <= 0 ) {
@@ -204,8 +231,6 @@ public abstract class Enemy extends GameObject {
         // Update the health bar width based on the current health points
         double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
         healthBar.setWidth(healthBarWidth);
-
-
     }
 
     public Rectangle getHealthBar () {
@@ -311,6 +336,9 @@ public abstract class Enemy extends GameObject {
                     ((javafx.scene.Group) parent).getChildren().add(goldPouch.getView());
                 }
             }
+
+            // Remove slow icon
+            GameActionController.getInstance().getGamePane().getChildren().remove(slowIcon);
         }
     }
 
@@ -322,6 +350,29 @@ public abstract class Enemy extends GameObject {
 
     public boolean hasReachedEnd() {
         return hasReachedEnd;
+    }
+    public Image makeWhiteTransparent(Image inputImage) {
+        int width = (int) inputImage.getWidth();
+        int height = (int) inputImage.getHeight();
+
+        WritableImage outputImage = new WritableImage(width, height);
+        PixelReader reader = inputImage.getPixelReader();
+        PixelWriter writer = outputImage.getPixelWriter();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = reader.getColor(x, y);
+
+                // Make nearly-white pixels fully transparent
+                if (color.getRed() > 0.95 && color.getGreen() > 0.95 && color.getBlue() > 0.95) {
+                    writer.setColor(x, y, new Color(1, 1, 1, 0)); // Transparent
+                } else {
+                    writer.setColor(x, y, color);
+                }
+            }
+        }
+
+        return outputImage;
     }
 
 }

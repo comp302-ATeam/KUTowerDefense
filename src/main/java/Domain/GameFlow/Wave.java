@@ -150,7 +150,7 @@ public class Wave {
         int offset = activeEnemies.size() * 65;
         if (currentEnemyCount < goblinCount) {
             // Base HP for goblin is 100, multiply by wave difficulty
-            int goblinHP = (int)(100 * hpMultiplier);
+            int goblinHP = (int)(700 * hpMultiplier);
             Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", goblinHP, 100, new ImageView(goblinImg));
             activeEnemies.add(goblin);
             gamePane.getChildren().addAll(goblin.getView(), goblin.getHealthBar());

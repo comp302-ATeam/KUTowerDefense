@@ -186,6 +186,9 @@ public class GameSceneController {
         // Reset WaveManager
         WaveManager.reset();
 
+        // Set game pane in GameActionController
+        gameActionController.setGamePane(gamePane);
+
         // Initialize new WaveSpawner
         waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
         waveSpawner.startGame();

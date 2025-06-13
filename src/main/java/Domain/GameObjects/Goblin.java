@@ -38,5 +38,15 @@ public class Goblin extends Enemy {
         }
     }
 
+    @Override
+    public void update(double deltaTime) {
+        if (!isAlive() || hasReachedEnd()) return;
 
+
+        slowIcon.setTranslateX(x + 20);
+        slowIcon.setTranslateY(y + 20);
+
+        // Call parent's update to handle movement
+        super.update(deltaTime);
+    }
 }
