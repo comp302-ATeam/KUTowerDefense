@@ -155,11 +155,7 @@ public class Wave {
             goblin.moveAlong(mainPath);
             currentEnemyCount++;
             // Kill after 8 seconds
-            javafx.animation.Timeline killTimer = new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(8), e -> goblin.Die())
-            );
-            killTimer.setCycleCount(1);
-            killTimer.play();
+
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
             // Base HP for knight is 100, multiply by wave difficulty
             int knightHP = (int)(100 * hpMultiplier);
@@ -173,11 +169,6 @@ public class Wave {
             knight.moveAlong(mainPath);
             currentEnemyCount++;
             // Kill after 8 seconds
-            javafx.animation.Timeline killTimer = new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(javafx.util.Duration.seconds(8), e -> knight.Die())
-            );
-            killTimer.setCycleCount(1);
-            killTimer.play();
         }
     }
 
