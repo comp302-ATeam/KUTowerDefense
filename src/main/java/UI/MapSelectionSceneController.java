@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,11 +80,11 @@ public class MapSelectionSceneController {
     }
 
     @FXML
-    private void onBack() {
+    private void onBack(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/FXML/MainMenu.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/StartScene.fxml"));
             Scene scene = new Scene(root);
-            Stage stage = (Stage) this.root.getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();

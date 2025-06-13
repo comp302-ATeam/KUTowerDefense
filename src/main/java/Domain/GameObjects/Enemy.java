@@ -33,6 +33,7 @@ public abstract class Enemy extends GameObject {
     private boolean hasReachedEnd = false;  // Track if enemy has reached the end
     private boolean isAlive = true;
     private static final Random random = new Random();
+    protected static java.util.List<Enemy> activeEnemies = new java.util.ArrayList<>();
 
 
     //region Animation Attributes
@@ -56,6 +57,7 @@ public abstract class Enemy extends GameObject {
         this.healthPoints = healthPoints;
         this.maxHealthPoints = healthPoints;
         this.speed = speed;
+        activeEnemies.add(this);
 
         // Initialize health bar
         this.healthBar = new Rectangle(50, 5); // Width: 50, Height: 5
@@ -216,6 +218,11 @@ public abstract class Enemy extends GameObject {
                 animation.stop();
             }
 
+            // Remove from active enemies list
+            if (activeEnemies != null) {
+                activeEnemies.remove(this);
+            }
+
             // Store parent reference before removing anything
             javafx.scene.Parent parent = view != null ? view.getParent() : null;
 
@@ -313,25 +320,4 @@ public abstract class Enemy extends GameObject {
         return hasReachedEnd;
     }
 
-    public void ApplySpeedUpgrade() {
-        if (!isAlive) return; // Don't apply upgrade if enemy is dead
-        
-        // Increase speed by 50%
-        speed *= 1.5;
-        
-        // Create and add speed up icon
-        if (view != null && view.getParent() != null) {
-            javafx.scene.image.ImageView speedIcon = new javafx.scene.image.ImageView(new javafx.scene.image.Image(getClass().getResourceAsStream("/images/speed_up.png")));
-            speedIcon.setFitWidth(20);
-            speedIcon.setFitHeight(20);
-            speedIcon.setTranslateX(x);
-            speedIcon.setTranslateY(y - 30); // Position above the enemy
-            
-            if (view.getParent() instanceof javafx.scene.layout.Pane) {
-                ((javafx.scene.layout.Pane) view.getParent()).getChildren().add(speedIcon);
-            } else if (view.getParent() instanceof javafx.scene.Group) {
-                ((javafx.scene.Group) view.getParent()).getChildren().add(speedIcon);
-            }
-        }
-    }
 }

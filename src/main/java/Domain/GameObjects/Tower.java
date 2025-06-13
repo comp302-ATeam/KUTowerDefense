@@ -181,11 +181,10 @@ public abstract class Tower extends GameObject {
 
 
     protected Enemy getClosestEnemy(){
-        List<Enemy> enemylist = WaveManager.getInstance().getActiveEnemies();
         Enemy closest = null;
         double shortestDistance = Double.MAX_VALUE;
 
-        for (Enemy enemy : enemylist) {
+        for (Enemy enemy : Enemy.activeEnemies) {
             if (!enemy.isAlive() || enemy.hasReachedEnd()) continue;
 
             double distance = distanceTo(enemy);
