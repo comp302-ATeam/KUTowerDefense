@@ -39,8 +39,8 @@ public abstract class Enemy extends GameObject {
     private static final int FRAME_COLUMNS = 6;
     private static final int FRAME_COUNT   = 6;
     private static double FPS        = 8.0;
-    private final int frameWidth;
-    private final int frameHeight;
+    public final int frameWidth;
+    public final int frameHeight;
     private int currentFrame = 0;
     private final Timeline animation;
     private final int frameCount;

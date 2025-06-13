@@ -1,5 +1,7 @@
 package Domain.GameFlow;
 
+import Domain.GameObjects.Enemy;
+import Domain.GameObjects.Projectile;
 import Domain.GameObjects.Tower;
 import javafx.animation.AnimationTimer;
 
@@ -18,6 +20,7 @@ public class GameActionController {
     private static double FPS = 8.0;
 
     public static List<Tower>  towerList =  new ArrayList<>();
+    public static List<Projectile> projectileList = new ArrayList<>();
 
 
     // Private constructor to prevent direct instantiation
@@ -52,8 +55,14 @@ public class GameActionController {
     }
 
     public void updateGame(double deltaTime) {
+        if (isPaused) return;
+
         for (Tower tower : towerList) {
             tower.update(deltaTime);
+        }
+
+        for (Projectile projectile : projectileList) {
+            projectile.update(deltaTime);
         }
     }
 

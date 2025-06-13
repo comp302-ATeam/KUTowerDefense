@@ -2,12 +2,15 @@ package Domain.GameObjects;
 
 import Domain.GameFlow.GameActionController;
 
+import Domain.GameFlow.WaveManager;
 import Domain.GameObjects.GameObject;
 import UI.TowerMenu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.List;
 
@@ -57,14 +60,38 @@ public abstract class Tower extends GameObject {
 
 
     // Abstract method for attacking enemies
-    public void attack(Enemy target){
+    public void attack(){
         if (!canAttack()){
             return;
         }
-        if (true){
+
+        Enemy target = getClosestEnemy();
+
+//        Enemy target = findBestTarget(GameActionController.getInstance().enemyList); // assuming you add this list
+        if (target != null) {
+            Projectile p = new MagicSpell((int) x + 48, (int) y + 48, damage,target); // Adjust center offset
+            mapPane.getChildren().add(p);
+            GameActionController.projectileList.add(p);
             updateLastAttackTime();
         }
 
+
+
+    }
+
+
+    public void drawDebugRange() {
+        Circle rangeCircle = new Circle(attackRange);
+        rangeCircle.setStroke(Color.RED);        // Outline color
+        rangeCircle.setFill(Color.TRANSPARENT);  // No fill
+        rangeCircle.setStrokeWidth(2);
+        rangeCircle.setMouseTransparent(true);   // Ignore clicks
+
+        // Center the circle around the tower
+        rangeCircle.setLayoutX(x + 48);  // Adjust if your tower size is different
+        rangeCircle.setLayoutY(y + 48);
+
+        mapPane.getChildren().add(rangeCircle);
     }
 
     // Render Method
@@ -83,6 +110,7 @@ public abstract class Tower extends GameObject {
         towerImage.setLayoutY(y);
 
         mapPane.getChildren().add(towerImage);
+        drawDebugRange();
     }
 
     // Method to upgrade the tower
@@ -149,6 +177,25 @@ public abstract class Tower extends GameObject {
         }
 
         return bestTarget;
+    }
+
+
+    protected Enemy getClosestEnemy(){
+        List<Enemy> enemylist = WaveManager.getInstance().getActiveEnemies();
+        Enemy closest = null;
+        double shortestDistance = Double.MAX_VALUE;
+
+        for (Enemy enemy : enemylist) {
+            if (!enemy.isAlive() || enemy.hasReachedEnd()) continue;
+
+            double distance = distanceTo(enemy);
+            if (distance <= attackRange && distance < shortestDistance) {
+                shortestDistance = distance;
+                closest = enemy;
+            }
+        }
+
+        return closest;
     }
 
     // Method to check if tower can attack based on fire rate
