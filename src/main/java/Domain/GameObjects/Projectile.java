@@ -1,25 +1,103 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.GameActionController;
+import Domain.GameFlow.Vector2;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
-public class Projectile extends GameObject{
+public class  Projectile extends ImageView{
     int damage;
     String type;
     Enemy target;
-    public Projectile(int xPos, int yPos, int damage, String type, Enemy target, ImageView image) {
-        super(xPos, yPos,image);
+    double speed = 300;
+
+    Vector2<Double> offset;
+
+    public Projectile(int xPos, int yPos, int damage, String type, Enemy target,String imagePath) {
+
+        super(new Image(Projectile.class.getResource(imagePath).toExternalForm()));
+
+        this.target = target;
         this.damage = damage;
         this.type = type;
-        this.target = target;
+
+        // Size the image
+        setFitWidth(16);
+        setFitHeight(16);
+
+        // Position it initially
+        setLayoutX(xPos - getFitWidth() / 2);
+        setLayoutY(yPos - getFitHeight() / 2);
+
+        offset = new Vector2<Double>(0.0,0.0);
+        offset.x = (double) target.frameWidth / 2;
+        offset.y = (double) target.frameHeight / 2;
     }
 
     public int getDamage() {
         return damage;
     }
 
-    @Override
+
     public void update(double deltaTime) {
+        if (target == null || !target.isAlive()) return;
+
+        double centerX = getLayoutX() + getFitWidth() / 2;
+        double centerY = getLayoutY() + getFitHeight() / 2;
+
+        double dx = target.x - centerX + offset.x;
+        double dy = target.y - centerY + offset.y;
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 1e-5) return;
+
+        double vx = dx / distance * speed * deltaTime;
+        double vy = dy / distance * speed * deltaTime;
+
+        setLayoutX(getLayoutX() + vx);
+        setLayoutY(getLayoutY() + vy);
+        if (hasHitTarget()){
+            target.takeDamage(this);
+
+            this.destroy();
+        }
 
     }
+
+    public boolean hasHitTarget() {
+        if (target == null || !target.isAlive()) return true;
+
+        double centerX = getLayoutX() + getFitWidth() / 2;
+        double centerY = getLayoutY() + getFitHeight() / 2;
+
+        double dx = target.x - centerX;
+        double dy = target.y - centerY;
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 150) {
+
+            if (target.isAlive()) target.takeDamage(this);
+
+            // let the enemy apply its own logic
+            return true;
+        }
+        return false;
+    }
+
+    public void destroy() {
+        // Remove from pane
+        if (this.getParent() != null) {
+            ((Pane) this.getParent()).getChildren().remove(this);
+        }
+
+        // Remove from game logic list
+        GameActionController.projectileList.remove(this);
+    }
+
+    public Enemy getTarget() {
+        return target;
+    }
+
 }
+
