@@ -12,6 +12,9 @@ public class Goblin extends Enemy {
     private static final int   FRAMES   = 6;
     private static final int   COLS     = 6;
     private static final double FPS      = 8.0;
+    private double baseSpeed; // Store the original speed
+    private double speedBoostEndTime = 0;
+    private double slowEndTime = 0;
     // goblin class is faster than knight class so it should have a greater speed multiplier.
     double speedMultiplier = 1.10;
     public Goblin(int xPos, int yPos, String enemyType, int healthPoints, int speed, ImageView imageObject) {
@@ -38,15 +41,6 @@ public class Goblin extends Enemy {
         }
     }
 
-    @Override
-    public void update(double deltaTime) {
-        if (!isAlive() || hasReachedEnd()) return;
 
 
-        slowIcon.setTranslateX(x + 20);
-        slowIcon.setTranslateY(y + 20);
-
-        // Call parent's update to handle movement
-        super.update(deltaTime);
-    }
 }

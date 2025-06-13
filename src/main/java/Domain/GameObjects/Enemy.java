@@ -152,9 +152,10 @@ public abstract class Enemy extends GameObject {
 
         // Check if slow effect has ended
         if (slowEndTime > 0 && System.currentTimeMillis() > slowEndTime) {
-            speed = baseSpeed;
             slowEndTime = 0;
             slowIcon.setVisible(false);
+            setSpeed(baseSpeed);
+            // Reset speed based on whether we're near goblins
         }
 
         GameActionController gameActionController = GameActionController.getInstance();
@@ -222,7 +223,6 @@ public abstract class Enemy extends GameObject {
         if (projectile.type.equals("MagicSpell") && !isSlowing) {
             //slowEndTime = System.currentTimeMillis() + 2000; // Set slow effect to end in 2 seconds
             slowIcon.setVisible(true);
-            isSlowing = true;
         }
 
         if( healthPoints <= 0 ) {

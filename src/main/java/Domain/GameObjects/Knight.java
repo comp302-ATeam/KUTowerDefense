@@ -89,7 +89,7 @@ public class Knight extends Enemy {
         // Apply current speed based on effects
         if (slowEndTime > 0) {
             // If slowed, apply slow effect
-        if (isBoosted) {
+            if (isBoosted) {
                 setSpeed(baseSpeed * SPEED_BUFF_MULTIPLIER * 0.8);
             } else {
                 setSpeed(baseSpeed * 0.8);
@@ -102,7 +102,7 @@ public class Knight extends Enemy {
                 setSpeed(baseSpeed);
             }
         }
-        
+
         // Update icon visibility and positions
         speedBuffIcon.setVisible(isBoosted);
         slowIcon.setVisible(slowEndTime > 0);
