@@ -7,7 +7,10 @@ public class TowerLot extends Tower{
     private static final String PATH = "/Assets/Towers/TowerSlotwithoutbackground128.png";
 
 
-
+    @Override
+    public Projectile createProjectile(Enemy e){
+        return null;
+    }
 
     @Override
     public void update(double deltaTime) {}

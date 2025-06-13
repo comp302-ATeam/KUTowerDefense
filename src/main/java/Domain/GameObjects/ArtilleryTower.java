@@ -22,7 +22,10 @@ public class ArtilleryTower extends Tower {
         renderTower(PATH);
     }
 
-
+    @Override
+    public Projectile createProjectile(Enemy enemy){
+        return new ArtilleryShell((int) x + 48, (int) y + 48, damage,enemy , 50);
+    }
 
     // Method to get splash radius
     public int getSplashRadius() {
@@ -38,6 +41,6 @@ public class ArtilleryTower extends Tower {
 
     @Override
     public void update(double deltaTime) {
-
+        attack();
     }
 }

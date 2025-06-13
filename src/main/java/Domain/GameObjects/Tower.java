@@ -60,6 +60,9 @@ public abstract class Tower extends GameObject {
     }
 
 
+
+
+
     // Abstract method for attacking enemies
     public void attack(){
         if (!canAttack()){
@@ -70,7 +73,8 @@ public abstract class Tower extends GameObject {
 
 //        Enemy target = findBestTarget(GameActionController.getInstance().enemyList); // assuming you add this list
         if (target != null) {
-            Projectile p = new MagicSpell((int) x + 48, (int) y + 48, damage,target); // Adjust center offset
+
+            Projectile p = createProjectile(target);// Adjust center offset
             mapPane.getChildren().add(p);
             GameActionController.projectileList.add(p);
             updateLastAttackTime();
@@ -209,6 +213,8 @@ public abstract class Tower extends GameObject {
     public void updateLastAttackTime() {
         lastAttackTime = System.currentTimeMillis();
     }
+
+    public abstract Projectile createProjectile(Enemy enemy);
 
     public abstract void update(double deltaTime);
 }

@@ -13,7 +13,10 @@ public class MageTower extends Tower {
         renderTower(PATH);
     }
 
-
+    @Override
+    public Projectile createProjectile(Enemy enemy){
+        return new MagicSpell((int) x + 48, (int) y + 48, damage,enemy);
+    }
 
     @Override
     public void update(double deltaTime) {

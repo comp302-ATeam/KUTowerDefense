@@ -10,9 +10,11 @@ public class  Projectile extends ImageView{
     int damage;
     String type;
     Enemy target;
-    double speed = 300;
+    double speed = 600;
     public boolean isActive = true;
     Vector2<Double> offset;
+
+    protected double rotateOffset = 90.0;
 
     public Projectile(int xPos, int yPos, int damage, String type, Enemy target,String imagePath) {
 
@@ -22,9 +24,19 @@ public class  Projectile extends ImageView{
         this.damage = damage;
         this.type = type;
 
+
+        if (!type.equals("MagicSpell")){
+            setFitWidth(32);
+            setFitHeight(32);
+        }
+        else {
+            setFitWidth(96);
+            setFitHeight(96);
+        }
+
         // Size the image
-        setFitWidth(16);
-        setFitHeight(16);
+        //setFitWidth(16);
+        //setFitHeight(16);
 
         // Position it initially
         setLayoutX(xPos - getFitWidth() / 2);
@@ -66,6 +78,10 @@ public class  Projectile extends ImageView{
         setLayoutX(getLayoutX() + vx);
         setLayoutY(getLayoutY() + vy);
 
+        if (!type.equals("ArtilleryShell")){
+            double angle = Math.toDegrees(Math.atan2(dy, dx));
+            setRotate(angle - rotateOffset);
+        }
 
     }
 
@@ -79,7 +95,7 @@ public class  Projectile extends ImageView{
         double dy = target.y - centerY + offset.y;
         double distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 30) {
+        if (distance < 15) {
 
             if (target.isAlive()) target.takeDamage(this);
 
