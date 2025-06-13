@@ -11,7 +11,7 @@ public class  Projectile extends ImageView{
     String type;
     Enemy target;
     double speed = 300;
-
+    public boolean isActive = true;
     Vector2<Double> offset;
 
     public Projectile(int xPos, int yPos, int damage, String type, Enemy target,String imagePath) {
@@ -41,7 +41,15 @@ public class  Projectile extends ImageView{
 
 
     public void update(double deltaTime) {
-        if (target == null || !target.isAlive()) return;
+
+        if (hasHitTarget()){
+            target.takeDamage(this);
+
+            this.destroy();
+            return;
+        }
+
+
 
         double centerX = getLayoutX() + getFitWidth() / 2;
         double centerY = getLayoutY() + getFitHeight() / 2;
@@ -57,11 +65,7 @@ public class  Projectile extends ImageView{
 
         setLayoutX(getLayoutX() + vx);
         setLayoutY(getLayoutY() + vy);
-        if (hasHitTarget()){
-            target.takeDamage(this);
 
-            this.destroy();
-        }
 
     }
 
@@ -71,11 +75,11 @@ public class  Projectile extends ImageView{
         double centerX = getLayoutX() + getFitWidth() / 2;
         double centerY = getLayoutY() + getFitHeight() / 2;
 
-        double dx = target.x - centerX;
-        double dy = target.y - centerY;
+        double dx = target.x - centerX + offset.x;
+        double dy = target.y - centerY + offset.y;
         double distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 150) {
+        if (distance < 30) {
 
             if (target.isAlive()) target.takeDamage(this);
 
@@ -87,6 +91,7 @@ public class  Projectile extends ImageView{
 
     public void destroy() {
         // Remove from pane
+        isActive = false;
         if (this.getParent() != null) {
             ((Pane) this.getParent()).getChildren().remove(this);
         }

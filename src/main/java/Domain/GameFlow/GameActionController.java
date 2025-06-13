@@ -61,9 +61,17 @@ public class GameActionController {
             tower.update(deltaTime);
         }
 
-        for (Projectile projectile : projectileList) {
-            projectile.update(deltaTime);
+        List<Projectile> toRemove = new ArrayList<>();
+
+        for (Projectile p : projectileList) {
+            //System.out.println(WaveManager.getInstance().getActiveEnemies().size());
+            p.update(deltaTime);
+            if (!p.isActive) {
+                toRemove.add(p);
+            }
         }
+
+        projectileList.removeAll(toRemove);
     }
 
     public static double getFPS(){
