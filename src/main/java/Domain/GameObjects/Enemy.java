@@ -219,15 +219,15 @@ public abstract class Enemy extends GameObject {
         if (!isAlive) return;
         int damageTaken = CalcDamage(projectile);
         healthPoints -= damageTaken;
-
+        if( healthPoints <= 0 ) {
+            Die();
+        }
         if (projectile.type.equals("MagicSpell") && !isSlowing) {
             //slowEndTime = System.currentTimeMillis() + 2000; // Set slow effect to end in 2 seconds
             slowIcon.setVisible(true);
         }
 
-        if( healthPoints <= 0 ) {
-            Die();
-        }
+
         // Update the health bar width based on the current health points
         double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
         healthBar.setWidth(healthBarWidth);
