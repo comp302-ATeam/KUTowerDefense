@@ -18,8 +18,8 @@ import java.util.*;
 
 public abstract class Enemy extends GameObject {
     /* enemy has 4 attributes, it has its own enemy type (goblin or knight)
-    *  its health points and its speed and also image of that enemy.
-    * */
+     *  its health points and its speed and also image of that enemy.
+     * */
     String enemyType;
     int healthPoints;
     double speed;
@@ -37,6 +37,8 @@ public abstract class Enemy extends GameObject {
     protected double slowEndTime = 0; // Time when slow effect ends
     protected ImageView slowIcon; // Snowflake icon for slow effect
     protected boolean isSlowing = false;
+    protected static final double SLOW_DURATION = 4000; // 4 seconds in milliseconds
+    protected static final double SLOW_FACTOR = 0.8; // Slow to 80% of original speed (20% reduction)
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -142,7 +144,7 @@ public abstract class Enemy extends GameObject {
                 Die();
             }
         } else {
-        advanceWaypoint();
+            advanceWaypoint();
         }
     }
 
@@ -151,11 +153,11 @@ public abstract class Enemy extends GameObject {
         if (!isAlive || hasReachedEnd) return;
 
         // Check if slow effect has ended
-        if (slowEndTime > 0 && System.currentTimeMillis() > slowEndTime) {
+        if (isSlowing && System.currentTimeMillis() > slowEndTime) {
+            isSlowing = false;
             slowEndTime = 0;
             slowIcon.setVisible(false);
-            setSpeed(baseSpeed);
-            // Reset speed based on whether we're near goblins
+            speed = baseSpeed; // Restore original speed
         }
 
         GameActionController gameActionController = GameActionController.getInstance();
@@ -172,9 +174,9 @@ public abstract class Enemy extends GameObject {
             }
         }
 
-        // Update slow icon position
-        slowIcon.setTranslateX(x + 20); // Position to the right
-        slowIcon.setTranslateY(y + 20); // Position below
+        // Update slow icon position - position it next to health bar
+        slowIcon.setTranslateX(x + 25); // Position to the right of health bar
+        slowIcon.setTranslateY(y - 10); // Same height as health bar
 
         if (movingToTarget) {
             double dx = targetX - x, dy = targetY - y;
@@ -222,15 +224,26 @@ public abstract class Enemy extends GameObject {
         if( healthPoints <= 0 ) {
             Die();
         }
-        if (projectile.type.equals("MagicSpell") && !isSlowing) {
-            //slowEndTime = System.currentTimeMillis() + 2000; // Set slow effect to end in 2 seconds
-            slowIcon.setVisible(true);
+        if (projectile.type.equals("MagicSpell")) {
+            applySlowEffect();
         }
-
 
         // Update the health bar width based on the current health points
         double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
         healthBar.setWidth(healthBarWidth);
+    }
+
+    protected void applySlowEffect() {
+        if (!isSlowing) {
+            isSlowing = true;
+            baseSpeed = speed; // Store current speed as base speed
+            speed *= SLOW_FACTOR; // Reduce speed by 20%
+            slowEndTime = System.currentTimeMillis() + SLOW_DURATION;
+            slowIcon.setVisible(true);
+        } else {
+            // If already slowed, just extend the duration
+            slowEndTime = System.currentTimeMillis() + SLOW_DURATION;
+        }
     }
 
     public Rectangle getHealthBar () {
@@ -261,7 +274,7 @@ public abstract class Enemy extends GameObject {
                     javafx.scene.layout.Pane pane = (javafx.scene.layout.Pane) parent;
                     // Remove all UI elements
                     pane.getChildren().remove(view);
-                    
+
                     // Remove health bar
                     if (healthBar != null) {
                         healthBar.setDisable(true);
@@ -274,9 +287,9 @@ public abstract class Enemy extends GameObject {
                     // Remove speed up icon if it exists - using a larger tolerance
                     for (javafx.scene.Node node : new ArrayList<>(pane.getChildren())) {
                         if (node instanceof javafx.scene.image.ImageView &&
-                            node != view &&
-                            Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
-                            Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
+                                node != view &&
+                                Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
+                                Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
                             node.setDisable(true);
                             node.setMouseTransparent(true);
                             node.setVisible(false);
@@ -289,7 +302,7 @@ public abstract class Enemy extends GameObject {
                     javafx.scene.Group group = (javafx.scene.Group) parent;
                     // Remove all UI elements
                     group.getChildren().remove(view);
-                    
+
                     // Remove health bar
                     if (healthBar != null) {
                         healthBar.setDisable(true);
@@ -302,9 +315,9 @@ public abstract class Enemy extends GameObject {
                     // Remove speed up icon if it exists - using a larger tolerance
                     for (javafx.scene.Node node : new ArrayList<>(group.getChildren())) {
                         if (node instanceof javafx.scene.image.ImageView &&
-                            node != view &&
-                            Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
-                            Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
+                                node != view &&
+                                Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
+                                Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
                             node.setDisable(true);
                             node.setMouseTransparent(true);
                             node.setVisible(false);
@@ -324,7 +337,7 @@ public abstract class Enemy extends GameObject {
                 // Spawn gold pouch at the enemy's death position with a small random offset
                 double offsetX = (random.nextDouble() - 0.5) * 20; // ±10 pixels
                 double offsetY = (random.nextDouble() - 0.5) * 20; // ±10 pixels
-                
+
                 double pouchX = x + offsetX;
                 double pouchY = y + offsetY;
 
