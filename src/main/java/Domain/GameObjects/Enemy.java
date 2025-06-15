@@ -240,7 +240,7 @@ public abstract class Enemy extends GameObject {
         if( healthPoints <= 0 ) {
             Die();
         }
-        if (projectile.type.equals("MagicSpell")) {
+        if (projectile.type.equals("MagicSpell") && isAlive) {
             applySlowEffect();
             // Check for teleport chance after applying slow effect
             if (random.nextDouble() < TELEPORT_CHANCE && isAlive) {
@@ -322,6 +322,7 @@ public abstract class Enemy extends GameObject {
                 activeEnemies.remove(this);
             }
 
+
             // Store parent reference before removing anything
             javafx.scene.Parent parent = view != null ? view.getParent() : null;
 
@@ -388,9 +389,8 @@ public abstract class Enemy extends GameObject {
             // Clear any remaining waypoints
             waypoints.clear();
             movingToTarget = false;
-
             // Only spawn gold pouch if enemy died on the path (not at the end) and with 50% chance
-            if (!hasReachedEnd && parent != null && random.nextDouble() < 0.5) {
+            if (!hasReachedEnd && parent != null && random.nextDouble() < 1) {
                 // Spawn gold pouch at the enemy's death position with a small random offset
                 double offsetX = (random.nextDouble() - 0.5) * 20; // ±10 pixels
                 double offsetY = (random.nextDouble() - 0.5) * 20; // ±10 pixels
