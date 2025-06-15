@@ -37,6 +37,9 @@ public class WaveSpawner {
         waveManager.addWave(3, 3, 1);  // 3 knights 3 goblins 1 group
         waveManager.addWave(3, 2, 3);
         waveManager.addWave(4, 3, 2);
+        waveManager.addWave(1,0,1);
+        waveManager.addWave(0,1,1);
+
 
         waveManager.startWaves();   // Start wave spawning
         isPaused = false;

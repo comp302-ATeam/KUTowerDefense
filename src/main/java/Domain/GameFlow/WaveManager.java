@@ -44,6 +44,9 @@ public class WaveManager {
         this.gameSceneController = gameSceneController;
         this.nextWaveToStart = 0;
         this.waveTimer = 0;
+
+        // Set the path in GameActionController
+        GameActionController.getInstance().setMainPath(mainPath);
     }
 
     // Public static method to get the singleton instance
@@ -106,7 +109,7 @@ public class WaveManager {
     //Updates all waves that have already been started.
     public void updateAndAdvanceWaves(GameSceneController controller, double deltaTime) {
         if (gameOver) return;  // Don't update waves if game is over
-        
+
         if (nextWaveToStart > 0) {
             waveTimer += deltaTime;
             if (nextWaveToStart < waves.size() && waveTimer >= WAVE_INTERVAL) {
@@ -141,13 +144,13 @@ public class WaveManager {
     public void enemyReachedEnd() {
         if (gameOver) return;  // Don't process if game is already over
 
-        
+
         // Check if game over
         if (playerLives <= 1) {
             gameOver = true;  // Set game over flag
             // Stop the game
             GameActionController.getInstance().pauseGame();
-            
+
             // Show game over screen
             try {
                 javafx.application.Platform.runLater(() -> {
@@ -155,23 +158,23 @@ public class WaveManager {
                         // Create a container for the game content
                         Pane gameContent = new Pane();
                         gameContent.setPrefSize(gamePane.getWidth(), gamePane.getHeight());
-                        
+
                         // Move all existing children to the game content pane
                         while (!gamePane.getChildren().isEmpty()) {
                             gameContent.getChildren().add(gamePane.getChildren().get(0));
                         }
-                        
+
                         // Add the game content pane to the main game pane
                         gamePane.getChildren().add(gameContent);
-                        
+
                         // Add blur effect to the game content
                         javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(10);
                         gameContent.setEffect(blur);
-                        
+
                         // Load the game over screen
                         javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(UI.GameOverScreenController.class.getResource("/GameOverScreen.fxml"));
                         javafx.scene.Parent root = loader.load();
-                        
+
                         // Get the controller and ensure it's initialized
                         UI.GameOverScreenController controller = loader.getController();
                         if (controller != null) {
@@ -179,10 +182,10 @@ public class WaveManager {
                         } else {
                             System.out.println("Warning: Game over screen controller is null");
                         }
-                        
+
                         // Add the game over screen as an overlay to the game pane
                         gamePane.getChildren().add(root);
-                        
+
                         // Center the game over screen
                         root.setLayoutX((gamePane.getWidth() - root.prefWidth(-1)) / 2);
                         root.setLayoutY((gamePane.getHeight() - root.prefHeight(-1)) / 2);

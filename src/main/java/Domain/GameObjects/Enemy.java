@@ -38,7 +38,9 @@ public abstract class Enemy extends GameObject {
     protected ImageView slowIcon; // Snowflake icon for slow effect
     protected boolean isSlowing = false;
     protected static final double SLOW_DURATION = 4000; // 4 seconds in milliseconds
-    protected static final double SLOW_FACTOR = 0.8; // Slow to 80% of original speed (20% reduction)
+    protected static final double SLOW_FACTOR = 0.5; // Slow to 80% of original speed (20% reduction)
+    protected static final double TELEPORT_CHANCE = 1; // 3% chance for teleport
+    protected Vector2<Double> startPosition; // Store the start position for teleporting
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -61,6 +63,7 @@ public abstract class Enemy extends GameObject {
         this.healthPoints = healthPoints;
         this.maxHealthPoints = healthPoints;
         this.speed = speed;
+        this.startPosition = new Vector2<>(xPos, yPos); // Store initial position
         activeEnemies.add(this);
 
         // Initialize health bar
@@ -175,8 +178,10 @@ public abstract class Enemy extends GameObject {
         }
 
         // Update slow icon position - position it next to health bar
-        slowIcon.setTranslateX(x + 25); // Position to the right of health bar
-        slowIcon.setTranslateY(y - 10); // Same height as health bar
+        if (slowIcon != null) {
+            slowIcon.setTranslateX(x + 25); // Position to the right of health bar
+            slowIcon.setTranslateY(y - 10); // Same height as health bar
+        }
 
         if (movingToTarget) {
             double dx = targetX - x, dy = targetY - y;
@@ -198,17 +203,28 @@ public abstract class Enemy extends GameObject {
             Die();
         }
         // 1) Update the health bar position
-        healthBar.setTranslateX(x);
-        healthBar.setTranslateY(y - 10); // Position above the enemy
-        healthBar.setFill(Color.GREEN);
-        healthBar.toFront();
+        if (healthBar != null) {
+            healthBar.setTranslateX(x);
+            healthBar.setTranslateY(y - 10); // Position above the enemy
+            healthBar.setFill(Color.GREEN);
+            healthBar.toFront();
 
-        // 2) Update the health bar width based on the current health points
-        double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
-        healthBar.setWidth(healthBarWidth);
+            // 2) Update the health bar width based on the current health points
+            double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
+            healthBar.setWidth(healthBarWidth);
+        }
         // 3) Push transforms to the view
         updateViewTransform();
     }
+
+    @Override
+    public void updateViewTransform() {
+        if (view != null) {
+            view.setTranslateX(x);
+            view.setTranslateY(y);
+        }
+    }
+
     // calculate damage method is an abstract method which will be used accordingly for each class goblin or knight
     // this abstract method is used for calculating the damage took by
     // enemy based on its type (goblins take less magic damage)
@@ -226,6 +242,10 @@ public abstract class Enemy extends GameObject {
         }
         if (projectile.type.equals("MagicSpell")) {
             applySlowEffect();
+            // Check for teleport chance after applying slow effect
+            if (random.nextDouble() < TELEPORT_CHANCE && isAlive) {
+                teleportToStart();
+            }
         }
 
         // Update the health bar width based on the current health points
@@ -243,6 +263,43 @@ public abstract class Enemy extends GameObject {
         } else {
             // If already slowed, just extend the duration
             slowEndTime = System.currentTimeMillis() + SLOW_DURATION;
+        }
+    }
+
+    protected void teleportToStart() {
+        // Teleport to start position
+        x = startPosition.x;
+        y = startPosition.y;
+        super.x = x;
+        super.y = y;
+
+        // Clear current waypoints and start from beginning
+        waypoints.clear();
+        movingToTarget = false;
+
+        // Update view position
+        if (view != null) {
+            view.setTranslateX(x);
+            view.setTranslateY(y);
+            updateViewTransform();
+        }
+
+        // Update health bar position
+        if (healthBar != null) {
+            healthBar.setTranslateX(x);
+            healthBar.setTranslateY(y - 10);
+        }
+
+        // Update slow icon position if visible
+        if (isSlowing && slowIcon != null) {
+            slowIcon.setTranslateX(x + 25);
+            slowIcon.setTranslateY(y - 10);
+        }
+
+        // Get the path from GameActionController and restart movement
+        Vector2<Double>[] path = GameActionController.getInstance().getPath();
+        if (path != null && path.length > 0) {
+            moveAlong(path);
         }
     }
 
@@ -351,7 +408,9 @@ public abstract class Enemy extends GameObject {
             }
 
             // Remove slow icon
-            GameActionController.getInstance().getGamePane().getChildren().remove(slowIcon);
+            if (slowIcon != null) {
+                GameActionController.getInstance().getGamePane().getChildren().remove(slowIcon);
+            }
         }
     }
 

@@ -13,6 +13,7 @@ public class GameActionController {
     // Singleton instance
     private static GameActionController instance;
     private Pane gamePane;
+    private Vector2<Double>[] mainPath; // Store the main path
 
     public static boolean isPaused; // we will be depending on this to check if game is Paused
     public static double gameSpeed;
@@ -139,5 +140,15 @@ public class GameActionController {
 
     public Pane getGamePane() {
         return gamePane;
+    }
+
+    // Set the main path for enemies to follow
+    public void setMainPath(Vector2<Double>[] path) {
+        this.mainPath = path;
+    }
+
+    // Get the main path for enemies to follow
+    public Vector2<Double>[] getPath() {
+        return mainPath;
     }
 }
