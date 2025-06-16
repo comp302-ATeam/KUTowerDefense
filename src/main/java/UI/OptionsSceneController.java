@@ -75,10 +75,12 @@ public class OptionsSceneController {
 
     private void initIntegerSpinner(Spinner<Integer> spinner, int min, int max, int initial) {
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max, initial));
+        spinner.setEditable(true); // Allow keyboard input
     }
 
     private void initDoubleSpinner(Spinner<Double> spinner, double min, double max, double initial, double step) {
         spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(min, max, initial, step));
+        spinner.setEditable(true); // Allow keyboard input
     }
 
     private void initializeDefaults() {
