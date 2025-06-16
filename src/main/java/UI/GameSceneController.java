@@ -1,14 +1,12 @@
 package UI;
 
-import Domain.GameFlow.GameActionController;
-import Domain.GameFlow.MapLoader;
-import Domain.GameFlow.Vector2;
-import Domain.GameFlow.WaveSpawner;
+import Domain.GameFlow.*;
 import Domain.GameObjects.Enemy;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.geometry.Rectangle2D;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -48,6 +46,17 @@ public class GameSceneController {
     private ImageView resumeImageView;
     @FXML
     private ImageView speedUpImageView;
+    @FXML
+    private Button pauseResumeButton;
+    @FXML
+    private ImageView pauseResumeImageView;
+
+    private String mapName = "mapSave";  // Default map name
+    private GameSettings currentSettings; // Store current game settings
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
 
     private void setImageRed(ImageView imageView, boolean isRed) {
         if (isRed) {
@@ -66,12 +75,44 @@ public class GameSceneController {
         labelGold.setText(String.valueOf(gold));
     }
 
+    public Label getLabelGold() {
+        return labelGold;
+    }
+
     public void updateLives(int lives) {
         labelLives.setText(String.valueOf(lives));
     }
 
     public void updateWave(int wave) {
         labelWave.setText(String.valueOf(Math.max(1, wave)));
+    }
+    @FXML
+    private void handlePauseResumeButton(ActionEvent event) {
+        // Always keep both controllers in sync
+        boolean currentlyPaused = GameActionController.isPaused();
+        if (currentlyPaused) {
+            // Resume everything
+            gameActionController.resumeGame();
+            if (waveSpawner != null) {
+                waveSpawner.resume();
+            }
+            setImageRed(speedUpImageView, false);
+            setImageRed(pauseResumeImageView, false);
+            // Show pause icon
+            pauseResumeImageView.setViewport(new Rectangle2D(128, 64, 64, 64));
+            System.out.println("Resumed Game");
+        } else {
+            // Pause everything
+            gameActionController.pauseGame();
+            if (waveSpawner != null) {
+                waveSpawner.stop();
+            }
+            setImageRed(speedUpImageView, true);
+            setImageRed(pauseResumeImageView, false);
+            // Show resume icon
+            pauseResumeImageView.setViewport(new Rectangle2D(0, 64, 64, 64));
+            System.out.println("Game Paused");
+        }
     }
     // Pauses the game via gameActionController. Also stops the waveSpawner.
     @FXML
@@ -116,16 +157,52 @@ public class GameSceneController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            mapLoader = new MapLoader(gameGrid, gamePane);
-            Vector2<Double>[] mainPath = mapLoader.getPath();
-            System.out.println(mainPath[0]);
-            int startingX = mainPath[0].x.intValue();
-            int startingY = mainPath[0].y.intValue();
-
-            // Initialize WaveSpawner with wave system
-            waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
-            waveSpawner.startGame();
-            // No AnimationTimer here for enemy or wave updates!
+            resetGame();
         });
+    }
+
+    private void resetGame() {
+        // Load current game settings from singleton
+        currentSettings = GameSettingsManager.getInstance().getSettings();
+        
+        // Clear any existing game state
+        if (waveSpawner != null) {
+            waveSpawner.stop();
+        }
+        if (gamePane != null) {
+            gamePane.getChildren().clear();
+        }
+        if (gameGrid != null) {
+            gameGrid.getChildren().clear();
+        }
+
+        // Reset UI elements using settings from options menu
+        updateGold(currentSettings.player.startingGold);  // Use configured starting gold
+        updateLives(currentSettings.player.startingHP);   // Use configured starting lives
+        updateWave(1);    // Reset to first wave
+
+        // Initialize new game
+        mapLoader = new MapLoader(gameGrid, gamePane, mapName);
+        Vector2<Double>[] mainPath = mapLoader.getPath();
+        int startingX = mainPath[0].x.intValue();
+        int startingY = mainPath[0].y.intValue();
+
+        // Reset WaveManager with settings
+        WaveManager.reset();
+
+        // Set game pane in GameActionController
+        gameActionController.setGamePane(gamePane);
+
+        // Initialize new WaveSpawner with settings
+        waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
+        waveSpawner.setGameSettings(currentSettings);  // Pass settings to wave spawner
+        waveSpawner.startGame();
+
+        // Ensure wave index is reset in UI
+        Platform.runLater(() -> {
+            updateWave(1);
+        });
+        
+        System.out.println("🎮 Game initialized with singleton settings - Gold: " + currentSettings.player.startingGold + ", Lives: " + currentSettings.player.startingHP);
     }
 }

@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.SpinnerValueFactory;
 import java.io.*;
 import Domain.GameFlow.GameSettings;
+import Domain.GameFlow.GameSettingsManager;
 
 public class OptionsSceneController {
 
@@ -54,7 +55,7 @@ public class OptionsSceneController {
     @FXML private Spinner<Double> spinnerMageFireRate;
 
     // Player Settings
-    @FXML private Spinner<Integer> spinnerPlayerHP;
+    @FXML private Spinner<Integer> spinnerPlayerLives;
     @FXML private Spinner<Integer> spinnerPlayerGold;
 
     private boolean isMusicOn = true;
@@ -64,7 +65,8 @@ public class OptionsSceneController {
     private void initialize() {
         initializeDefaults();  // Always set up value factories first
 
-        GameSettings settings = loadSettingsFromDisk();
+        // Load settings from singleton manager
+        GameSettings settings = GameSettingsManager.getInstance().getSettings();
         if (settings != null) {
             applySettingsToUI(settings);  // Now safe to set values
         }
@@ -82,7 +84,7 @@ public class OptionsSceneController {
     private void initializeDefaults() {
         // Wave Settings
         initIntegerSpinner(spinnerNumWaves, 1, 100, 10);
-        initIntegerSpinner(spinnerGroupsPerWave, 1, 10, 3);
+        initIntegerSpinner(spinnerGroupsPerWave, 1, 10, 1);
         initIntegerSpinner(spinnerEnemiesPerGroup, 1, 20, 5);
         initIntegerSpinner(spinnerGoblinsPerGroup, 0, 20, 3);
         initIntegerSpinner(spinnerKnightsPerGroup, 0, 20, 2);
@@ -114,7 +116,7 @@ public class OptionsSceneController {
         initDoubleSpinner(spinnerMageFireRate, 0.1, 5.0, 1.8, 0.1);
 
         // Player Settings
-        initIntegerSpinner(spinnerPlayerHP, 1, 500, 100);
+        initIntegerSpinner(spinnerPlayerLives, 1, 500, 10);
         initIntegerSpinner(spinnerPlayerGold, 0, 1000, 100);
     }
 
@@ -155,7 +157,7 @@ public class OptionsSceneController {
         s.tower.artilleryFireRate = spinnerArtilleryFireRate.getValue();
         s.tower.mageFireRate = spinnerMageFireRate.getValue();
 
-        s.player.startingHP = spinnerPlayerHP.getValue();
+        s.player.startingHP = spinnerPlayerLives.getValue();
         s.player.startingGold = spinnerPlayerGold.getValue();
         s.player.musicOn = isMusicOn;
         s.player.sfxOn = isSfxOn;
@@ -200,7 +202,7 @@ public class OptionsSceneController {
         spinnerArtilleryFireRate.getValueFactory().setValue(s.tower.artilleryFireRate);
         spinnerMageFireRate.getValueFactory().setValue(s.tower.mageFireRate);
 
-        spinnerPlayerHP.getValueFactory().setValue(s.player.startingHP);
+        spinnerPlayerLives.getValueFactory().setValue(s.player.startingHP);
         spinnerPlayerGold.getValueFactory().setValue(s.player.startingGold);
         isMusicOn = s.player.musicOn;
         isSfxOn = s.player.sfxOn;
@@ -218,46 +220,17 @@ public class OptionsSceneController {
         musicToggleButton.setText("Music: ON");
         soundEffectsToggleButton.setText("SFX: ON");
 
-        // 🔐 Save the restored state
-        GameSettings defaults = gatherSettingsFromUI();
-        defaults.player.musicOn = isMusicOn;
-        defaults.player.sfxOn = isSfxOn;
-        saveSettingsToDisk(defaults);
+        // Use singleton to reset to defaults
+        GameSettingsManager.getInstance().resetToDefaults();
         System.out.println("Defaults saved.");
     }
 
     @FXML
     private void handleSaveButton(ActionEvent event) {
         GameSettings settings = gatherSettingsFromUI();
-        saveSettingsToDisk(settings);
+        GameSettingsManager.getInstance().updateSettings(settings);
         System.out.println("Settings saved.");
     }
-
-
-    private GameSettings loadSettingsFromDisk() {
-        File file = new File("src/data/OptionsSettings.dat");
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            System.out.println("✅ Loaded settings from: " + file.getAbsolutePath());
-            return (GameSettings) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.err.println("❌ Could not load settings: " + e.getMessage());
-            return null;
-        }
-    }
-
-    private void saveSettingsToDisk(GameSettings settings) {
-        File file = new File("src/data/OptionsSettings.dat");
-        try {
-            file.getParentFile().mkdirs(); // Ensure directory exists
-            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-                oos.writeObject(settings);
-                System.out.println("✅ Saved settings to: " + file.getAbsolutePath());
-            }
-        } catch (IOException e) {
-            System.err.println("❌ Could not save settings: " + e.getMessage());
-        }
-    }
-
 
     @FXML
     private void handleBackButton(ActionEvent event) {

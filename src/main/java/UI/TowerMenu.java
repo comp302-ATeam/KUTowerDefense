@@ -26,7 +26,7 @@ public class TowerMenu extends Pane {
         downButton.setOnAction(e -> {
             tower.Destroy();
             Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(lotTower);
+//            new TowerMenu(lotTower);
             tower.mapPane.getChildren().remove(this);
         });
     }
@@ -35,21 +35,21 @@ public class TowerMenu extends Pane {
         upButton.setOnAction(e -> {
             tower.Destroy();
             Tower cur_tower = new ArcherTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
+//            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
             return;
         });
         leftButton.setOnAction(e -> {
             tower.Destroy();
             Tower cur_tower = new ArtilleryTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
+//            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
             return;
         });
         downButton.setOnAction(e -> {
             tower.Destroy();
             Tower cur_tower = new MageTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
+//            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
             return;
         });
@@ -62,11 +62,15 @@ public class TowerMenu extends Pane {
         this.setLayoutY(tower.getY());
         this.setPrefSize(80, 100);
 
-        //this.setStyle("-fx-background-color: red;");
+        // Make the menu pane mouse transparent except for buttons
+        //this.setMouseTransparent(true);
 
-        this.setOnMouseClicked(e -> clickTower());
+        //this.setOnMouseClicked(e -> clickTower());
         //tower.towerImage.setOnMouseClicked(e -> clickTower());
         this.setOpacity(0.0);
+
+        this.setOnMouseEntered(e -> openMenu(true));
+        this.setOnMouseExited(e -> openMenu(false));
 
          ///  ADASDASDASD
         Button cur_button = new Button();
@@ -128,8 +132,21 @@ public class TowerMenu extends Pane {
         }
     }
 
+
+    private void openMenu(boolean state){
+        if (state){
+            setOpacity(1.0);
+            setButtons(true);
+        }
+        else {
+            setOpacity(0.0);
+            setButtons(false);
+        }
+    }
+
     private void clickTower(){
         menuOn = !menuOn;
+        System.out.println("menuOn: " + menuOn);
         if (menuOn){
             setOpacity(1.0);
             setButtons(true);

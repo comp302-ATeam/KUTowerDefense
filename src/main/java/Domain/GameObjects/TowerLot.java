@@ -8,7 +8,9 @@ public class TowerLot extends Tower{
 
 
     @Override
-    public void attack(Enemy target){}
+    public Projectile createProjectile(Enemy e){
+        return null;
+    }
 
     @Override
     public void update(double deltaTime) {}

@@ -1,10 +1,17 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.GameActionController;
+
+import Domain.GameFlow.Vector2;
+import Domain.GameFlow.WaveManager;
+import Domain.GameObjects.GameObject;
 import UI.TowerMenu;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.List;
 
@@ -15,12 +22,14 @@ public abstract class Tower extends GameObject {
     protected int cost;             // cost of the tower
     protected int currentLevel;     // we can upgrade the tower so we should keep the current level of it.
     protected int damage;           // it is how much we damage the enemy
-    protected double fireRate;      // Attacks per second
+    public double baseFireRate;
+    public double fireRate;      // Attacks per second
     protected double sellRatio;     // Ratio of cost returned when selling
     protected long lastAttackTime;  // Time of last attack in milliseconds
-    public ImageView towerImage;
 
+    public ImageView towerImage;
     public Pane mapPane;
+    private Circle rangeCircle;
 
     /**
      * Constructor for Tower class.
@@ -38,7 +47,8 @@ public abstract class Tower extends GameObject {
         super(x, y, new ImageView());
         this.attackRange = attackRange;
         this.damage = damage;
-        this.fireRate = fireRate;
+        this.baseFireRate = fireRate;
+        this.fireRate = baseFireRate;
         this.cost = cost;
 
         // Initialize common values that are same for all towers
@@ -48,19 +58,61 @@ public abstract class Tower extends GameObject {
 
         this.mapPane = mapPane;
 
-        //renderTower(PATH);
+        GameActionController.towerList.add(this);
 
-        //TowerMenu towerMenu = new TowerMenu(this);
+    }
+
+    // Abstract method for attacking enemies
+    public void attack(){
+        if (!canAttack()){
+            return;
+        }
+
+        Enemy target = getClosestEnemy();
+
+//        Enemy target = findBestTarget(GameActionController.getInstance().enemyList); // assuming you add this list
+        if (target != null) {
+
+            Projectile p = createProjectile(target);// Adjust center offset
+            mapPane.getChildren().add(p);
+            GameActionController.projectileList.add(p);
+            updateLastAttackTime();
+        }
+
 
 
     }
 
-
-    // Abstract method for attacking enemies
-    public abstract void attack(Enemy target);
+//    public void drawDebugRange() {
+//        if (rangeCircle == null) {
+//            rangeCircle = new Circle(attackRange);
+//            rangeCircle.setStroke(Color.RED);        // Outline color
+//            rangeCircle.setFill(Color.TRANSPARENT);  // No fill
+//            rangeCircle.setStrokeWidth(2);
+//            rangeCircle.setMouseTransparent(true);   // Ignore clicks
+//
+//            // Center the circle around the tower's center using the tower's actual position
+//            double towerCenterX = towerImage.getLayoutX() + towerImage.getFitWidth() / 2 -2;
+//            double towerCenterY = towerImage.getLayoutY() + towerImage.getFitHeight() / 2;
+//            rangeCircle.setCenterX(towerCenterX);
+//            rangeCircle.setCenterY(towerCenterY);
+//        }
+//    }
+//
+//    public void showRange() {
+//        if (rangeCircle != null && !mapPane.getChildren().contains(rangeCircle)) {
+//            mapPane.getChildren().add(rangeCircle);
+//        }
+//    }
+//
+//    public void hideRange() {
+//        if (rangeCircle != null && mapPane.getChildren().contains(rangeCircle)) {
+//            mapPane.getChildren().remove(rangeCircle);
+//        }
+//    }
 
     // Render Method
-    protected void renderTower(String path){
+    public void renderTower(String path){
         System.out.println(path);
         Image image = new Image(getClass().getResource(path).toExternalForm());
         towerImage = new ImageView(image);
@@ -74,7 +126,20 @@ public abstract class Tower extends GameObject {
         towerImage.setLayoutX(x);
         towerImage.setLayoutY(y);
 
+//        // Add hover effects for range display
+//        towerImage.setOnMouseEntered(e -> {
+//            drawDebugRange();
+//            showRange();
+//        });
+//        towerImage.setOnMouseExited(e -> hideRange());
+//
+//        // Ensure the tower image is on top of other elements
+//        towerImage.setMouseTransparent(false);
+//        towerImage.toFront();
+//
         mapPane.getChildren().add(towerImage);
+        TowerMenu menu = new TowerMenu(this);
+        menu.toFront();
     }
 
     // Method to upgrade the tower
@@ -106,6 +171,7 @@ public abstract class Tower extends GameObject {
     public int getCost() { return cost; }
 
     public void Destroy(){
+        GameActionController.towerList.remove(this);
         mapPane.getChildren().remove(towerImage);
     }
 
@@ -142,6 +208,25 @@ public abstract class Tower extends GameObject {
         return bestTarget;
     }
 
+
+
+    protected Enemy getClosestEnemy(){
+        Enemy closest = null;
+        double shortestDistance = Double.MAX_VALUE;
+
+        for (Enemy enemy : Enemy.activeEnemies) {
+            if (!enemy.isAlive() || enemy.hasReachedEnd()) continue;
+
+            double distance = distanceTo(enemy, new Vector2<Double>((double) enemy.frameWidth / 2,(double) enemy.frameHeight / 2));
+            if (distance <= attackRange && distance < shortestDistance) {
+                shortestDistance = distance;
+                closest = enemy;
+            }
+        }
+
+        return closest;
+    }
+
     // Method to check if tower can attack based on fire rate
     public boolean canAttack() {
         long currentTime = System.currentTimeMillis();
@@ -150,7 +235,11 @@ public abstract class Tower extends GameObject {
     }
 
     // Method to update last attack time
-    protected void updateLastAttackTime() {
+    public void updateLastAttackTime() {
         lastAttackTime = System.currentTimeMillis();
     }
+
+    public abstract Projectile createProjectile(Enemy enemy);
+
+    public abstract void update(double deltaTime);
 }

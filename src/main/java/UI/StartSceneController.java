@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.scene.Parent;
+import Domain.GameFlow.GameActionController;
 
 public class StartSceneController {
 
@@ -29,15 +30,22 @@ public class StartSceneController {
     @FXML
     private void onActionStartNew(ActionEvent event) throws Exception {
         System.out.println("StartNew");
-        //Stage stage1 = (Stage)((Node)event.getSource()).getScene().getWindow();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/GameSceneController.fxml"));
-        stage.setScene(new Scene(root));
-        stage.setMaximized(true);
+        
+        // Reset game state
+        GameActionController.getInstance().resetGame();
+        
+        // Load map selection scene
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/MapSelectionScene.fxml"));
+        Parent root = loader.load();
+        
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
-
     }
 
+    /*
     @FXML
     private void onActionLoadGame(ActionEvent event) throws Exception {
         System.out.println("LoadGame");
@@ -47,6 +55,7 @@ public class StartSceneController {
         stage.show();
 
     }
+    */
 
     @FXML
     private void onActionOptions() {

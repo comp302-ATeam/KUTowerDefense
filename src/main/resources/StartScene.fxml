@@ -11,9 +11,9 @@
          <image>
             <Image url="@../../../out/production/302Project/Assets/KuTowerDefence2.jpg" />
          </image>
-      </ImageView>
+            </ImageView>
       <Button fx:id="buttonStartNew" layoutX="203.0" layoutY="194.0" mnemonicParsing="false" onAction="#onActionStartNew" opacity="0.0" prefHeight="26.0" prefWidth="193.0" text="New Game" textAlignment="CENTER" />
-      <Button fx:id="buttonLoadGame" layoutX="197.0" layoutY="223.0" mnemonicParsing="false" onAction="#onActionLoadGame" opacity="0.0" prefHeight="34.0" prefWidth="204.0" text="Load Game" textAlignment="CENTER" />
+             <!-- <Button fx:id="buttonLoadGame" layoutX="197.0" layoutY="223.0" mnemonicParsing="false" onAction="#onActionLoadGame" opacity="0.0" prefHeight="34.0" prefWidth="204.0" text="Load Game" textAlignment="CENTER" /> -->
       <Button fx:id="buttonOptions" layoutX="229.0" layoutY="295.0" mnemonicParsing="false" onAction="#onActionOptions" opacity="0.0" prefHeight="26.0" prefWidth="142.0" text="Options" textAlignment="CENTER" />
       <Button fx:id="buttonQuit" layoutX="258.0" layoutY="334.0" mnemonicParsing="false" onAction="#onActionQuit" opacity="0.0" prefHeight="26.0" prefWidth="81.0" text="Quit" textAlignment="CENTER" />
       <Button fx:id="buttonMapEditor" layoutX="203.0" layoutY="257.0" mnemonicParsing="false" onAction="#onActionOpenMapEditor" opacity="0.0" prefHeight="34.0" prefWidth="194.0" text="Map Editor" textAlignment="CENTER" />

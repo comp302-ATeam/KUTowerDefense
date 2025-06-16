@@ -6,6 +6,7 @@ import Domain.GameObjects.Knight;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.Node;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,11 +25,14 @@ public class Wave {
     private double enemySpawnTimer;
     private double groupWaitTimer;
     private boolean waitingForNextGroup;
-    private static final double ENEMY_SPAWN_INTERVAL = 0.25;
-    private static final double GROUP_SPAWN_INTERVAL = 45.0;
+    private static final double DEFAULT_ENEMY_SPAWN_INTERVAL = 0.25;
+    private static final double DEFAULT_GROUP_SPAWN_INTERVAL = 45.0;
+    private final double enemySpawnInterval;   // Configurable enemy spawn interval
+    private final double groupSpawnInterval;   // Configurable group spawn interval
     private final Pane gamePane;
     private final Vector2<Double>[] mainPath;
     private final int waveIndex;
+    private final GameSettings gameSettings;
 
     //Images
     private final Image goblinImg;
@@ -36,7 +40,7 @@ public class Wave {
     private final Image knightImg;
     private final ImageView knightView;
 
-    public Wave(int waveIndex, int knightCount, int goblinCount, int groupCount, int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath) {
+    public Wave(int waveIndex, int knightCount, int goblinCount, int groupCount, int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSettings gameSettings) {
         this.waveIndex = waveIndex;
         this.knightCount = knightCount;
         this.goblinCount = goblinCount;
@@ -45,6 +49,7 @@ public class Wave {
         this.yPos = yPos;
         this.gamePane = gamePane;
         this.mainPath = mainPath;
+        this.gameSettings = gameSettings;
         this.currentGroup = 0;
         this.currentEnemyCount = 0;
         this.isWaveComplete = false;
@@ -52,6 +57,17 @@ public class Wave {
         this.enemySpawnTimer = 0;
         this.groupWaitTimer = 0;
         this.waitingForNextGroup = false;
+
+        // Set configurable timing intervals
+        if (gameSettings != null && gameSettings.waves != null) {
+            this.enemySpawnInterval = gameSettings.waves.delayBetweenEnemies;
+            this.groupSpawnInterval = gameSettings.waves.delayBetweenGroups;
+            System.out.println("⏱️ Wave " + waveIndex + ": Using delays - Enemy: " + enemySpawnInterval + "s, Group: " + groupSpawnInterval + "s");
+        } else {
+            this.enemySpawnInterval = DEFAULT_ENEMY_SPAWN_INTERVAL;
+            this.groupSpawnInterval = DEFAULT_GROUP_SPAWN_INTERVAL;
+            System.out.println("⚠️ Wave " + waveIndex + ": Using default delays");
+        }
 
         // Initialize images
         this.goblinImg = new Image("Assets/enemies/Goblin_Red.png");
@@ -85,11 +101,16 @@ public class Wave {
     //Once all groups have spawned, it marks the wave as complete.
     //Also cleans up dead enemies from the screen and memory.
     public void update(double deltaTime) {
+        for (int i = 0; i < activeEnemies.size(); i++) {
+            if (!activeEnemies.get(i).isAlive()) {
+                activeEnemies.remove(i);
+            }
+        }
         if (currentGroup < groupCount) {
             if (!waitingForNextGroup) {
                 if (currentEnemyCount < (knightCount + goblinCount)) {
                     enemySpawnTimer += deltaTime;
-                    if (enemySpawnTimer >= ENEMY_SPAWN_INTERVAL) {
+                    if (enemySpawnTimer >= enemySpawnInterval) {
                         spawnEnemy();
                         enemySpawnTimer = 0;
                     }
@@ -101,7 +122,7 @@ public class Wave {
                 }
             } else {
                 groupWaitTimer += deltaTime;
-                if (groupWaitTimer >= GROUP_SPAWN_INTERVAL) {
+                if (groupWaitTimer >= groupSpawnInterval) {
                     currentGroup++;
                     if (currentGroup < groupCount) {
                         System.out.println("[Wave] Starting group " + currentGroup + " in waveIndex=" + waveIndex);
@@ -115,13 +136,21 @@ public class Wave {
             isWaveComplete = true;
         }
 
-        // Update existing enemies
+        // Update existing enemies and remove dead ones
         Iterator<Enemy> iterator = activeEnemies.iterator();
         while (iterator.hasNext()) {
             Enemy enemy = iterator.next();
-            if (!enemy.isAlive()) {
-                gamePane.getChildren().removeAll(enemy.getView(), enemy.getHealthBar());
+            if (!enemy.isAlive() || enemy.hasReachedEnd()) {
+                // Let Die() handle the gold pouch spawning first
+                if (!enemy.isAlive() && !enemy.hasReachedEnd()) {
+                    enemy.Die();
+                }
+                // Then remove from game pane if not already removed
+                if (enemy.getView() != null && enemy.getView().getParent() != null) {
+                    gamePane.getChildren().removeAll(enemy.getView(), enemy.getHealthBar());
+                }
                 iterator.remove();
+                System.out.println("[Wave] Removed enemy from wave " + waveIndex + (enemy.hasReachedEnd() ? " (reached end)" : " (dead)"));
             }
         }
     }
@@ -129,9 +158,15 @@ public class Wave {
     // Spawns a single goblin or knight depending on currentEnemyCount.
     private void spawnEnemy() {
         System.out.println("[Wave] spawnEnemy called for waveIndex=" + waveIndex + ", currentGroup=" + currentGroup + ", currentEnemyCount=" + currentEnemyCount);
-        int offset = activeEnemies.size() * 20;
+
+        // Calculate HP multiplier based on wave number (20% increase per wave)
+        double hpMultiplier = 1.0 + (waveIndex - 1) * 0.2;
+
+        int offset = activeEnemies.size() * 65;
         if (currentEnemyCount < goblinCount) {
-            Goblin goblin = new Goblin(xPos, yPos-offset, "Goblin", 100, 100, new ImageView(goblinImg));
+            // Base HP for goblin is 100, multiply by wave difficulty
+            int goblinHP = (int)(100 * hpMultiplier);
+            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", goblinHP, 100, new ImageView(goblinImg));
             activeEnemies.add(goblin);
             gamePane.getChildren().addAll(goblin.getView(), goblin.getHealthBar());
             goblin.getView().setPickOnBounds(true);
@@ -139,15 +174,21 @@ public class Wave {
             goblin.getView().setOnMouseExited(e -> goblin.getHealthBar().setVisible(false));
             goblin.moveAlong(mainPath);
             currentEnemyCount++;
+            // Kill after 8 seconds
+
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
-            Knight knight = new Knight(xPos, yPos-offset, "Knight", 100, 100, new ImageView(knightImg));
+            // Base HP for knight is 100, multiply by wave difficulty
+            int knightHP = (int)(100 * hpMultiplier);
+            Knight knight = new Knight(xPos + offset, yPos, "Knight", knightHP, 100, new ImageView(knightImg));
             activeEnemies.add(knight);
-            gamePane.getChildren().addAll(knight.getView(), knight.getHealthBar());
-            knight.getView().setPickOnBounds(true);
-            knight.getView().setOnMouseEntered(e -> knight.getHealthBar().setVisible(true));
-            knight.getView().setOnMouseExited(e -> knight.getHealthBar().setVisible(false));
+            Node knightView = knight.getView();
+            gamePane.getChildren().addAll(knightView, knight.getHealthBar());
+            knightView.setPickOnBounds(true);
+            knightView.setOnMouseEntered(e -> knight.getHealthBar().setVisible(true));
+            knightView.setOnMouseExited(e -> knight.getHealthBar().setVisible(false));
             knight.moveAlong(mainPath);
             currentEnemyCount++;
+            // Kill after 8 seconds
         }
     }
 

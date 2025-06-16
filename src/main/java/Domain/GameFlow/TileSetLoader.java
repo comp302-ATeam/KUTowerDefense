@@ -59,43 +59,26 @@ public class TileSetLoader {
         pathMode = !pathMode;
     }
 
-    public void saveGrid(){
-
-
+    public void saveGrid(String mapName){
         if (startTile == null || endTile == null) return;
 
-
         List<Tile> temp_path = new ArrayList<Tile>();
+        temp_path = createPath(startTile, startTile, endTile);
 
-        temp_path =  createPath(startTile,startTile,endTile);
-
-        if(temp_path != null){
-//            for (Tile tile : temp_path) {
-//                System.out.println(tile.position);
-//            }
-        }
-        else {
+        if(temp_path == null) {
             System.out.println("no path found \n construct a proper path");
             return;
         }
 
-         // or use relative path like "saves/"
+        // Create saves directory if it doesn't exist
         File directory = new File(directoryPath);
-
-        // Create directory if it doesn't exist
         if (!directory.exists()) {
             directory.mkdirs();
         }
 
-        File saveFile = new File(directory, "mapSave.ser");
-
+        File saveFile = new File(directory, mapName + ".ser");
         Tile[] pathArray = temp_path.toArray(new Tile[0]);
-
-        TileMap tileMap = new TileMap(tileGrid, pathArray,mapSize.x,mapSize.y);
-
-//        for (Vector2<Double> pos : tileMap.getPath(root,tileHeight)){
-//            System.out.println(pos);
-//        }
+        TileMap tileMap = new TileMap(tileGrid, pathArray, mapSize.x, mapSize.y);
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile))) {
             out.writeObject(tileMap);
@@ -103,7 +86,11 @@ public class TileSetLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    // Overload for backward compatibility
+    public void saveGrid() {
+        saveGrid("mapSave");
     }
 
     ///  CONSTRUCTS THE EDITABLE TILEMAP

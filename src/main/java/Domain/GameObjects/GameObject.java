@@ -1,5 +1,6 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.Vector2;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,6 +72,12 @@ public abstract class GameObject {
         );
     }
 
+    public double distanceTo(GameObject other, Vector2<Double> offset) {
+        return Math.sqrt(
+                Math.pow(this.x - other.x - offset.x, 2) +
+                        Math.pow(this.y - other.y - offset.y, 2)
+        );
+    }
     public Node getView() {
         return imageObject;
     }

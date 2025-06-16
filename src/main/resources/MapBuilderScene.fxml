@@ -2,10 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.MapBuilderSceneController">
    <children>
@@ -35,7 +37,12 @@
             </GridPane>
          </content>
       </ScrollPane>
-      <Button fx:id="returnButton" layoutX="27.0" layoutY="350.0" mnemonicParsing="false" onAction="#onReturn" prefHeight="42.0" prefWidth="75.0" text="Return" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="27.0" />
-      <Button fx:id="saveButton" layoutX="80.0" layoutY="350.0" mnemonicParsing="false" onAction="#onSave" prefHeight="42.0" prefWidth="75.0" text="Save" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="120.0" />
+      <HBox spacing="10" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="27.0">
+         <children>
+            <Button fx:id="returnButton" mnemonicParsing="false" onAction="#onReturn" prefHeight="42.0" prefWidth="75.0" text="Return" />
+            <TextField fx:id="mapNameField" promptText="Enter map name" prefHeight="42.0" prefWidth="150.0" />
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#onSave" prefHeight="42.0" prefWidth="75.0" text="Save" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

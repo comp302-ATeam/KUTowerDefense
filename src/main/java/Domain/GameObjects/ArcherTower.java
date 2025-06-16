@@ -17,18 +17,12 @@ public class ArcherTower extends Tower {
     }
 
     @Override
-    public void attack(Enemy target) {
-        if (target != null && canAttack()) {
-            // Create a new arrow
-            //Arrow arrow = new Arrow(this.getX(), this.getY(), 10, target);
-            // here we should add arrow to the game
-            // update time
-            updateLastAttackTime();
-        }
+    public Projectile createProjectile(Enemy enemy){
+        return new Arrow((int) x + 48, (int) y + 48, damage,enemy);
     }
 
     @Override
     public void update(double deltaTime) {
-
+        attack();
     }
 } 

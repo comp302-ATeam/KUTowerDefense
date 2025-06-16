@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.GameOverScreenController">
+    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="Game Over!" textAlignment="CENTER">
+            <font>
+                <Font size="48.0"/>
+            </font>
+        </Text>
+        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="You have been defeated!" textAlignment="CENTER">
+            <font>
+                <Font size="24.0"/>
+            </font>
+        </Text>
+        <Button mnemonicParsing="false" onAction="#handleOKButton" prefHeight="40.0" prefWidth="120.0" text="OK">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </Button>
+    </VBox>
+</AnchorPane> 
