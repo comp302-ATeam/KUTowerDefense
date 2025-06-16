@@ -26,7 +26,7 @@ public class TowerMenu extends Pane {
         downButton.setOnAction(e -> {
             tower.Destroy();
             Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(lotTower);
+//            new TowerMenu(lotTower);
             tower.mapPane.getChildren().remove(this);
         });
     }
@@ -35,21 +35,21 @@ public class TowerMenu extends Pane {
         upButton.setOnAction(e -> {
             tower.Destroy();
             Tower cur_tower = new ArcherTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
+//            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
             return;
         });
         leftButton.setOnAction(e -> {
             tower.Destroy();
             Tower cur_tower = new ArtilleryTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
+//            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
             return;
         });
         downButton.setOnAction(e -> {
             tower.Destroy();
             Tower cur_tower = new MageTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
-            new TowerMenu(cur_tower);
+//            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
             return;
         });
@@ -67,7 +67,7 @@ public class TowerMenu extends Pane {
 
         this.setOnMouseClicked(e -> clickTower());
         //tower.towerImage.setOnMouseClicked(e -> clickTower());
-        this.setOpacity(0.0);
+        this.setOpacity(1.0);
 
          ///  ADASDASDASD
         Button cur_button = new Button();
@@ -102,7 +102,7 @@ public class TowerMenu extends Pane {
 
         leftButton = cur_button;
 
-        setButtons(false);
+        setButtons(true);
         ///  aasdasdasdasd
 
         if (tower instanceof TowerLot ){
@@ -131,6 +131,7 @@ public class TowerMenu extends Pane {
 
     private void clickTower(){
         menuOn = !menuOn;
+        System.out.println("menuOn: " + menuOn);
         if (menuOn){
             setOpacity(1.0);
             setButtons(true);

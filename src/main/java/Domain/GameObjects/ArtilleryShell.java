@@ -14,6 +14,7 @@ public class ArtilleryShell extends Projectile {
         super(xPos, yPos, damage, "ArtilleryShell", target,"/Assets/Projectilşes/bomb.png");
         this.splashRadius = splashRadius;
         shotBehaviour = new AOEShot(this);
+
     }
 
 

@@ -22,7 +22,8 @@ public abstract class Tower extends GameObject {
     protected int cost;             // cost of the tower
     protected int currentLevel;     // we can upgrade the tower so we should keep the current level of it.
     protected int damage;           // it is how much we damage the enemy
-    protected double fireRate;      // Attacks per second
+    public double baseFireRate;
+    public double fireRate;      // Attacks per second
     protected double sellRatio;     // Ratio of cost returned when selling
     protected long lastAttackTime;  // Time of last attack in milliseconds
 
@@ -46,7 +47,8 @@ public abstract class Tower extends GameObject {
         super(x, y, new ImageView());
         this.attackRange = attackRange;
         this.damage = damage;
-        this.fireRate = fireRate;
+        this.baseFireRate = fireRate;
+        this.fireRate = baseFireRate;
         this.cost = cost;
 
         // Initialize common values that are same for all towers
@@ -81,33 +83,33 @@ public abstract class Tower extends GameObject {
 
     }
 
-    public void drawDebugRange() {
-        if (rangeCircle == null) {
-            rangeCircle = new Circle(attackRange);
-            rangeCircle.setStroke(Color.RED);        // Outline color
-            rangeCircle.setFill(Color.TRANSPARENT);  // No fill
-            rangeCircle.setStrokeWidth(2);
-            rangeCircle.setMouseTransparent(true);   // Ignore clicks
-
-            // Center the circle around the tower's center using the tower's actual position
-            double towerCenterX = towerImage.getLayoutX() + towerImage.getFitWidth() / 2 -2;
-            double towerCenterY = towerImage.getLayoutY() + towerImage.getFitHeight() / 2;
-            rangeCircle.setCenterX(towerCenterX);
-            rangeCircle.setCenterY(towerCenterY);
-        }
-    }
-
-    public void showRange() {
-        if (rangeCircle != null && !mapPane.getChildren().contains(rangeCircle)) {
-            mapPane.getChildren().add(rangeCircle);
-        }
-    }
-
-    public void hideRange() {
-        if (rangeCircle != null && mapPane.getChildren().contains(rangeCircle)) {
-            mapPane.getChildren().remove(rangeCircle);
-        }
-    }
+//    public void drawDebugRange() {
+//        if (rangeCircle == null) {
+//            rangeCircle = new Circle(attackRange);
+//            rangeCircle.setStroke(Color.RED);        // Outline color
+//            rangeCircle.setFill(Color.TRANSPARENT);  // No fill
+//            rangeCircle.setStrokeWidth(2);
+//            rangeCircle.setMouseTransparent(true);   // Ignore clicks
+//
+//            // Center the circle around the tower's center using the tower's actual position
+//            double towerCenterX = towerImage.getLayoutX() + towerImage.getFitWidth() / 2 -2;
+//            double towerCenterY = towerImage.getLayoutY() + towerImage.getFitHeight() / 2;
+//            rangeCircle.setCenterX(towerCenterX);
+//            rangeCircle.setCenterY(towerCenterY);
+//        }
+//    }
+//
+//    public void showRange() {
+//        if (rangeCircle != null && !mapPane.getChildren().contains(rangeCircle)) {
+//            mapPane.getChildren().add(rangeCircle);
+//        }
+//    }
+//
+//    public void hideRange() {
+//        if (rangeCircle != null && mapPane.getChildren().contains(rangeCircle)) {
+//            mapPane.getChildren().remove(rangeCircle);
+//        }
+//    }
 
     // Render Method
     public void renderTower(String path){
@@ -124,18 +126,20 @@ public abstract class Tower extends GameObject {
         towerImage.setLayoutX(x);
         towerImage.setLayoutY(y);
 
-        // Add hover effects for range display
-        towerImage.setOnMouseEntered(e -> {
-            drawDebugRange();
-            showRange();
-        });
-        towerImage.setOnMouseExited(e -> hideRange());
-
-        // Ensure the tower image is on top of other elements
-        towerImage.setMouseTransparent(false);
-        towerImage.toFront();
-        
+//        // Add hover effects for range display
+//        towerImage.setOnMouseEntered(e -> {
+//            drawDebugRange();
+//            showRange();
+//        });
+//        towerImage.setOnMouseExited(e -> hideRange());
+//
+//        // Ensure the tower image is on top of other elements
+//        towerImage.setMouseTransparent(false);
+//        towerImage.toFront();
+//
         mapPane.getChildren().add(towerImage);
+        TowerMenu menu = new TowerMenu(this);
+        menu.toFront();
     }
 
     // Method to upgrade the tower
