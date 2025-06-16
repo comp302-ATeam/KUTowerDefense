@@ -1,5 +1,6 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.DamageIndicator;
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.Tile;
 import Domain.GameFlow.Vector2;
@@ -92,6 +93,8 @@ public abstract class Enemy extends GameObject {
         );
         animation.setCycleCount(Animation.INDEFINITE);
         animation.play();
+
+
         //endregion
 
         // Initialize slow icon with transparent background
@@ -206,8 +209,8 @@ public abstract class Enemy extends GameObject {
         }
         // 1) Update the health bar position
         if (healthBar != null) {
-            healthBar.setTranslateX(x);
-            healthBar.setTranslateY(y - 10); // Position above the enemy
+            healthBar.setTranslateX(x + (frameWidth / 2) - 20);
+            healthBar.setTranslateY(y + (frameHeight / 2) - 40); // Position above the enemy
             healthBar.setFill(Color.GREEN);
             healthBar.toFront();
 
@@ -236,6 +239,7 @@ public abstract class Enemy extends GameObject {
     // amount of damage from the health point of that enemy object
     // if the damage is lethal, then the enemy object calls the method Die()
     public void takeDamage(Projectile projectile) {
+        DamageIndicator.showDamageText(GameActionController.getInstance().getGamePane(), projectile.damage , getX() + frameWidth / 2 , getY() + frameHeight / 2);
         if (!isAlive) return;
         int damageTaken = CalcDamage(projectile);
         healthPoints -= damageTaken;
@@ -253,6 +257,7 @@ public abstract class Enemy extends GameObject {
         // Update the health bar width based on the current health points
         double healthBarWidth = (healthPoints / maxHealthPoints) * 50; // Scale to the width of the health bar
         healthBar.setWidth(healthBarWidth);
+
     }
 
     protected void applySlowEffect() {

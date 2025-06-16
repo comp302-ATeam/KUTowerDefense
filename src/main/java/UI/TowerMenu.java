@@ -69,8 +69,8 @@ public class TowerMenu extends Pane {
         this.setPrefSize(80, 100);
 
         // Make the menu pane mouse transparent except for buttons
-        //this.setMouseTransparent(true);
-
+        this.setMouseTransparent(false);
+        setPickOnBounds(true);
         //this.setOnMouseClicked(e -> clickTower());
         //tower.towerImage.setOnMouseClicked(e -> clickTower());
         this.setOpacity(0.0);
