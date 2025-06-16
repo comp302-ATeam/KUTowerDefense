@@ -25,11 +25,14 @@ public class Wave {
     private double enemySpawnTimer;
     private double groupWaitTimer;
     private boolean waitingForNextGroup;
-    private static final double ENEMY_SPAWN_INTERVAL = 0.25;
-    private static final double GROUP_SPAWN_INTERVAL = 45.0;
+    private static final double DEFAULT_ENEMY_SPAWN_INTERVAL = 0.25;
+    private static final double DEFAULT_GROUP_SPAWN_INTERVAL = 45.0;
+    private final double enemySpawnInterval;   // Configurable enemy spawn interval
+    private final double groupSpawnInterval;   // Configurable group spawn interval
     private final Pane gamePane;
     private final Vector2<Double>[] mainPath;
     private final int waveIndex;
+    private final GameSettings gameSettings;
 
     //Images
     private final Image goblinImg;
@@ -37,7 +40,7 @@ public class Wave {
     private final Image knightImg;
     private final ImageView knightView;
 
-    public Wave(int waveIndex, int knightCount, int goblinCount, int groupCount, int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath) {
+    public Wave(int waveIndex, int knightCount, int goblinCount, int groupCount, int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSettings gameSettings) {
         this.waveIndex = waveIndex;
         this.knightCount = knightCount;
         this.goblinCount = goblinCount;
@@ -46,6 +49,7 @@ public class Wave {
         this.yPos = yPos;
         this.gamePane = gamePane;
         this.mainPath = mainPath;
+        this.gameSettings = gameSettings;
         this.currentGroup = 0;
         this.currentEnemyCount = 0;
         this.isWaveComplete = false;
@@ -53,6 +57,17 @@ public class Wave {
         this.enemySpawnTimer = 0;
         this.groupWaitTimer = 0;
         this.waitingForNextGroup = false;
+
+        // Set configurable timing intervals
+        if (gameSettings != null && gameSettings.waves != null) {
+            this.enemySpawnInterval = gameSettings.waves.delayBetweenEnemies;
+            this.groupSpawnInterval = gameSettings.waves.delayBetweenGroups;
+            System.out.println("⏱️ Wave " + waveIndex + ": Using delays - Enemy: " + enemySpawnInterval + "s, Group: " + groupSpawnInterval + "s");
+        } else {
+            this.enemySpawnInterval = DEFAULT_ENEMY_SPAWN_INTERVAL;
+            this.groupSpawnInterval = DEFAULT_GROUP_SPAWN_INTERVAL;
+            System.out.println("⚠️ Wave " + waveIndex + ": Using default delays");
+        }
 
         // Initialize images
         this.goblinImg = new Image("Assets/enemies/Goblin_Red.png");
@@ -95,7 +110,7 @@ public class Wave {
             if (!waitingForNextGroup) {
                 if (currentEnemyCount < (knightCount + goblinCount)) {
                     enemySpawnTimer += deltaTime;
-                    if (enemySpawnTimer >= ENEMY_SPAWN_INTERVAL) {
+                    if (enemySpawnTimer >= enemySpawnInterval) {
                         spawnEnemy();
                         enemySpawnTimer = 0;
                     }
@@ -107,7 +122,7 @@ public class Wave {
                 }
             } else {
                 groupWaitTimer += deltaTime;
-                if (groupWaitTimer >= GROUP_SPAWN_INTERVAL) {
+                if (groupWaitTimer >= groupSpawnInterval) {
                     currentGroup++;
                     if (currentGroup < groupCount) {
                         System.out.println("[Wave] Starting group " + currentGroup + " in waveIndex=" + waveIndex);

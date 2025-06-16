@@ -4,6 +4,7 @@ import Domain.GameObjects.Enemy;
 import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import java.util.List;
+import Domain.GameFlow.GameSettingsManager;
 
 /**
  * WaveSpawner class manages the game loop and wave spawning process.
@@ -43,18 +44,49 @@ public class WaveSpawner {
         }
         System.out.println("🔧 WaveSpawner: Applied game settings");
     }
-    
-    // Adds predefined waves to the manager.
-    //Starts the wave logic.
-    //Sets isPaused to false and starts the animation timer
-    public void startGame() {
-        // Add some waves with different configurations
-        waveManager.addWave(3, 3, 1);  // 3 knights 3 goblins 1 group
-        waveManager.addWave(3, 2, 3);
-        waveManager.addWave(4, 3, 2);
-        waveManager.addWave(1,0,1);
-        waveManager.addWave(0,1,1);
 
+    /**
+     * Gets current game settings from singleton manager.
+     * @return Current game settings
+     */
+    private GameSettings getCurrentSettings() {
+        if (gameSettings == null) {
+            gameSettings = GameSettingsManager.getInstance().getSettings();
+        }
+        return gameSettings;
+    }
+    
+    // Adds configurable waves based on game settings.
+    // Starts the wave logic.
+    // Sets isPaused to false and starts the animation timer
+    public void startGame() {
+        GameSettings settings = getCurrentSettings();
+        
+        if (settings != null && settings.waves != null) {
+            // Use configurable wave settings
+            GameSettings.Waves waveConfig = settings.waves;
+            
+            System.out.println("🌊 Creating " + waveConfig.numWaves + " waves with singleton settings:");
+            System.out.println("   - Groups per wave: " + waveConfig.groupsPerWave);
+            System.out.println("   - Goblins per group: " + waveConfig.goblinsPerGroup);
+            System.out.println("   - Knights per group: " + waveConfig.knightsPerGroup);
+            
+            // Create the configured number of waves
+            for (int i = 0; i < waveConfig.numWaves; i++) {
+                // Add wave with configured enemy counts and groups
+                waveManager.addWave(waveConfig.knightsPerGroup, waveConfig.goblinsPerGroup, waveConfig.groupsPerWave);
+                System.out.println("   Wave " + (i + 1) + ": " + waveConfig.knightsPerGroup + " knights, " + 
+                                 waveConfig.goblinsPerGroup + " goblins, " + waveConfig.groupsPerWave + " groups");
+            }
+        } else {
+            // Fallback to default waves if no settings available
+            System.out.println("⚠️ No wave settings found, using defaults");
+            waveManager.addWave(3, 3, 1);  // 3 knights 3 goblins 1 group
+            waveManager.addWave(3, 2, 3);
+            waveManager.addWave(4, 3, 2);
+            waveManager.addWave(1, 0, 1);
+            waveManager.addWave(0, 1, 1);
+        }
 
         waveManager.startWaves();   // Start wave spawning
         isPaused = false;
