@@ -60,13 +60,17 @@ public class TileSetLoader {
     }
 
     public void saveGrid(String mapName){
-        if (startTile == null || endTile == null) return;
+        if (startTile == null || endTile == null) {
+            DamageIndicator.showText(root, "START AND END TILE IS NOT SELECTED\n PRESS T KEY IN ORDER TO CHANGE TO MODES", 300, 300);
+            return;
+        }
 
         List<Tile> temp_path = new ArrayList<Tile>();
         temp_path = createPath(startTile, startTile, endTile);
 
         if(temp_path == null) {
             System.out.println("no path found \n construct a proper path");
+            DamageIndicator.showText(root,"INVALID PATH CONSTRUCT A PROPER PATH", 300 , 300);
             return;
         }
 
@@ -83,6 +87,7 @@ public class TileSetLoader {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(saveFile))) {
             out.writeObject(tileMap);
             System.out.println("Map saved to: " + saveFile.getAbsolutePath());
+            DamageIndicator.showText(root,"MAP SAVED TO " + saveFile.getAbsolutePath(), 300 , 300);
         } catch (Exception e) {
             e.printStackTrace();
         }
