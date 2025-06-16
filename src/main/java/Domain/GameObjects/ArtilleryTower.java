@@ -9,6 +9,8 @@ import java.util.List;
 public class ArtilleryTower extends Tower {
 
     private static final String PATH = "/Assets/Towers/Tower_bomb128.png";
+    private static final String UPGRADEPATH = "/Assets/phase2/artillery up.png";
+
 
     private int splashRadius;  // Radius of AOE damage
     private List<Enemy> allEnemies;  // Reference to all enemies for AOE damage
@@ -35,8 +37,9 @@ public class ArtilleryTower extends Tower {
     // Override upgrade to also increase splash radius
     @Override
     public void upgrade() {
-        super.upgrade();
+        setImage(UPGRADEPATH);
         splashRadius = (int)(splashRadius * 1.2);  // 20% increase in splash radius
+        damage = (int)(damage * 1.2);
     }
 
     @Override

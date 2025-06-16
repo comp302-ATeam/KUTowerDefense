@@ -29,6 +29,12 @@ public class TowerMenu extends Pane {
 //            new TowerMenu(lotTower);
             tower.mapPane.getChildren().remove(this);
         });
+
+        upButton.setOnAction(e -> {
+            tower.upgrade();
+        });
+
+
     }
 
     private void lotMode(){
@@ -95,20 +101,22 @@ public class TowerMenu extends Pane {
 
         downButton = cur_button;
 
-        cur_button = new Button();
-        this.getChildren().add(cur_button);
 
-        cur_button.setPrefSize(50,50);
-        //cur_button.setLayoutX(tower.getX());
-        cur_button.layoutYProperty().bind(this.heightProperty().subtract(cur_button.heightProperty()).divide(2));
-        cur_button.setLayoutX(-70); // 10px from top
-
-        leftButton = cur_button;
 
         setButtons(false);
         ///  aasdasdasdasd
 
         if (tower instanceof TowerLot ){
+            cur_button = new Button();
+            this.getChildren().add(cur_button);
+
+            cur_button.setPrefSize(50,50);
+            //cur_button.setLayoutX(tower.getX());
+            cur_button.layoutYProperty().bind(this.heightProperty().subtract(cur_button.heightProperty()).divide(2));
+            cur_button.setLayoutX(-70); // 10px from top
+
+            leftButton = cur_button;
+
             lotMode();
         }
         else {
@@ -123,12 +131,13 @@ public class TowerMenu extends Pane {
         if (state){
             upButton.setVisible(true);
             downButton.setVisible(true);
-            leftButton.setVisible(true);
+            if (leftButton != null)leftButton.setVisible(true);
+
         }
         else {
             upButton.setVisible(false);
             downButton.setVisible(false);
-            leftButton.setVisible(false);
+            if (leftButton != null)leftButton.setVisible(false);
         }
     }
 

@@ -42,3 +42,4 @@ bin/
 ### Downloaded Archives ###
 /libs/*.zip
 /libs/*.tar.gz
+/javafx-sdk-21.0.7/

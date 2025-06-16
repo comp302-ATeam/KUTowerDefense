@@ -8,6 +8,11 @@ public class TowerLot extends Tower{
 
 
     @Override
+    public void upgrade() {
+
+    }
+
+    @Override
     public Projectile createProjectile(Enemy e){
         return null;
     }

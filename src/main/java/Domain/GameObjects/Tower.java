@@ -143,11 +143,10 @@ public abstract class Tower extends GameObject {
     }
 
     // Method to upgrade the tower
-    public void upgrade() {
-        currentLevel++;
-        damage = (int)(damage * 1.2);  // 20% damage increase
-        attackRange = (int)(attackRange * 1.2);    // 20% range increase
-        fireRate *= 1.2;               // 20% fire rate increase
+    public abstract void upgrade();
+
+    protected void setImage(String path) {
+        towerImage.setImage(new Image(getClass().getResource(path).toExternalForm()));
     }
 
     // Method to calculate refund amount when selling the tower
