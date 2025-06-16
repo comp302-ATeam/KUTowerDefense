@@ -17,7 +17,7 @@ public class WaveManager {
     // Private static instance of the singleton
     private static WaveManager instance;
 
-
+    private boolean waveOver;
     private final List<Wave> waves;     // List to store all waves in the game
     private int currentWaveIndex;       // Tracks which wave is currently active
     private final int xPos;
@@ -125,6 +125,7 @@ public class WaveManager {
             waves.get(0).startWave();
             gameSceneController.updateWave(1);
             nextWaveToStart = 1;
+
         }
     }
 
@@ -152,8 +153,75 @@ public class WaveManager {
                 waveTimer = 0;
             }
         }
+        boolean winCond = nextWaveToStart>=waves.size();
         for (int i = 0; i < nextWaveToStart; i++) {
             waves.get(i).update(deltaTime);
+        }
+        if(!waves.isEmpty()) {
+            waveOver = waves.get(0).getActiveEnemies().isEmpty();
+            winCond = nextWaveToStart>=waves.size();
+        }
+
+        // Check for win condition
+        if ( winCond && waveOver) {
+            System.out.println("[WaveManager] Win condition met! All waves complete and no enemies remaining.");
+            showWinScreen();
+            gameOver = true;  // Set game over flag to prevent further updates
+            GameActionController.getInstance().pauseGame();  // Pause the game
+        }
+    }
+
+    private void showWinScreen() {
+        if (gameOver) return;  // Don't show win screen if game is already over
+
+        gameOver = true;  // Set game over flag
+        // Stop the game
+        GameActionController.getInstance().pauseGame();
+
+        // Show win screen
+        try {
+            javafx.application.Platform.runLater(() -> {
+                try {
+                    // Create a container for the game content
+                    Pane gameContent = new Pane();
+                    gameContent.setPrefSize(gamePane.getWidth(), gamePane.getHeight());
+
+                    // Move all existing children to the game content pane
+                    while (!gamePane.getChildren().isEmpty()) {
+                        gameContent.getChildren().add(gamePane.getChildren().get(0));
+                    }
+
+                    // Add the game content pane to the main game pane
+                    gamePane.getChildren().add(gameContent);
+
+                    // Add blur effect to the game content
+                    javafx.scene.effect.GaussianBlur blur = new javafx.scene.effect.GaussianBlur(10);
+                    gameContent.setEffect(blur);
+
+                    // Load the win screen
+                    javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(UI.WinScreenController.class.getResource("/WinScreen.fxml"));
+                    javafx.scene.Parent root = loader.load();
+
+                    // Get the controller and ensure it's initialized
+                    UI.WinScreenController controller = loader.getController();
+                    if (controller != null) {
+                        System.out.println("Win screen controller loaded successfully");
+                    } else {
+                        System.out.println("Warning: Win screen controller is null");
+                    }
+
+                    // Add the win screen as an overlay to the game pane
+                    gamePane.getChildren().add(root);
+
+                    // Center the win screen
+                    root.setLayoutX((gamePane.getWidth() - root.prefWidth(-1)) / 2);
+                    root.setLayoutY((gamePane.getHeight() - root.prefHeight(-1)) / 2);
+                } catch (java.io.IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -101,11 +101,9 @@ public class Wave {
     //Once all groups have spawned, it marks the wave as complete.
     //Also cleans up dead enemies from the screen and memory.
     public void update(double deltaTime) {
-        for (int i = 0; i < activeEnemies.size(); i++) {
-            if (!activeEnemies.get(i).isAlive()) {
-                activeEnemies.remove(i);
-            }
-        }
+        // First, sync our activeEnemies list with the static Enemy.activeEnemies list
+        activeEnemies.removeIf(enemy -> !Enemy.activeEnemies.contains(enemy));
+
         if (currentGroup < groupCount) {
             if (!waitingForNextGroup) {
                 if (currentEnemyCount < (knightCount + goblinCount)) {
@@ -149,7 +147,9 @@ public class Wave {
                 if (enemy.getView() != null && enemy.getView().getParent() != null) {
                     gamePane.getChildren().removeAll(enemy.getView(), enemy.getHealthBar());
                 }
+                // Remove from both lists
                 iterator.remove();
+                Enemy.activeEnemies.remove(enemy);
                 System.out.println("[Wave] Removed enemy from wave " + waveIndex + (enemy.hasReachedEnd() ? " (reached end)" : " (dead)"));
             }
         }

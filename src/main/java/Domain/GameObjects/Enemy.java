@@ -238,6 +238,9 @@ public abstract class Enemy extends GameObject {
     public void takeDamage(Projectile projectile) {
         if (!isAlive) return;
         int damageTaken = CalcDamage(projectile);
+        if(damageTaken>healthPoints){
+            Die();
+        }
         healthPoints -= damageTaken;
         if( healthPoints <= 0 ) {
             Die();
@@ -312,107 +315,107 @@ public abstract class Enemy extends GameObject {
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
     public void Die() {
-        if (isAlive) {
-            isAlive = false;
-            // Stop the animation
-            if (animation != null) {
-                animation.stop();
-            }
+        System.out.println("this enemy just died");
+        isAlive = false;
+        // Stop the animation
+        if (animation != null) {
+            animation.stop();
+        }
 
-            // Remove from active enemies list
-            if (activeEnemies != null) {
-                activeEnemies.remove(this);
-            }
+        // Remove from active enemies list
+        if (activeEnemies != null) {
+            activeEnemies.remove(this);
+            System.out.println("[Enemy] Removed from activeEnemies list. Remaining enemies: " + activeEnemies.size());
+        }
 
 
-            // Store parent reference before removing anything
-            javafx.scene.Parent parent = view != null ? view.getParent() : null;
+        // Store parent reference before removing anything
+        javafx.scene.Parent parent = view != null ? view.getParent() : null;
 
-            // Remove the enemy and its UI elements from the game pane
-            if (view != null && parent != null) {
-                if (parent instanceof javafx.scene.layout.Pane) {
-                    javafx.scene.layout.Pane pane = (javafx.scene.layout.Pane) parent;
-                    // Remove all UI elements
-                    pane.getChildren().remove(view);
+        // Remove the enemy and its UI elements from the game pane
+        if (view != null && parent != null) {
+            if (parent instanceof javafx.scene.layout.Pane) {
+                javafx.scene.layout.Pane pane = (javafx.scene.layout.Pane) parent;
+                // Remove all UI elements
+                pane.getChildren().remove(view);
 
-                    // Remove health bar
-                    if (healthBar != null) {
-                        healthBar.setDisable(true);
-                        healthBar.setMouseTransparent(true);
-                        healthBar.setVisible(false);
-                        healthBar.setOpacity(0);
-                        pane.getChildren().remove(healthBar);
+                // Remove health bar
+                if (healthBar != null) {
+                    healthBar.setDisable(true);
+                    healthBar.setMouseTransparent(true);
+                    healthBar.setVisible(false);
+                    healthBar.setOpacity(0);
+                    pane.getChildren().remove(healthBar);
+                }
+
+                // Remove speed up icon if it exists - using a larger tolerance
+                for (javafx.scene.Node node : new ArrayList<>(pane.getChildren())) {
+                    if (node instanceof javafx.scene.image.ImageView &&
+                            node != view &&
+                            Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
+                            Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
+                        node.setDisable(true);
+                        node.setMouseTransparent(true);
+                        node.setVisible(false);
+                        node.setOpacity(0);
+                        pane.getChildren().remove(node);
                     }
+                }
+                pane.requestLayout();
+            } else if (parent instanceof javafx.scene.Group) {
+                javafx.scene.Group group = (javafx.scene.Group) parent;
+                // Remove all UI elements
+                group.getChildren().remove(view);
 
-                    // Remove speed up icon if it exists - using a larger tolerance
-                    for (javafx.scene.Node node : new ArrayList<>(pane.getChildren())) {
-                        if (node instanceof javafx.scene.image.ImageView &&
-                                node != view &&
-                                Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
-                                Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
-                            node.setDisable(true);
-                            node.setMouseTransparent(true);
-                            node.setVisible(false);
-                            node.setOpacity(0);
-                            pane.getChildren().remove(node);
-                        }
-                    }
-                    pane.requestLayout();
-                } else if (parent instanceof javafx.scene.Group) {
-                    javafx.scene.Group group = (javafx.scene.Group) parent;
-                    // Remove all UI elements
-                    group.getChildren().remove(view);
+                // Remove health bar
+                if (healthBar != null) {
+                    healthBar.setDisable(true);
+                    healthBar.setMouseTransparent(true);
+                    healthBar.setVisible(false);
+                    healthBar.setOpacity(0);
+                    group.getChildren().remove(healthBar);
+                }
 
-                    // Remove health bar
-                    if (healthBar != null) {
-                        healthBar.setDisable(true);
-                        healthBar.setMouseTransparent(true);
-                        healthBar.setVisible(false);
-                        healthBar.setOpacity(0);
-                        group.getChildren().remove(healthBar);
-                    }
-
-                    // Remove speed up icon if it exists - using a larger tolerance
-                    for (javafx.scene.Node node : new ArrayList<>(group.getChildren())) {
-                        if (node instanceof javafx.scene.image.ImageView &&
-                                node != view &&
-                                Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
-                                Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
-                            node.setDisable(true);
-                            node.setMouseTransparent(true);
-                            node.setVisible(false);
-                            node.setOpacity(0);
-                            group.getChildren().remove(node);
-                        }
+                // Remove speed up icon if it exists - using a larger tolerance
+                for (javafx.scene.Node node : new ArrayList<>(group.getChildren())) {
+                    if (node instanceof javafx.scene.image.ImageView &&
+                            node != view &&
+                            Math.abs(node.getTranslateX() - x) < 30 && // Increased tolerance
+                            Math.abs(node.getTranslateY() - y) < 30) { // Increased tolerance
+                        node.setDisable(true);
+                        node.setMouseTransparent(true);
+                        node.setVisible(false);
+                        node.setOpacity(0);
+                        group.getChildren().remove(node);
                     }
                 }
             }
+        }
 
-            // Clear any remaining waypoints
-            waypoints.clear();
-            movingToTarget = false;
-            // Only spawn gold pouch if enemy died on the path (not at the end) and with configurable chance
-            if (!hasReachedEnd && parent != null && random.nextDouble() < 0.2) {
-                // Spawn gold pouch at the enemy's death position with a small random offset
-                double offsetX = (random.nextDouble() - 0.5) * 20; // ±10 pixels
-                double offsetY = (random.nextDouble() - 0.5) * 20; // ±10 pixels
+        // Clear any remaining waypoints
+        waypoints.clear();
+        movingToTarget = false;
+        // Only spawn gold pouch if enemy died on the path (not at the end) and with configurable chance
+        if (!hasReachedEnd && parent != null && random.nextDouble() < 0.2) {
+            // Spawn gold pouch at the enemy's death position with a small random offset
+            double offsetX = (random.nextDouble() - 0.5) * 20; // ±10 pixels
+            double offsetY = (random.nextDouble() - 0.5) * 20; // ±10 pixels
 
-                double pouchX = x + offsetX;
-                double pouchY = y + offsetY;
+            double pouchX = x + offsetX;
+            double pouchY = y + offsetY;
 
-                GoldPouch goldPouch = GoldPouch.spawnAtWithAmount(pouchX, pouchY, goldReward);
+            GoldPouch goldPouch = GoldPouch.spawnAtWithAmount(pouchX, pouchY, goldReward);
 
-                if (parent instanceof javafx.scene.layout.Pane) {
-                    ((javafx.scene.layout.Pane) parent).getChildren().add(goldPouch.getView());
-                } else if (parent instanceof javafx.scene.Group) {
-                    ((javafx.scene.Group) parent).getChildren().add(goldPouch.getView());
-                }
+            if (parent instanceof javafx.scene.layout.Pane) {
+                ((javafx.scene.layout.Pane) parent).getChildren().add(goldPouch.getView());
+            } else if (parent instanceof javafx.scene.Group) {
+                ((javafx.scene.Group) parent).getChildren().add(goldPouch.getView());
             }
+        }
 
-            // Remove slow icon
-            if (slowIcon != null) {
-                GameActionController.getInstance().getGamePane().getChildren().remove(slowIcon);
-            }
+        // Remove slow icon
+        if (slowIcon != null) {
+            GameActionController.getInstance().getGamePane().getChildren().remove(slowIcon);
         }
     }
 
@@ -420,6 +423,10 @@ public abstract class Enemy extends GameObject {
     {
         // TO BE IMPLEMENTED
         return 0;
+    }
+
+    public boolean getIsAlive(){
+         return isAlive;
     }
 
     public boolean hasReachedEnd() {
