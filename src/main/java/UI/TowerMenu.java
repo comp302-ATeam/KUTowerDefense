@@ -63,11 +63,14 @@ public class TowerMenu extends Pane {
         this.setPrefSize(80, 100);
 
         // Make the menu pane mouse transparent except for buttons
-        this.setMouseTransparent(true);
+        //this.setMouseTransparent(true);
 
-        this.setOnMouseClicked(e -> clickTower());
+        //this.setOnMouseClicked(e -> clickTower());
         //tower.towerImage.setOnMouseClicked(e -> clickTower());
-        this.setOpacity(1.0);
+        this.setOpacity(0.0);
+
+        this.setOnMouseEntered(e -> openMenu(true));
+        this.setOnMouseExited(e -> openMenu(false));
 
          ///  ADASDASDASD
         Button cur_button = new Button();
@@ -102,7 +105,7 @@ public class TowerMenu extends Pane {
 
         leftButton = cur_button;
 
-        setButtons(true);
+        setButtons(false);
         ///  aasdasdasdasd
 
         if (tower instanceof TowerLot ){
@@ -126,6 +129,18 @@ public class TowerMenu extends Pane {
             upButton.setVisible(false);
             downButton.setVisible(false);
             leftButton.setVisible(false);
+        }
+    }
+
+
+    private void openMenu(boolean state){
+        if (state){
+            setOpacity(1.0);
+            setButtons(true);
+        }
+        else {
+            setOpacity(0.0);
+            setButtons(false);
         }
     }
 
