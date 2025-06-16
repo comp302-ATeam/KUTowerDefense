@@ -16,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.effect.Effect;
 import java.util.List;
-import java.io.*;
 
 public class GameSceneController {
     // Use singleton instance of the game controller to handle pause, resume, and speed changes..
@@ -57,35 +56,6 @@ public class GameSceneController {
 
     public void setMapName(String mapName) {
         this.mapName = mapName;
-    }
-
-    /**
-     * Loads game settings from disk. Returns default settings if file doesn't exist.
-     * @return GameSettings object containing player preferences
-     */
-    private GameSettings loadGameSettings() {
-        File file = new File("src/data/OptionsSettings.dat");
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            System.out.println("✅ Loaded game settings from: " + file.getAbsolutePath());
-            return (GameSettings) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("⚠️ Could not load settings, using defaults: " + e.getMessage());
-            return getDefaultSettings();
-        }
-    }
-
-    /**
-     * Creates default game settings when no saved settings exist.
-     * @return GameSettings with default values
-     */
-    private GameSettings getDefaultSettings() {
-        GameSettings settings = new GameSettings();
-        settings.player = new GameSettings.Player();
-        settings.player.startingGold = 100;
-        settings.player.startingHP = 10;
-        settings.player.musicOn = true;
-        settings.player.sfxOn = true;
-        return settings;
     }
 
     private void setImageRed(ImageView imageView, boolean isRed) {
@@ -192,8 +162,8 @@ public class GameSceneController {
     }
 
     private void resetGame() {
-        // Load current game settings
-        currentSettings = loadGameSettings();
+        // Load current game settings from singleton
+        currentSettings = GameSettingsManager.getInstance().getSettings();
         
         // Clear any existing game state
         if (waveSpawner != null) {
@@ -233,6 +203,6 @@ public class GameSceneController {
             updateWave(1);
         });
         
-        System.out.println("🎮 Game initialized with settings - Gold: " + currentSettings.player.startingGold + ", Lives: " + currentSettings.player.startingHP);
+        System.out.println("🎮 Game initialized with singleton settings - Gold: " + currentSettings.player.startingGold + ", Lives: " + currentSettings.player.startingHP);
     }
 }

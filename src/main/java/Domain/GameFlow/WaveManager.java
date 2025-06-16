@@ -28,7 +28,8 @@ public class WaveManager {
     private final GameSceneController gameSceneController;
     private boolean waveJustStarted = false;
     private double waveTimer = 0;
-    private static final double WAVE_INTERVAL = 10.0;
+    private static final double DEFAULT_WAVE_INTERVAL = 10.0;  // Default fallback
+    private double currentWaveInterval = DEFAULT_WAVE_INTERVAL; // Configurable interval
     private int nextWaveToStart = 0;
     private int playerLives = 10;  // Default starting lives
     private boolean gameOver = false;  // Flag to track if game is over
@@ -56,10 +57,27 @@ public class WaveManager {
      */
     public void setGameSettings(GameSettings settings) {
         this.gameSettings = settings;
-        if (settings != null && settings.player != null) {
-            this.playerLives = settings.player.startingHP;  // Use configured starting lives
-            System.out.println("🎯 WaveManager: Applied game settings - Player lives set to: " + playerLives);
+        if (settings != null) {
+            if (settings.player != null) {
+                this.playerLives = settings.player.startingHP;  // Use configured starting lives
+                System.out.println("🎯 WaveManager: Applied player settings - Lives set to: " + playerLives);
+            }
+            if (settings.waves != null) {
+                this.currentWaveInterval = settings.waves.delayBetweenWaves;  // Use configured wave delay
+                System.out.println("🎯 WaveManager: Applied wave settings - Wave interval set to: " + currentWaveInterval + " seconds");
+            }
         }
+    }
+
+    /**
+     * Gets current settings from singleton manager.
+     * @return Current game settings
+     */
+    private GameSettings getCurrentSettings() {
+        if (gameSettings == null) {
+            gameSettings = GameSettingsManager.getInstance().getSettings();
+        }
+        return gameSettings;
     }
 
     // Public static method to get the singleton instance
@@ -113,7 +131,8 @@ public class WaveManager {
     // Adds a new wave with given numbers of knights, goblins, and groups.
     //Wave index is inferred by the size of the list.
     public void addWave(int knightCount, int goblinCount, int groupCount) {
-        Wave wave = new Wave(waves.size(), knightCount, goblinCount, groupCount, xPos, yPos, gamePane, mainPath);
+        GameSettings settings = getCurrentSettings();
+        Wave wave = new Wave(waves.size(), knightCount, goblinCount, groupCount, xPos, yPos, gamePane, mainPath, settings);
         waves.add(wave);
     }
 
@@ -125,7 +144,7 @@ public class WaveManager {
 
         if (nextWaveToStart > 0) {
             waveTimer += deltaTime;
-            if (nextWaveToStart < waves.size() && waveTimer >= WAVE_INTERVAL) {
+            if (nextWaveToStart < waves.size() && waveTimer >= currentWaveInterval) {
                 System.out.println("[WaveManager] Starting wave " + nextWaveToStart);
                 waves.get(nextWaveToStart).startWave();
                 controller.updateWave(nextWaveToStart + 1);
