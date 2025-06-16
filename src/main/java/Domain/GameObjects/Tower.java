@@ -26,6 +26,7 @@ public abstract class Tower extends GameObject {
     public double fireRate;      // Attacks per second
     protected double sellRatio;     // Ratio of cost returned when selling
     protected long lastAttackTime;  // Time of last attack in milliseconds
+    protected int level = 1;
 
     public ImageView towerImage;
     public Pane mapPane;

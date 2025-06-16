@@ -4,6 +4,7 @@ import Domain.GameFlow.GameActionController;
 import Domain.GameObjects.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
@@ -18,21 +19,91 @@ public class TowerMenu extends Pane {
     private Button upButton;
     private Button downButton;
     private Button leftButton;
+    private boolean setTower = false;
 
     private void towerMode(){
+        if(tower instanceof MageTower){
+            Image downImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_3_0.png"));
+            ImageView downImageView = new ImageView(downImage);
+            downImageView.setFitWidth(50);
+            downImageView.setFitHeight(50);
+            downButton.setGraphic(downImageView);
+            downButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+            Image upImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_1_2.png"));
+            ImageView upImageView = new ImageView(upImage);
+            upImageView.setFitWidth(50);
+            upImageView.setFitHeight(50);
+            upButton.setGraphic(upImageView);
+            upButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
 
 
-
-        downButton.setOnAction(e -> {
-            tower.Destroy();
-            Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+            downButton.setOnAction(e -> {
+                tower.Destroy();
+                Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(lotTower);
-            tower.mapPane.getChildren().remove(this);
-        });
+                tower.mapPane.getChildren().remove(this);
+            });
 
-        upButton.setOnAction(e -> {
-            tower.upgrade();
-        });
+            upButton.setOnAction(e -> {
+                tower.upgrade();
+            });
+        }
+        if(tower instanceof ArcherTower){
+            Image downImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_3_0.png"));
+            ImageView downImageView = new ImageView(downImage);
+            downImageView.setFitWidth(50);
+            downImageView.setFitHeight(50);
+            downButton.setGraphic(downImageView);
+            downButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+            Image upImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_1_2.png"));
+            ImageView upImageView = new ImageView(upImage);
+            upImageView.setFitWidth(50);
+            upImageView.setFitHeight(50);
+            upButton.setGraphic(upImageView);
+            upButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+
+            downButton.setOnAction(e -> {
+                tower.Destroy();
+                Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+//            new TowerMenu(lotTower);
+                tower.mapPane.getChildren().remove(this);
+            });
+
+            upButton.setOnAction(e -> {
+                tower.upgrade();
+            });
+        }
+        if(tower instanceof ArtilleryTower){
+            Image downImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_3_0.png"));
+            ImageView downImageView = new ImageView(downImage);
+            downImageView.setFitWidth(50);
+            downImageView.setFitHeight(50);
+            downButton.setGraphic(downImageView);
+            downButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+            Image upImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_1_2.png"));
+            ImageView upImageView = new ImageView(upImage);
+            upImageView.setFitWidth(50);
+            upImageView.setFitHeight(50);
+            upButton.setGraphic(upImageView);
+            upButton.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+
+
+            downButton.setOnAction(e -> {
+                tower.Destroy();
+                Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+//            new TowerMenu(lotTower);
+                tower.mapPane.getChildren().remove(this);
+            });
+
+            upButton.setOnAction(e -> {
+                tower.upgrade();
+            });
+        }
+
 
 
     }
@@ -40,6 +111,7 @@ public class TowerMenu extends Pane {
     private void lotMode(){
         upButton.setOnAction(e -> {
             tower.Destroy();
+            setTower = true;
             Tower cur_tower = new ArcherTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
@@ -47,6 +119,7 @@ public class TowerMenu extends Pane {
         });
         leftButton.setOnAction(e -> {
             tower.Destroy();
+            setTower = true;
             Tower cur_tower = new ArtilleryTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
@@ -54,6 +127,7 @@ public class TowerMenu extends Pane {
         });
         downButton.setOnAction(e -> {
             tower.Destroy();
+            setTower = true;
             Tower cur_tower = new MageTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(cur_tower);
             tower.mapPane.getChildren().remove(this);
@@ -79,42 +153,59 @@ public class TowerMenu extends Pane {
         this.setOnMouseExited(e -> openMenu(false));
 
          ///  ADASDASDASD
+        // Create up button
         Button cur_button = new Button();
         this.getChildren().add(cur_button);
-
         cur_button.setPrefSize(50,50);
-        //cur_button.setLayoutX(tower.getX());
         cur_button.layoutXProperty().bind(this.widthProperty().subtract(cur_button.widthProperty()).divide(2));
-        cur_button.setLayoutY(-50); // 10px from top
-
-        cur_button.setOnAction(e -> allah());
-
+        cur_button.setLayoutY(-50);
+        
+        // Set up button image
+        Image upImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_0_2.png"));
+        ImageView upImageView = new ImageView(upImage);
+        upImageView.setFitWidth(50);
+        upImageView.setFitHeight(50);
+        cur_button.setGraphic(upImageView);
+        cur_button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        
         upButton = cur_button;
 
+        // Create down button
         cur_button = new Button();
         this.getChildren().add(cur_button);
-
         cur_button.setPrefSize(50,50);
-        //cur_button.setLayoutX(tower.getX());
         cur_button.layoutXProperty().bind(this.widthProperty().subtract(cur_button.widthProperty()).divide(2));
-        cur_button.setLayoutY(100); // 10px from top
-
+        cur_button.setLayoutY(100);
+        
+        // Set down button image
+        Image downImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_2_2.png"));
+        ImageView downImageView = new ImageView(downImage);
+        downImageView.setFitWidth(50);
+        downImageView.setFitHeight(50);
+        cur_button.setGraphic(downImageView);
+        cur_button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        
         downButton = cur_button;
-
-
 
         setButtons(false);
         ///  aasdasdasdasd
 
         if (tower instanceof TowerLot ){
+            // Create left button
             cur_button = new Button();
             this.getChildren().add(cur_button);
-
             cur_button.setPrefSize(50,50);
-            //cur_button.setLayoutX(tower.getX());
             cur_button.layoutYProperty().bind(this.heightProperty().subtract(cur_button.heightProperty()).divide(2));
-            cur_button.setLayoutX(-70); // 10px from top
-
+            cur_button.setLayoutX(-70);
+            
+            // Set left button image
+            Image leftImage = new Image(getClass().getResourceAsStream("/Assets/UI/Buttons/button_3_2.png"));
+            ImageView leftImageView = new ImageView(leftImage);
+            leftImageView.setFitWidth(50);
+            leftImageView.setFitHeight(50);
+            cur_button.setGraphic(leftImageView);
+            cur_button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+            
             leftButton = cur_button;
 
             lotMode();
@@ -172,6 +263,21 @@ public class TowerMenu extends Pane {
         System.out.println("hmm");
     }
 
-
+    private Button createButton(String imagePath) {
+        Button button = new Button();
+        button.setPrefSize(50, 50);
+        
+        // Create and set the button image
+        Image image = new Image(getClass().getResourceAsStream(imagePath));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+        button.setGraphic(imageView);
+        
+        // Remove button background and border
+        button.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        
+        return button;
+    }
 
 }

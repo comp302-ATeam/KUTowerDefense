@@ -16,6 +16,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.effect.Effect;
 import java.util.List;
+import javafx.scene.image.Image;
+import javafx.scene.ImageCursor;
+import javafx.scene.Cursor;
 
 public class GameSceneController {
     // Use singleton instance of the game controller to handle pause, resume, and speed changes..
@@ -158,6 +161,12 @@ public class GameSceneController {
     public void initialize() {
         Platform.runLater(() -> {
             resetGame();
+            
+            // Set custom cursor
+            Image cursorImg = new Image(getClass().getResourceAsStream("/Assets/UI/01.png"));
+            double hotspotX = cursorImg.getWidth() / 2;
+            double hotspotY = cursorImg.getHeight() / 2;
+            gamePane.getScene().setCursor(new ImageCursor(cursorImg, hotspotX, hotspotY));
         });
     }
 

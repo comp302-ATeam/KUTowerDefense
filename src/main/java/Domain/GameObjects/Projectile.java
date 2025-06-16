@@ -126,5 +126,8 @@ public class  Projectile extends ImageView{
         return target;
     }
 
+    public String getType() {
+        return this.type;
+    }
 }
 

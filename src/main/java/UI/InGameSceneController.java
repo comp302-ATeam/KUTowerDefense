@@ -7,6 +7,7 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -47,6 +48,8 @@ public class InGameSceneController {
 
         Image goldImg = new Image("Assets/enemies/G_Spawn.png");
         ImageView goldView = new ImageView(goldImg);
+
+        Image cursorImg = new Image(getClass().getResourceAsStream("/Assets/UI/01.png"));
 
         gamePane.getChildren().addAll(
                 
