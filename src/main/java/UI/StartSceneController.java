@@ -45,6 +45,7 @@ public class StartSceneController {
         stage.show();
     }
 
+    /*
     @FXML
     private void onActionLoadGame(ActionEvent event) throws Exception {
         System.out.println("LoadGame");
@@ -54,6 +55,7 @@ public class StartSceneController {
         stage.show();
 
     }
+    */
 
     @FXML
     private void onActionOptions() {
