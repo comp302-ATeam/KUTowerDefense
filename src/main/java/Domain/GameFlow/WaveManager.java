@@ -100,6 +100,7 @@ public class WaveManager {
     // Public static method to reset the singleton
     public static synchronized void reset() {
         if (instance != null) {
+            // Reset all wave-related state
             instance.waveTimer = 0;
             instance.nextWaveToStart = 0;
             instance.currentWaveIndex = 0;
@@ -108,6 +109,17 @@ public class WaveManager {
             instance.gameOver = false;
             instance.playerLives = 10;  // Reset to starting lives
             instance.waves.clear();     // Clear all waves
+            
+            // Clear any remaining enemies
+            Enemy.activeEnemies.clear();
+            
+            // Reset game settings
+            instance.gameSettings = GameSettingsManager.getInstance().getSettings();
+            if (instance.gameSettings != null && instance.gameSettings.player != null) {
+                instance.playerLives = instance.gameSettings.player.startingHP;
+            }
+            
+            System.out.println("[WaveManager] Reset complete - All waves and enemies cleared");
         }
         instance = null;
     }
@@ -143,8 +155,12 @@ public class WaveManager {
     public void updateAndAdvanceWaves(GameSceneController controller, double deltaTime) {
         if (gameOver) return;  // Don't update waves if game is over
 
+        // Scale deltaTime by game speed
+        double scaledDeltaTime = deltaTime * GameActionController.getInstance().getGameSpeed();
+
+        // Update wave timer and start next wave if ready
         if (nextWaveToStart > 0) {
-            waveTimer += deltaTime;
+            waveTimer += scaledDeltaTime;
             if (nextWaveToStart < waves.size() && waveTimer >= currentWaveInterval) {
                 System.out.println("[WaveManager] Starting wave " + nextWaveToStart);
                 waves.get(nextWaveToStart).startWave();
@@ -153,18 +169,28 @@ public class WaveManager {
                 waveTimer = 0;
             }
         }
-        boolean winCond = nextWaveToStart>=waves.size();
+
+        // Update all active waves
+        boolean allWavesComplete = true;
+        boolean anyEnemiesRemaining = false;
+
         for (int i = 0; i < nextWaveToStart; i++) {
-            waves.get(i).update(deltaTime);
-        }
-        if(!waves.isEmpty()) {
-            waveOver = waves.get(0).getActiveEnemies().isEmpty();
-            winCond = nextWaveToStart>=waves.size();
+            Wave wave = waves.get(i);
+            wave.update(scaledDeltaTime);
+            
+            // Check if wave is complete and has no enemies
+            if (!wave.isWaveComplete() || !wave.getActiveEnemies().isEmpty()) {
+                allWavesComplete = false;
+            }
+            if (!wave.getActiveEnemies().isEmpty()) {
+                anyEnemiesRemaining = true;
+            }
         }
 
         // Check for win condition
-        if ( winCond && waveOver) {
+        if (allWavesComplete && !anyEnemiesRemaining && nextWaveToStart >= waves.size()) {
             System.out.println("[WaveManager] Win condition met! All waves complete and no enemies remaining.");
+            reset();
             showWinScreen();
             gameOver = true;  // Set game over flag to prevent further updates
             GameActionController.getInstance().pauseGame();  // Pause the game

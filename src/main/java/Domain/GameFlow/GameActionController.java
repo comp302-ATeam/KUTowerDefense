@@ -130,10 +130,20 @@ public class GameActionController {
     }
 
     public void resetGame() {
+        // Reset game state
         this.isPaused = false;
         this.gameSpeed = defaultSpeed;
         this.FPS = 8.0;
-        System.out.println("Game state reset");
+        
+        // Clear all game objects
+        towerList.clear();
+        projectileList.clear();
+        Enemy.activeEnemies.clear();
+        
+        // Reset WaveManager
+        WaveManager.reset();
+        
+        System.out.println("Game state reset - All game objects cleared");
     }
 
     public void setGamePane(Pane gamePane) {

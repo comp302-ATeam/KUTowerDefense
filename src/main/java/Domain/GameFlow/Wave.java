@@ -101,13 +101,17 @@ public class Wave {
     //Once all groups have spawned, it marks the wave as complete.
     //Also cleans up dead enemies from the screen and memory.
     public void update(double deltaTime) {
+        // Scale deltaTime by game speed
+        double scaledDeltaTime = deltaTime * GameActionController.getInstance().getGameSpeed();
+
         // First, sync our activeEnemies list with the static Enemy.activeEnemies list
         activeEnemies.removeIf(enemy -> !Enemy.activeEnemies.contains(enemy));
 
-        if (currentGroup < groupCount) {
+        // Only spawn new enemies if wave is not complete
+        if (!isWaveComplete && currentGroup < groupCount) {
             if (!waitingForNextGroup) {
                 if (currentEnemyCount < (knightCount + goblinCount)) {
-                    enemySpawnTimer += deltaTime;
+                    enemySpawnTimer += scaledDeltaTime;
                     if (enemySpawnTimer >= enemySpawnInterval) {
                         spawnEnemy();
                         enemySpawnTimer = 0;
@@ -119,7 +123,7 @@ public class Wave {
                     groupWaitTimer = 0;
                 }
             } else {
-                groupWaitTimer += deltaTime;
+                groupWaitTimer += scaledDeltaTime;
                 if (groupWaitTimer >= groupSpawnInterval) {
                     currentGroup++;
                     if (currentGroup < groupCount) {
@@ -130,8 +134,6 @@ public class Wave {
                     waitingForNextGroup = false;
                 }
             }
-        } else {
-            isWaveComplete = true;
         }
 
         // Update existing enemies and remove dead ones
@@ -152,6 +154,12 @@ public class Wave {
                 Enemy.activeEnemies.remove(enemy);
                 System.out.println("[Wave] Removed enemy from wave " + waveIndex + (enemy.hasReachedEnd() ? " (reached end)" : " (dead)"));
             }
+        }
+
+        // Check if wave is complete
+        if (!isWaveComplete && currentGroup >= groupCount && activeEnemies.isEmpty()) {
+            isWaveComplete = true;
+            System.out.println("[Wave] Wave " + waveIndex + " is complete");
         }
     }
 
