@@ -3,6 +3,7 @@ package Domain.GameObjects.ShotBehaviour;
 import Domain.GameFlow.AnimationPlayer;
 import Domain.GameObjects.Enemy;
 import Domain.GameObjects.Projectile;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 
@@ -15,8 +16,6 @@ public class BasicShot extends BaseBehaviour {
         super(projectile);
     }
 
-
-
     @Override
     public boolean Shoot(Enemy target) {
         target.takeDamage(projectile);
@@ -27,6 +26,13 @@ public class BasicShot extends BaseBehaviour {
             explosionAnim.setLooping(false);
             double explosionX = target.getX() + target.frameWidth / 2;
             double explosionY = target.getY() + target.frameHeight / 2;
+
+            // Add blue color effect to the explosion
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setHue(0.7); // Blue hue
+            colorAdjust.setSaturation(0.8); // Increase saturation
+            colorAdjust.setBrightness(0.2); // Slightly increase brightness
+            explosionAnim.getView().setEffect(colorAdjust);
 
             explosionAnim.setOnComplete(() -> {
                 if (explosionAnim.isPlaying()) {

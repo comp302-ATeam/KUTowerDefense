@@ -46,6 +46,14 @@ public class AnimationPlayer {
     }
 
     /**
+     * Gets the ImageView used for the animation
+     * @return The ImageView instance
+     */
+    public ImageView getView() {
+        return view;
+    }
+
+    /**
      * Plays the animation at the specified location
      * @param x X coordinate to play the animation
      * @param y Y coordinate to play the animation
