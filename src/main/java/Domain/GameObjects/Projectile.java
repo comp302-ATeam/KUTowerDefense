@@ -11,7 +11,8 @@ public class  Projectile extends ImageView{
     int damage;
     String type;
     Enemy target;
-    double speed = 600;
+    public double basespeed = 600;
+    public double speed;
     public boolean isActive = true;
     Vector2<Double> offset;
 
@@ -49,6 +50,8 @@ public class  Projectile extends ImageView{
         offset = new Vector2<Double>(0.0,0.0);
         offset.x = (double) target.frameWidth / 2;
         offset.y = (double) target.frameHeight / 2;
+
+        speed = basespeed;
     }
 
     public int getDamage() {

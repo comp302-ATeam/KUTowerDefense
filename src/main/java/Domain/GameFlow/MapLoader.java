@@ -85,7 +85,7 @@ public class MapLoader extends TileSetLoader {
                 return;
 
         }
-        new TowerMenu(cur_tower);
+
         
     }
 

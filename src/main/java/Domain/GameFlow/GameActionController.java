@@ -62,6 +62,7 @@ public class GameActionController {
 
         for (Tower tower : towerList) {
             tower.update(deltaTime);
+            tower.fireRate = tower.baseFireRate * getGameSpeed();
         }
 
         List<Projectile> toRemove = new ArrayList<>();
@@ -69,6 +70,7 @@ public class GameActionController {
         for (Projectile p : projectileList) {
             //System.out.println(WaveManager.getInstance().getActiveEnemies().size());
             p.update(deltaTime);
+            p.speed = p.basespeed *getGameSpeed();
             if (!p.isActive) {
                 toRemove.add(p);
             }
