@@ -2,6 +2,7 @@ package Domain.GameObjects;
 
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.Vector2;
+import Domain.GameObjects.ShotBehaviour.BaseBehaviour;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,9 @@ public class  Projectile extends ImageView{
     double speed = 600;
     public boolean isActive = true;
     Vector2<Double> offset;
+
+    protected BaseBehaviour shotBehaviour;
+
 
     protected double rotateOffset = 90.0;
 
@@ -55,8 +59,8 @@ public class  Projectile extends ImageView{
     public void update(double deltaTime) {
 
         if (hasHitTarget()){
-            target.takeDamage(this);
-
+            //target.takeDamage(this);
+            shotBehaviour.Shoot(target);
             this.destroy();
             return;
         }
@@ -112,8 +116,7 @@ public class  Projectile extends ImageView{
             ((Pane) this.getParent()).getChildren().remove(this);
         }
 
-        // Remove from game logic list
-        GameActionController.projectileList.remove(this);
+        
     }
 
     public Enemy getTarget() {

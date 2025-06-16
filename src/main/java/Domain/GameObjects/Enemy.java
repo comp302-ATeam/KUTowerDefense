@@ -32,14 +32,14 @@ public abstract class Enemy extends GameObject {
     private boolean hasReachedEnd = false;  // Track if enemy has reached the end
     private boolean isAlive = true;
     private static final Random random = new Random();
-    protected static java.util.List<Enemy> activeEnemies = new java.util.ArrayList<>();
+    public static java.util.List<Enemy> activeEnemies = new java.util.ArrayList<>();
     protected double baseSpeed;
     protected double slowEndTime = 0; // Time when slow effect ends
     protected ImageView slowIcon; // Snowflake icon for slow effect
     protected boolean isSlowing = false;
     protected static final double SLOW_DURATION = 4000; // 4 seconds in milliseconds
-    protected static final double SLOW_FACTOR = 0.5; // Slow to 80% of original speed (20% reduction)
-    protected static final double TELEPORT_CHANCE = 1; // 3% chance for teleport
+    protected static final double SLOW_FACTOR = 0.8; // Slow to 80% of original speed (20% reduction)
+    protected static final double TELEPORT_CHANCE = 0.03; // 3% chance for teleport
     protected Vector2<Double> startPosition; // Store the start position for teleporting
 
     //region Animation Attributes
@@ -390,7 +390,7 @@ public abstract class Enemy extends GameObject {
             waypoints.clear();
             movingToTarget = false;
             // Only spawn gold pouch if enemy died on the path (not at the end) and with 50% chance
-            if (!hasReachedEnd && parent != null && random.nextDouble() < 1) {
+            if (!hasReachedEnd && parent != null && random.nextDouble() < 0.2) {
                 // Spawn gold pouch at the enemy's death position with a small random offset
                 double offsetX = (random.nextDouble() - 0.5) * 20; // ±10 pixels
                 double offsetY = (random.nextDouble() - 0.5) * 20; // ±10 pixels
