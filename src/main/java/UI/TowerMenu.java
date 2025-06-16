@@ -195,7 +195,7 @@ public class TowerMenu extends Pane {
             // Create left button
             cur_button = new Button();
             this.getChildren().add(cur_button);
-            cur_button.setPrefSize(50,50);
+            cur_button.setPrefSize(75,75);
             cur_button.layoutYProperty().bind(this.heightProperty().subtract(cur_button.heightProperty()).divide(2));
             cur_button.setLayoutX(-70);
             
@@ -260,13 +260,10 @@ public class TowerMenu extends Pane {
 
     }
 
-    private void allah(){
-        System.out.println("hmm");
-    }
 
     private Button createButton(String imagePath) {
         Button button = new Button();
-        button.setPrefSize(50, 50);
+        button.setPrefSize(75, 75);
         
         // Create and set the button image
         Image image = new Image(getClass().getResourceAsStream(imagePath));
