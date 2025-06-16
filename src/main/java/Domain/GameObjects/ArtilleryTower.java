@@ -24,7 +24,7 @@ public class ArtilleryTower extends Tower {
 
     @Override
     public Projectile createProjectile(Enemy enemy){
-        return new ArtilleryShell((int) x + 48, (int) y + 48, damage,enemy , 50);
+        return new ArtilleryShell((int) x + 48, (int) y + 48, damage,enemy , 250);
     }
 
     // Method to get splash radius

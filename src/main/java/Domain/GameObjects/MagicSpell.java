@@ -1,5 +1,6 @@
 package Domain.GameObjects;
 
+import Domain.GameObjects.ShotBehaviour.BasicShot;
 import javafx.scene.image.ImageView;
 
 public class MagicSpell extends Projectile {
@@ -8,5 +9,6 @@ public class MagicSpell extends Projectile {
     public MagicSpell(int xPos, int yPos, int damage, Enemy target) {
         super(xPos,yPos,damage,"MagicSpell",target, "/Assets/Projectilşes/fireball.png");
         rotateOffset = 180;
+        shotBehaviour = new BasicShot(this);
     }
 }

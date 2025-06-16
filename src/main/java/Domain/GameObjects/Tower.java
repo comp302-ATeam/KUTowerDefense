@@ -205,6 +205,7 @@ public abstract class Tower extends GameObject {
     }
 
 
+
     protected Enemy getClosestEnemy(){
         Enemy closest = null;
         double shortestDistance = Double.MAX_VALUE;

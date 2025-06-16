@@ -32,7 +32,7 @@ public abstract class Enemy extends GameObject {
     private boolean hasReachedEnd = false;  // Track if enemy has reached the end
     private boolean isAlive = true;
     private static final Random random = new Random();
-    protected static java.util.List<Enemy> activeEnemies = new java.util.ArrayList<>();
+    public static java.util.List<Enemy> activeEnemies = new java.util.ArrayList<>();
     protected double baseSpeed;
     protected double slowEndTime = 0; // Time when slow effect ends
     protected ImageView slowIcon; // Snowflake icon for slow effect
