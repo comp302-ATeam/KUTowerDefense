@@ -62,7 +62,8 @@ public class TowerMenu extends Pane {
         this.setLayoutY(tower.getY());
         this.setPrefSize(80, 100);
 
-        //this.setStyle("-fx-background-color: red;");
+        // Make the menu pane mouse transparent except for buttons
+        this.setMouseTransparent(true);
 
         this.setOnMouseClicked(e -> clickTower());
         //tower.towerImage.setOnMouseClicked(e -> clickTower());
