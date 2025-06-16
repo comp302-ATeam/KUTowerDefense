@@ -32,6 +32,7 @@ public class WaveManager {
     private int nextWaveToStart = 0;
     private int playerLives = 10;  // Default starting lives
     private boolean gameOver = false;  // Flag to track if game is over
+    private GameSettings gameSettings; // Store game settings
 
     private WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
         this.waves = new ArrayList<>();
@@ -47,6 +48,18 @@ public class WaveManager {
 
         // Set the path in GameActionController
         GameActionController.getInstance().setMainPath(mainPath);
+    }
+
+    /**
+     * Sets the game settings and applies player configuration.
+     * @param settings GameSettings object containing all configuration
+     */
+    public void setGameSettings(GameSettings settings) {
+        this.gameSettings = settings;
+        if (settings != null && settings.player != null) {
+            this.playerLives = settings.player.startingHP;  // Use configured starting lives
+            System.out.println("🎯 WaveManager: Applied game settings - Player lives set to: " + playerLives);
+        }
     }
 
     // Public static method to get the singleton instance

@@ -73,7 +73,7 @@ public class OptionsSceneControllerTest {
         setSpinnerField("spinnerMageFireRate", new Spinner<>(0.1, 5.0, 1.8, 0.1));
 
         // Player Settings Spinners
-        setSpinnerField("spinnerPlayerHP", new Spinner<>(1, 500, 100));
+        setSpinnerField("spinnerPlayerLives", new Spinner<>(1, 500, 100));
         setSpinnerField("spinnerPlayerGold", new Spinner<>(0, 1000, 100));
     }
 
@@ -195,7 +195,7 @@ public class OptionsSceneControllerTest {
         assertEquals(2.0, getSpinnerValue("spinnerMageFireRate"));
 
         // Assert - Player settings
-        assertEquals(120, getSpinnerValue("spinnerPlayerHP"));
+        assertEquals(120, getSpinnerValue("spinnerPlayerLives"));
         assertEquals(150, getSpinnerValue("spinnerPlayerGold"));
 
         // Assert - Audio settings
@@ -283,7 +283,7 @@ public class OptionsSceneControllerTest {
         assertEquals(0.1, getSpinnerValue("spinnerArcherFireRate"));
         assertEquals(5.0, getSpinnerValue("spinnerArtilleryFireRate"));
 
-        assertEquals(1, getSpinnerValue("spinnerPlayerHP"));
+        assertEquals(1, getSpinnerValue("spinnerPlayerLives"));
         assertEquals(1000, getSpinnerValue("spinnerPlayerGold"));
 
         // Assert - Both audio settings OFF
@@ -356,7 +356,7 @@ public class OptionsSceneControllerTest {
         assertEquals(40, getSpinnerValue("spinnerKnightHP"));
         assertEquals(50, getSpinnerValue("spinnerArcherCost"));
         assertEquals(70, getSpinnerValue("spinnerArtilleryCost"));
-        assertEquals(100, getSpinnerValue("spinnerPlayerHP"));
+        assertEquals(100, getSpinnerValue("spinnerPlayerLives"));
         assertEquals(100, getSpinnerValue("spinnerPlayerGold"));
 
         // Assert - Audio settings (music OFF, SFX ON)

@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.effect.Effect;
 import java.util.List;
+import java.io.*;
 
 public class GameSceneController {
     // Use singleton instance of the game controller to handle pause, resume, and speed changes..
@@ -52,9 +53,39 @@ public class GameSceneController {
     private ImageView pauseResumeImageView;
 
     private String mapName = "mapSave";  // Default map name
+    private GameSettings currentSettings; // Store current game settings
 
     public void setMapName(String mapName) {
         this.mapName = mapName;
+    }
+
+    /**
+     * Loads game settings from disk. Returns default settings if file doesn't exist.
+     * @return GameSettings object containing player preferences
+     */
+    private GameSettings loadGameSettings() {
+        File file = new File("src/data/OptionsSettings.dat");
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            System.out.println("✅ Loaded game settings from: " + file.getAbsolutePath());
+            return (GameSettings) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("⚠️ Could not load settings, using defaults: " + e.getMessage());
+            return getDefaultSettings();
+        }
+    }
+
+    /**
+     * Creates default game settings when no saved settings exist.
+     * @return GameSettings with default values
+     */
+    private GameSettings getDefaultSettings() {
+        GameSettings settings = new GameSettings();
+        settings.player = new GameSettings.Player();
+        settings.player.startingGold = 100;
+        settings.player.startingHP = 10;
+        settings.player.musicOn = true;
+        settings.player.sfxOn = true;
+        return settings;
     }
 
     private void setImageRed(ImageView imageView, boolean isRed) {
@@ -161,6 +192,9 @@ public class GameSceneController {
     }
 
     private void resetGame() {
+        // Load current game settings
+        currentSettings = loadGameSettings();
+        
         // Clear any existing game state
         if (waveSpawner != null) {
             waveSpawner.stop();
@@ -172,9 +206,9 @@ public class GameSceneController {
             gameGrid.getChildren().clear();
         }
 
-        // Reset UI elements
-        updateGold(100);  // Reset to starting gold
-        updateLives(10);  // Reset to starting lives
+        // Reset UI elements using settings from options menu
+        updateGold(currentSettings.player.startingGold);  // Use configured starting gold
+        updateLives(currentSettings.player.startingHP);   // Use configured starting lives
         updateWave(1);    // Reset to first wave
 
         // Initialize new game
@@ -183,19 +217,22 @@ public class GameSceneController {
         int startingX = mainPath[0].x.intValue();
         int startingY = mainPath[0].y.intValue();
 
-        // Reset WaveManager
+        // Reset WaveManager with settings
         WaveManager.reset();
 
         // Set game pane in GameActionController
         gameActionController.setGamePane(gamePane);
 
-        // Initialize new WaveSpawner
+        // Initialize new WaveSpawner with settings
         waveSpawner = new WaveSpawner(startingX, startingY, gamePane, mainPath, this);
+        waveSpawner.setGameSettings(currentSettings);  // Pass settings to wave spawner
         waveSpawner.startGame();
 
         // Ensure wave index is reset in UI
         Platform.runLater(() -> {
             updateWave(1);
         });
+        
+        System.out.println("🎮 Game initialized with settings - Gold: " + currentSettings.player.startingGold + ", Lives: " + currentSettings.player.startingHP);
     }
 }

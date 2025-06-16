@@ -108,8 +108,8 @@
             <Spinner fx:id="spinnerMageFireRate" GridPane.columnIndex="2" GridPane.rowIndex="26" />
 
             <!-- Column 4: Player Settings -->
-            <Label text="Starting HP:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-            <Spinner fx:id="spinnerPlayerHP" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Label text="Starting Lives:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Spinner fx:id="spinnerPlayerLives" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
             <!-- Future expansion example -->
 

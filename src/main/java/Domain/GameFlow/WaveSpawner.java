@@ -17,6 +17,7 @@ public class WaveSpawner {
     private final Vector2<Double>[] mainPath;
     private final UI.GameSceneController gameSceneController;
     private long lastTime = 0;
+    private GameSettings gameSettings;     // Store game settings
 
     public WaveSpawner(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, UI.GameSceneController gameSceneController) {
         WaveManager.initialize(startX, startY, gamePane, mainPath, gameSceneController);
@@ -29,6 +30,20 @@ public class WaveSpawner {
         // Set up GoldPouch with GameSceneController
         Domain.GameObjects.GoldPouch.setGameSceneController(gameSceneController);
     }
+
+    /**
+     * Sets the game settings to use for enemy stats, tower costs, etc.
+     * @param settings GameSettings object containing all configuration
+     */
+    public void setGameSettings(GameSettings settings) {
+        this.gameSettings = settings;
+        // Pass settings to wave manager
+        if (waveManager != null) {
+            waveManager.setGameSettings(settings);
+        }
+        System.out.println("🔧 WaveSpawner: Applied game settings");
+    }
+    
     // Adds predefined waves to the manager.
     //Starts the wave logic.
     //Sets isPaused to false and starts the animation timer

@@ -54,7 +54,7 @@ public class OptionsSceneController {
     @FXML private Spinner<Double> spinnerMageFireRate;
 
     // Player Settings
-    @FXML private Spinner<Integer> spinnerPlayerHP;
+    @FXML private Spinner<Integer> spinnerPlayerLives;
     @FXML private Spinner<Integer> spinnerPlayerGold;
 
     private boolean isMusicOn = true;
@@ -114,7 +114,7 @@ public class OptionsSceneController {
         initDoubleSpinner(spinnerMageFireRate, 0.1, 5.0, 1.8, 0.1);
 
         // Player Settings
-        initIntegerSpinner(spinnerPlayerHP, 1, 500, 100);
+        initIntegerSpinner(spinnerPlayerLives, 1, 500, 100);
         initIntegerSpinner(spinnerPlayerGold, 0, 1000, 100);
     }
 
@@ -155,7 +155,7 @@ public class OptionsSceneController {
         s.tower.artilleryFireRate = spinnerArtilleryFireRate.getValue();
         s.tower.mageFireRate = spinnerMageFireRate.getValue();
 
-        s.player.startingHP = spinnerPlayerHP.getValue();
+        s.player.startingHP = spinnerPlayerLives.getValue();
         s.player.startingGold = spinnerPlayerGold.getValue();
         s.player.musicOn = isMusicOn;
         s.player.sfxOn = isSfxOn;
@@ -200,7 +200,7 @@ public class OptionsSceneController {
         spinnerArtilleryFireRate.getValueFactory().setValue(s.tower.artilleryFireRate);
         spinnerMageFireRate.getValueFactory().setValue(s.tower.mageFireRate);
 
-        spinnerPlayerHP.getValueFactory().setValue(s.player.startingHP);
+        spinnerPlayerLives.getValueFactory().setValue(s.player.startingHP);
         spinnerPlayerGold.getValueFactory().setValue(s.player.startingGold);
         isMusicOn = s.player.musicOn;
         isSfxOn = s.player.sfxOn;
