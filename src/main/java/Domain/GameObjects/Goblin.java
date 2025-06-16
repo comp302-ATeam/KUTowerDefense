@@ -17,10 +17,9 @@ public class Goblin extends Enemy {
     private double slowEndTime = 0;
     // goblin class is faster than knight class so it should have a greater speed multiplier.
     double speedMultiplier = 1.10;
-    public Goblin(int xPos, int yPos, String enemyType, int healthPoints, int speed, ImageView imageObject) {
-        super(xPos, yPos, imageObject, enemyType,healthPoints,speed,FRAMES,COLS,FPS);
+    public Goblin(int xPos, int yPos, String enemyType, int healthPoints, double speed, ImageView imageObject, int goldReward) {
+        super(xPos, yPos, imageObject, enemyType, healthPoints, speed, FRAMES, COLS, FPS, goldReward);
         this.speed *= speedMultiplier;
-
     }
 
     // this method is used for calculating the damage the goblin class takes based on the projectile

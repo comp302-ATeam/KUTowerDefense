@@ -48,11 +48,18 @@ public class GoldPouch extends GameObject {
      * Constructs a pouch at (x,y), flies it, animates, and enables click-to-collect.
      */
     public GoldPouch(double x, double y) {
+        this(x, y, MIN_GOLD_AMOUNT + new Random().nextInt(MAX_GOLD_AMOUNT - MIN_GOLD_AMOUNT + 1));
+    }
+    
+    /**
+     * Constructs a pouch at (x,y) with specific gold amount, flies it, animates, and enables click-to-collect.
+     */
+    public GoldPouch(double x, double y, int goldAmount) {
         super(x, y, new ImageView());
         this.spawnX = x;
         this.spawnY = y;
         this.view = (ImageView) getView();
-        this.goldAmount = MIN_GOLD_AMOUNT + random.nextInt(MAX_GOLD_AMOUNT - MIN_GOLD_AMOUNT + 1);
+        this.goldAmount = goldAmount;
 
         // Size and initial position
         view.setFitWidth(64);
@@ -192,6 +199,10 @@ public class GoldPouch extends GameObject {
 
     public static GoldPouch spawnAt(double x, double y) {
         return new GoldPouch(x, y);
+    }
+
+    public static GoldPouch spawnAtWithAmount(double x, double y, int goldAmount) {
+        return new GoldPouch(x, y, goldAmount);
     }
 
     public static int getGoldAmount() {

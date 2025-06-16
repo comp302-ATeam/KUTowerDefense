@@ -159,14 +159,25 @@ public class Wave {
     private void spawnEnemy() {
         System.out.println("[Wave] spawnEnemy called for waveIndex=" + waveIndex + ", currentGroup=" + currentGroup + ", currentEnemyCount=" + currentEnemyCount);
 
+        // Get enemy settings from GameSettings
+        GameSettings.Enemy enemySettings = null;
+        if (gameSettings != null && gameSettings.enemy != null) {
+            enemySettings = gameSettings.enemy;
+        }
+
         // Calculate HP multiplier based on wave number (20% increase per wave)
         double hpMultiplier = 1.0 + (waveIndex - 1) * 0.2;
 
         int offset = activeEnemies.size() * 65;
         if (currentEnemyCount < goblinCount) {
-            // Base HP for goblin is 100, multiply by wave difficulty
-            int goblinHP = (int)(100 * hpMultiplier);
-            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", goblinHP, 100, new ImageView(goblinImg));
+            // Use configurable goblin stats or defaults
+            int baseGoblinHP = (enemySettings != null) ? enemySettings.goblinHP : 20;
+            double goblinSpeed = (enemySettings != null) ? enemySettings.goblinSpeed * 100 : 100.0; // Convert to internal speed units
+            int goblinGold = (enemySettings != null) ? enemySettings.goblinGold : 5;
+            
+            int goblinHP = (int)(baseGoblinHP * hpMultiplier);
+            
+            Goblin goblin = new Goblin(xPos + offset, yPos, "Goblin", goblinHP, goblinSpeed, new ImageView(goblinImg), goblinGold);
             activeEnemies.add(goblin);
             gamePane.getChildren().addAll(goblin.getView(), goblin.getHealthBar());
             goblin.getView().setPickOnBounds(true);
@@ -174,12 +185,18 @@ public class Wave {
             goblin.getView().setOnMouseExited(e -> goblin.getHealthBar().setVisible(false));
             goblin.moveAlong(mainPath);
             currentEnemyCount++;
-            // Kill after 8 seconds
+            
+            System.out.println("👹 Spawned Goblin - HP: " + goblinHP + " (base: " + baseGoblinHP + "), Speed: " + goblinSpeed + ", Gold: " + goblinGold);
 
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
-            // Base HP for knight is 100, multiply by wave difficulty
-            int knightHP = (int)(100 * hpMultiplier);
-            Knight knight = new Knight(xPos + offset, yPos, "Knight", knightHP, 100, new ImageView(knightImg));
+            // Use configurable knight stats or defaults
+            int baseKnightHP = (enemySettings != null) ? enemySettings.knightHP : 40;
+            double knightSpeed = (enemySettings != null) ? enemySettings.knightSpeed * 100 : 80.0; // Convert to internal speed units
+            int knightGold = (enemySettings != null) ? enemySettings.knightGold : 10;
+            
+            int knightHP = (int)(baseKnightHP * hpMultiplier);
+            
+            Knight knight = new Knight(xPos + offset, yPos, "Knight", knightHP, knightSpeed, new ImageView(knightImg), knightGold);
             activeEnemies.add(knight);
             Node knightView = knight.getView();
             gamePane.getChildren().addAll(knightView, knight.getHealthBar());
@@ -188,7 +205,8 @@ public class Wave {
             knightView.setOnMouseExited(e -> knight.getHealthBar().setVisible(false));
             knight.moveAlong(mainPath);
             currentEnemyCount++;
-            // Kill after 8 seconds
+            
+            System.out.println("⚔️ Spawned Knight - HP: " + knightHP + " (base: " + baseKnightHP + "), Speed: " + knightSpeed + ", Gold: " + knightGold);
         }
     }
 

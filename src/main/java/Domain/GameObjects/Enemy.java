@@ -41,6 +41,7 @@ public abstract class Enemy extends GameObject {
     protected static final double SLOW_FACTOR = 0.8; // Slow to 80% of original speed (20% reduction)
     protected static final double TELEPORT_CHANCE = 0.03; // 3% chance for teleport
     protected Vector2<Double> startPosition; // Store the start position for teleporting
+    protected int goldReward; // Configurable gold reward amount
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -57,12 +58,13 @@ public abstract class Enemy extends GameObject {
 
 
     // constructor for the enemy superclass
-    public Enemy(double xPos, double yPos, ImageView imageObject, String enemyType, int healthPoints, double speed, int frameCount, int frameColumns, double fps) {
+    public Enemy(double xPos, double yPos, ImageView imageObject, String enemyType, int healthPoints, double speed, int frameCount, int frameColumns, double fps, int goldReward) {
         super(xPos, yPos,imageObject);
         this.enemyType = enemyType;
         this.healthPoints = healthPoints;
         this.maxHealthPoints = healthPoints;
         this.speed = speed;
+        this.goldReward = goldReward;
         this.startPosition = new Vector2<>(xPos, yPos); // Store initial position
         activeEnemies.add(this);
 
@@ -389,7 +391,7 @@ public abstract class Enemy extends GameObject {
             // Clear any remaining waypoints
             waypoints.clear();
             movingToTarget = false;
-            // Only spawn gold pouch if enemy died on the path (not at the end) and with 50% chance
+            // Only spawn gold pouch if enemy died on the path (not at the end) and with configurable chance
             if (!hasReachedEnd && parent != null && random.nextDouble() < 0.2) {
                 // Spawn gold pouch at the enemy's death position with a small random offset
                 double offsetX = (random.nextDouble() - 0.5) * 20; // ±10 pixels
@@ -398,7 +400,7 @@ public abstract class Enemy extends GameObject {
                 double pouchX = x + offsetX;
                 double pouchY = y + offsetY;
 
-                GoldPouch goldPouch = GoldPouch.spawnAt(pouchX, pouchY);
+                GoldPouch goldPouch = GoldPouch.spawnAtWithAmount(pouchX, pouchY, goldReward);
 
                 if (parent instanceof javafx.scene.layout.Pane) {
                     ((javafx.scene.layout.Pane) parent).getChildren().add(goldPouch.getView());

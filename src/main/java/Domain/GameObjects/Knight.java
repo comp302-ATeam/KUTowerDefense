@@ -26,8 +26,8 @@ public class Knight extends Enemy {
     private ImageView speedBuffIcon; // Icon to show when speed boosted
     private ImageView slowIcon; // Icon to show when slowed
 
-    public Knight(int xPos, int yPos, String enemyType, int healthPoints, int speed, ImageView knightImage){
-        super(xPos, yPos, knightImage,enemyType, healthPoints, speed,FRAMES,COLS,FPS);
+    public Knight(int xPos, int yPos, String enemyType, int healthPoints, double speed, ImageView knightImage, int goldReward) {
+        super(xPos, yPos, knightImage, enemyType, healthPoints, speed, FRAMES, COLS, FPS, goldReward);
         this.baseSpeed = speed * speedMultiplier;
         this.speed = baseSpeed;
         
