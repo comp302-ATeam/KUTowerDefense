@@ -186,7 +186,7 @@ public class Wave {
             goblin.moveAlong(mainPath);
             currentEnemyCount++;
             
-            System.out.println("👹 Spawned Goblin - HP: " + goblinHP + " (base: " + baseGoblinHP + "), Speed: " + goblinSpeed + ", Gold: " + goblinGold);
+            System.out.println("Spawned Goblin - HP: " + goblinHP + " (base: " + baseGoblinHP + "), Speed: " + goblinSpeed + ", Gold: " + goblinGold);
 
         } else if (currentEnemyCount < (goblinCount + knightCount)) {
             // Use configurable knight stats or defaults
@@ -206,7 +206,7 @@ public class Wave {
             knight.moveAlong(mainPath);
             currentEnemyCount++;
             
-            System.out.println("⚔️ Spawned Knight - HP: " + knightHP + " (base: " + baseKnightHP + "), Speed: " + knightSpeed + ", Gold: " + knightGold);
+            System.out.println("Spawned Knight - HP: " + knightHP + " (base: " + baseKnightHP + "), Speed: " + knightSpeed + ", Gold: " + knightGold);
         }
     }
 
