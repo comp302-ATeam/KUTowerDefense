@@ -6,6 +6,7 @@ import javafx.animation.Timeline;
 import javafx.animation.KeyFrame;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,16 +14,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 import java.util.Random;
 import javafx.animation.Animation;
+import javafx.application.Platform;
 
 /**
  * GoldPouch handles spawning, flight animation, and click-to-collect logic.
  */
 public class GoldPouch extends GameObject {
-    private static final double GOLD_AMOUNT = 10.0;
+    private static final int MIN_GOLD_AMOUNT = 2;
+    private static final int MAX_GOLD_AMOUNT = 20;
     private static final int FRAME_COUNT = 8;
     private static final double FRAME_DURATION = 0.1;
     private static final double FLY_DISTANCE = 50.0;
     private static final double FLY_DURATION = 0.5;
+    private static final double DISAPPEAR_DURATION = 10.0;
 
     private final ImageView view;
     private final double spawnX, spawnY;
@@ -33,6 +37,8 @@ public class GoldPouch extends GameObject {
     private static final Random random = new Random();
     private boolean isCollected = false;
     private TranslateTransition flyAnimation;
+    private PauseTransition disappearTimer;
+    private final int goldAmount;
 
     public static void setGameSceneController(GameSceneController controller) {
         gameSceneController = controller;
@@ -46,6 +52,7 @@ public class GoldPouch extends GameObject {
         this.spawnX = x;
         this.spawnY = y;
         this.view = (ImageView) getView();
+        this.goldAmount = MIN_GOLD_AMOUNT + random.nextInt(MAX_GOLD_AMOUNT - MIN_GOLD_AMOUNT + 1);
 
         // Size and initial position
         view.setFitWidth(64);
@@ -66,6 +73,24 @@ public class GoldPouch extends GameObject {
         double endX = spawnX + (random.nextDouble() * FLY_DISTANCE * 2 - FLY_DISTANCE);
         double endY = spawnY + FLY_DISTANCE;
         flyAndAnimate(endX, endY);
+
+        // Set up disappear timer
+        disappearTimer = new PauseTransition(Duration.seconds(DISAPPEAR_DURATION));
+        disappearTimer.setOnFinished(e -> {
+            if (!isCollected) {
+                Platform.runLater(() -> {
+                    if (view != null && view.getParent() != null) {
+                        javafx.scene.Parent parent = view.getParent();
+                        if (parent instanceof javafx.scene.layout.Pane) {
+                            ((javafx.scene.layout.Pane) parent).getChildren().remove(view);
+                        } else if (parent instanceof javafx.scene.Group) {
+                            ((javafx.scene.Group) parent).getChildren().remove(view);
+                        }
+                    }
+                });
+            }
+        });
+        disappearTimer.play();
     }
 
     /**
@@ -143,6 +168,9 @@ public class GoldPouch extends GameObject {
             if (spriteAnimation != null && spriteAnimation.getStatus() == Animation.Status.RUNNING) {
                 spriteAnimation.stop();
             }
+            if (disappearTimer != null && disappearTimer.getStatus() == Animation.Status.RUNNING) {
+                disappearTimer.stop();
+            }
             
             // Remove from parent container
             if (view != null && view.getParent() != null) {
@@ -157,18 +185,17 @@ public class GoldPouch extends GameObject {
             // Add gold to player's total
             if (gameSceneController != null) {
                 int currentGold = Integer.parseInt(gameSceneController.getLabelGold().getText());
-                gameSceneController.updateGold(currentGold + (int)GOLD_AMOUNT);
+                gameSceneController.updateGold(currentGold + goldAmount);
             }
         }
     }
-
 
     public static GoldPouch spawnAt(double x, double y) {
         return new GoldPouch(x, y);
     }
 
-    public static double getGoldAmount() {
-        return GOLD_AMOUNT;
+    public static int getGoldAmount() {
+        return MIN_GOLD_AMOUNT + random.nextInt(MAX_GOLD_AMOUNT - MIN_GOLD_AMOUNT + 1);
     }
 
     @Override
