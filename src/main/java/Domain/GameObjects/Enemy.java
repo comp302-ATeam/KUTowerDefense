@@ -56,8 +56,6 @@ public abstract class Enemy extends GameObject {
     private final int frameColumns;
     //endregion
 
-
-
     // constructor for the enemy superclass
     public Enemy(double xPos, double yPos, ImageView imageObject, String enemyType, int healthPoints, double speed, int frameCount, int frameColumns, double fps, int goldReward) {
         super(xPos, yPos,imageObject);
@@ -132,9 +130,13 @@ public abstract class Enemy extends GameObject {
     }
     private void advanceWaypoint() {
         Vector2<Double> next = waypoints.poll();
+
+        double xOffset = (random.nextDouble() - 0.5) * 50; // Range: -10 to +10
+        double yOffset = (random.nextDouble() - 0.5) * 50; // Range: -5 to +5
+
         if (next != null) {
             // Double auto-unboxes to double
-            moveTo(next.x, next.y);
+            moveTo(next.x + xOffset, next.y + yOffset);
         } else {
             movingToTarget = false;  // no more waypoints
         }

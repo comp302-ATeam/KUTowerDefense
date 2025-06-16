@@ -138,6 +138,7 @@ public class TowerMenu extends Pane {
     public TowerMenu(Tower tower){
         this.tower = tower;
         tower.mapPane.getChildren().add(this);
+        this.toFront();
         this.setLayoutX(tower.getX());
         this.setLayoutY(tower.getY());
         this.setPrefSize(80, 100);
