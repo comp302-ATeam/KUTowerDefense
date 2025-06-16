@@ -22,7 +22,7 @@ import javafx.application.Platform;
 public class GoldPouch extends GameObject {
     private static final int MIN_GOLD_AMOUNT = 2;
     private static final int MAX_GOLD_AMOUNT = 20;
-    private static final int FRAME_COUNT = 8;
+    private static final int FRAME_COUNT = 7;
     private static final double FRAME_DURATION = 0.1;
     private static final double FLY_DISTANCE = 50.0;
     private static final double FLY_DURATION = 0.5;

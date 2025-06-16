@@ -1,5 +1,6 @@
 package Domain.GameObjects;
 
+import Domain.GameFlow.AnimationPlayer;
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.Vector2;
 import Domain.GameObjects.ShotBehaviour.BaseBehaviour;
@@ -105,7 +106,6 @@ public class  Projectile extends ImageView{
         if (distance < 15) {
 
             if (target.isAlive()) target.takeDamage(this);
-
             // let the enemy apply its own logic
             return true;
         }

@@ -37,7 +37,6 @@ public class InGameSceneController {
 
 
 
-
         Image goblinImg = new Image("Assets/enemies/Goblin_Red.png");
         ImageView goblinView = new ImageView(goblinImg);
         //Goblin goblin = new Goblin(-100,0,"Goblin",100,100,goblinView);
