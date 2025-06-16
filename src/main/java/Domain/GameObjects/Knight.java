@@ -52,7 +52,6 @@ public class Knight extends Enemy {
         this.slowIcon.setVisible(false);
         GameActionController.getInstance().getGamePane().getChildren().add(slowIcon);
     }
-
     private boolean isNearGoblin() {
         for (Enemy enemy : activeEnemies) {
             if (enemy.enemyType.equals("Goblin") && enemy.isAlive()) {
@@ -69,11 +68,10 @@ public class Knight extends Enemy {
 
     @Override
     public void update(double deltaTime) {
-        if (!isAlive() || hasReachedEnd()) return;
 
         // Check if near goblins and adjust speed accordingly
         boolean isBoosted = isNearGoblin();
-        
+
         // Check if slow effect has ended
         if (slowEndTime > 0 && System.currentTimeMillis() > slowEndTime) {
             slowEndTime = 0;
@@ -102,7 +100,7 @@ public class Knight extends Enemy {
                 setSpeed(baseSpeed);
             }
         }
-        
+
         // Update icon visibility and positions
         speedBuffIcon.setVisible(isBoosted);
         slowIcon.setVisible(slowEndTime > 0);
@@ -111,7 +109,6 @@ public class Knight extends Enemy {
         slowIcon.setTranslateX(x + 20);
         slowIcon.setTranslateY(y + 20);
 
-        // Call parent's update to handle movement
         super.update(deltaTime);
     }
 

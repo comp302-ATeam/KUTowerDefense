@@ -41,6 +41,7 @@ public abstract class Enemy extends GameObject {
     protected static final double SLOW_FACTOR = 0.8; // Slow to 80% of original speed (20% reduction)
     protected static final double TELEPORT_CHANCE = 0.03; // 3% chance for teleport
     protected Vector2<Double> startPosition; // Store the start position for teleporting
+    protected boolean isBoosted = false;
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -445,6 +446,19 @@ public abstract class Enemy extends GameObject {
         }
 
         return outputImage;
+    }
+    private boolean isNearGoblin() {
+        for (Enemy enemy : activeEnemies) {
+            if (enemy.enemyType.equals("Goblin") && enemy.isAlive()) {
+                double dx = enemy.x - x;
+                double dy = enemy.y - y;
+                double distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance <= 100) { // 100 pixels radius
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
