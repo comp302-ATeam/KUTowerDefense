@@ -173,6 +173,7 @@ public abstract class Tower extends GameObject {
     public int getCost() { return cost; }
 
     public void Destroy(){
+        hideRange();
         GameActionController.towerList.remove(this);
         mapPane.getChildren().remove(towerImage);
     }

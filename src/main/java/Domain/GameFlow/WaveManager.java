@@ -34,6 +34,7 @@ public class WaveManager {
     private int playerLives = 10;  // Default starting lives
     private boolean gameOver = false;  // Flag to track if game is over
     private GameSettings gameSettings; // Store game settings
+    private boolean GameLost = false;
 
     private WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
         this.waves = new ArrayList<>();
@@ -49,6 +50,8 @@ public class WaveManager {
 
         // Set the path in GameActionController
         GameActionController.getInstance().setMainPath(mainPath);
+
+
     }
 
     /**
@@ -188,7 +191,7 @@ public class WaveManager {
         }
 
         // Check for win condition
-        if (allWavesComplete && !anyEnemiesRemaining && nextWaveToStart >= waves.size()) {
+        if (allWavesComplete && !anyEnemiesRemaining && nextWaveToStart >= waves.size() &&!GameLost) {
             System.out.println("[WaveManager] Win condition met! All waves complete and no enemies remaining.");
             reset();
             showWinScreen();
@@ -274,9 +277,9 @@ public class WaveManager {
         // Check if game over
         if (playerLives <= 1) {
             gameOver = true;  // Set game over flag
+            GameLost = true;
             // Stop the game
             GameActionController.getInstance().pauseGame();
-            reset();
             // Show game over screen
             try {
                 javafx.application.Platform.runLater(() -> {
@@ -310,6 +313,7 @@ public class WaveManager {
                         }
 
                         // Add the game over screen as an overlay to the game pane
+
                         gamePane.getChildren().add(root);
 
                         // Center the game over screen
