@@ -276,7 +276,7 @@ public class WaveManager {
             gameOver = true;  // Set game over flag
             // Stop the game
             GameActionController.getInstance().pauseGame();
-
+            reset();
             // Show game over screen
             try {
                 javafx.application.Platform.runLater(() -> {
