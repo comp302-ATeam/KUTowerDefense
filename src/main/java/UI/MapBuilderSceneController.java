@@ -77,6 +77,7 @@ public class MapBuilderSceneController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Parent root = FXMLLoader.load(getClass().getResource("/StartScene.fxml"));
         stage.setScene(new Scene(root));
+        stage.centerOnScreen();
         stage.show();
         //stage.setMaximized(true);
 

@@ -1,9 +1,6 @@
 package Domain.GameFlow;
 
-import Domain.GameObjects.ArcherTower;
-import Domain.GameObjects.ArtilleryTower;
-import Domain.GameObjects.MageTower;
-import Domain.GameObjects.Tower;
+import Domain.GameObjects.*;
 import UI.TowerMenu;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
@@ -79,7 +76,7 @@ public class MapLoader extends TileSetLoader {
                 cur_tower = new ArtilleryTower(x, y, gamePane);
                 break;
             case TOWER_LOT:
-                cur_tower = new MageTower(x, y, gamePane);
+                cur_tower = new TowerLot(x,y,gamePane);
                 break;
             default:
                 return;
