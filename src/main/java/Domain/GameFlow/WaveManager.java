@@ -6,6 +6,7 @@ import java.util.List;
 import UI.GameSceneController;
 import Domain.GameFlow.Vector2;
 import javafx.animation.AnimationTimer;
+import javafx.scene.control.ProgressBar;
 
 /**
  * WaveManager class manages multiple waves of enemies in the game.
@@ -35,23 +36,39 @@ public class WaveManager {
     private boolean gameOver = false;  // Flag to track if game is over
     private GameSettings gameSettings; // Store game settings
     private boolean GameLost = false;
+    private double gracePeriod = 4.0; // 4 seconds grace period before first wave
+    private boolean inGracePeriod = true;
+    private double gracePeriodTimer = 0;
+    private double waveStartTime = 0;
+    private double waveEndTime = 0;
+    private double waveDuration = 0;
+    private double waveProgress = 0;
+    private ProgressBar waveProgressBar = new ProgressBar(0);
+    private boolean isWaveActive = false;
+    private int currentWave = 0;
 
     private WaveManager(int xPos, int yPos, Pane gamePane, Vector2<Double>[] mainPath, GameSceneController gameSceneController) {
-        this.waves = new ArrayList<>();
-        this.currentWaveIndex = 0;
         this.xPos = xPos;
         this.yPos = yPos;
         this.gamePane = gamePane;
         this.mainPath = mainPath;
-        this.isGameComplete = false;
         this.gameSceneController = gameSceneController;
-        this.nextWaveToStart = 0;
+        this.currentWave = 0;
+        this.waves = new ArrayList<>();
+        this.isWaveActive = false;
         this.waveTimer = 0;
+        this.gracePeriod = 4.0; // 4 seconds grace period before first wave
+        this.inGracePeriod = true;
+        this.gracePeriodTimer = 0;
 
         // Set the path in GameActionController
         GameActionController.getInstance().setMainPath(mainPath);
 
+        // Initialize waves
+        initializeWaves();
 
+        // Start the game loop
+        startGameLoop();
     }
 
     /**
@@ -339,4 +356,80 @@ public class WaveManager {
         }
     }
 
+    public void update(double deltaTime) {
+        if (inGracePeriod) {
+            gracePeriodTimer += deltaTime;
+            if (gracePeriodTimer >= gracePeriod) {
+                inGracePeriod = false;
+                gracePeriodTimer = 0;
+                startWave();
+            }
+            return;
+        }
+
+        if (isWaveActive) {
+            waveTimer += deltaTime;
+            if (waveTimer >= waveDuration) {
+                endWave();
+            }
+        }
+    }
+
+    private void startWave() {
+        if (currentWave < waves.size()) {
+            isWaveActive = true;
+            waveTimer = 0;
+            waves.get(currentWave).startWave();
+        }
+    }
+
+    private void endWave() {
+        if (isWaveActive) {
+            isWaveActive = false;
+            currentWave++;
+            if (currentWave < waves.size()) {
+                startWave();
+            }
+        }
+    }
+
+    private void initializeWaves() {
+        // Create waves with increasing difficulty
+        for (int i = 0; i < 10; i++) {
+            // Each wave gets more enemies and groups
+            int knightCount = 2 + i;
+            int goblinCount = 3 + i;
+            int groupCount = 2 + (i / 2);
+            Wave wave = new Wave(i + 1, knightCount, goblinCount, groupCount, xPos, yPos, gamePane, mainPath, gameSettings);
+            waves.add(wave);
+        }
+    }
+
+    private void startGameLoop() {
+        new AnimationTimer() {
+            private long lastTime = 0;
+
+            @Override
+            public void handle(long now) {
+                if (lastTime == 0) {
+                    lastTime = now;
+                    return;
+                }
+
+                double deltaTime = (now - lastTime) / 1_000_000_000.0; // convert to seconds
+                lastTime = now;
+
+                update(deltaTime);
+            }
+        }.start();
+    }
+
+    public void startGame() {
+        // Reset wave state
+        currentWave = 0;
+        isWaveActive = false;
+        waveTimer = 0;
+        inGracePeriod = true;
+        gracePeriodTimer = 0;
+    }
 }

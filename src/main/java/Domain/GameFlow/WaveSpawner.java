@@ -19,6 +19,9 @@ public class WaveSpawner {
     private final UI.GameSceneController gameSceneController;
     private long lastTime = 0;
     private GameSettings gameSettings;     // Store game settings
+    private double gracePeriod = 4.0;     // 4 seconds grace period
+    private double gracePeriodTimer = 0;   // Timer for grace period
+    private boolean inGracePeriod = true;  // Whether we're in grace period
 
     public WaveSpawner(int startX, int startY, Pane gamePane, Vector2<Double>[] mainPath, UI.GameSceneController gameSceneController) {
         WaveManager.initialize(startX, startY, gamePane, mainPath, gameSceneController);
@@ -88,7 +91,10 @@ public class WaveSpawner {
             waveManager.addWave(0, 1, 1);
         }
 
-        waveManager.startWaves();   // Start wave spawning
+        // Reset grace period
+        inGracePeriod = true;
+        gracePeriodTimer = 0;
+        
         isPaused = false;
         if (gameLoop != null) {
             gameLoop.start();
@@ -117,6 +123,16 @@ public class WaveSpawner {
     //Tells waveManager to update and potentially spawn the next wave.
     // If all waves are done and enemies are defeated, stop the loop.
     private void update(double deltaTime) {
+        if (inGracePeriod) {
+            gracePeriodTimer += deltaTime;
+            if (gracePeriodTimer >= gracePeriod) {
+                inGracePeriod = false;
+                gracePeriodTimer = 0;
+                waveManager.startWaves();
+            }
+            return;
+        }
+
         waveManager.updateAndAdvanceWaves(gameSceneController, deltaTime);
         // Update all active enemies
         List<Enemy> activeEnemies = waveManager.getActiveEnemies();
