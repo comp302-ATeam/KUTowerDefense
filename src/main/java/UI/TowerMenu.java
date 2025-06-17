@@ -238,10 +238,12 @@ public class TowerMenu extends Pane {
         if (state){
             setOpacity(1.0);
             setButtons(true);
+            tower.showRange();
         }
         else {
             setOpacity(0.0);
             setButtons(false);
+            tower.hideRange();
         }
     }
 

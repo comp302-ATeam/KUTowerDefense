@@ -84,33 +84,33 @@ public abstract class Tower extends GameObject {
 
     }
 
-//    public void drawDebugRange() {
-//        if (rangeCircle == null) {
-//            rangeCircle = new Circle(attackRange);
-//            rangeCircle.setStroke(Color.RED);        // Outline color
-//            rangeCircle.setFill(Color.TRANSPARENT);  // No fill
-//            rangeCircle.setStrokeWidth(2);
-//            rangeCircle.setMouseTransparent(true);   // Ignore clicks
-//
-//            // Center the circle around the tower's center using the tower's actual position
-//            double towerCenterX = towerImage.getLayoutX() + towerImage.getFitWidth() / 2 -2;
-//            double towerCenterY = towerImage.getLayoutY() + towerImage.getFitHeight() / 2;
-//            rangeCircle.setCenterX(towerCenterX);
-//            rangeCircle.setCenterY(towerCenterY);
-//        }
-//    }
-//
-//    public void showRange() {
-//        if (rangeCircle != null && !mapPane.getChildren().contains(rangeCircle)) {
-//            mapPane.getChildren().add(rangeCircle);
-//        }
-//    }
-//
-//    public void hideRange() {
-//        if (rangeCircle != null && mapPane.getChildren().contains(rangeCircle)) {
-//            mapPane.getChildren().remove(rangeCircle);
-//        }
-//    }
+    public void drawDebugRange() {
+        if (rangeCircle == null) {
+            rangeCircle = new Circle(attackRange);
+            rangeCircle.setStroke(Color.RED);        // Outline color
+            rangeCircle.setFill(Color.TRANSPARENT);  // No fill
+            rangeCircle.setStrokeWidth(2);
+            rangeCircle.setMouseTransparent(true);   // Ignore clicks
+
+            // Center the circle around the tower's center using the tower's actual position
+            double towerCenterX = towerImage.getLayoutX() + towerImage.getFitWidth() / 2 -2;
+            double towerCenterY = towerImage.getLayoutY() + towerImage.getFitHeight() / 2;
+            rangeCircle.setCenterX(towerCenterX);
+            rangeCircle.setCenterY(towerCenterY);
+        }
+    }
+
+    public void showRange() {
+        if (rangeCircle != null && !mapPane.getChildren().contains(rangeCircle)) {
+            mapPane.getChildren().add(rangeCircle);
+        }
+    }
+
+    public void hideRange() {
+        if (rangeCircle != null && mapPane.getChildren().contains(rangeCircle)) {
+            mapPane.getChildren().remove(rangeCircle);
+        }
+    }
 
     // Render Method
     public void renderTower(String path){
@@ -141,6 +141,8 @@ public abstract class Tower extends GameObject {
         mapPane.getChildren().add(towerImage);
         TowerMenu menu = new TowerMenu(this);
         menu.toFront();
+        drawDebugRange();
+        hideRange();
     }
 
     // Method to upgrade the tower
