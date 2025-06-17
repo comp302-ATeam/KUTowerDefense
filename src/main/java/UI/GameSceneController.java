@@ -165,6 +165,9 @@ public class GameSceneController {
             // Set this controller in TowerMenu for upgrade cost checking
             TowerMenu.setGameController(this);
             
+            // Set this controller in Enemy for gold rewards
+            Domain.GameObjects.Enemy.setGameController(this);
+            
             // Set custom cursor
             Image cursorImg = new Image(getClass().getResourceAsStream("/Assets/UI/01.png"));
             double hotspotX = cursorImg.getWidth() / 2;

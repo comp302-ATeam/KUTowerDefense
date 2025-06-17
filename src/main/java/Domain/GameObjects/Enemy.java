@@ -328,6 +328,13 @@ public abstract class Enemy extends GameObject {
         return healthBar;
     }
 
+    // Static reference to game controller for gold updates
+    private static UI.GameSceneController gameController;
+    
+    public static void setGameController(UI.GameSceneController controller) {
+        gameController = controller;
+    }
+
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
     public void Die() {
@@ -339,6 +346,13 @@ public abstract class Enemy extends GameObject {
         // Stop the animation
         if (animation != null) {
             animation.stop();
+        }
+
+        // Award gold to the player when enemy dies (not when reaching end)
+        if (!hasReachedEnd && gameController != null) {
+            int currentGold = Integer.parseInt(gameController.getLabelGold().getText());
+            gameController.updateGold(currentGold + goldReward);
+            System.out.println("[Enemy] Awarded " + goldReward + " gold for killing " + enemyType);
         }
 
         // Remove from active enemies list
