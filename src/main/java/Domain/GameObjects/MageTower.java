@@ -10,14 +10,32 @@ public class MageTower extends Tower {
 
     public MageTower(int x, int y, Pane mapPane) {
         // Mage tower has medium fire rate but high damage
-        super(x, y, 180, 5, 1.0, 150,mapPane);  // range=180, damage=25, fireRate=1.0, cost=150
+        super(x, y, getSettingsRange(), getSettingsDamage(), getSettingsFireRate(), getSettingsCost(), mapPane);
         renderTower(PATH);
+    }
+    
+    private static int getSettingsRange() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.mageRange;
+    }
+    
+    private static int getSettingsDamage() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.magicDamage;
+    }
+    
+    private static double getSettingsFireRate() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.mageFireRate;
+    }
+    
+    private static int getSettingsCost() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.mageCost;
     }
 
     @Override
     public void upgrade() {
         setImage(UPGRADEPATH);
-        ++currentLevel;
+        currentLevel++;
+        damage = (int)(damage * 1.5);  // Increase damage by 50%
+        attackRange = (int)(attackRange * 1.2);  // Increase range by 20%
     }
 
     @Override

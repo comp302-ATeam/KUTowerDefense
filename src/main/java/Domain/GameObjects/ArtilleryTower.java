@@ -18,10 +18,30 @@ public class ArtilleryTower extends Tower {
 
     public ArtilleryTower(int x, int y, Pane mapPane) {
         // Artillery tower has low fire rate but high damage and AOE
-        super(x, y, 250, 25, 0.3, 200,mapPane);  // range=250, damage=40, fireRate=0.5, cost=200
-        this.splashRadius = 100;  // AOE radius
+        super(x, y, getSettingsRange(), getSettingsDamage(), getSettingsFireRate(), getSettingsCost(), mapPane);
+        this.splashRadius = getSettingsAOERadius();  // AOE radius from settings
         //this.allEnemies = allEnemies;
         renderTower(PATH);
+    }
+    
+    private static int getSettingsRange() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.artilleryRange;
+    }
+    
+    private static int getSettingsDamage() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.artilleryDamage;
+    }
+    
+    private static double getSettingsFireRate() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.artilleryFireRate;
+    }
+    
+    private static int getSettingsCost() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.artilleryCost;
+    }
+    
+    private static int getSettingsAOERadius() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.aoeRadius;
     }
 
     @Override
@@ -38,8 +58,10 @@ public class ArtilleryTower extends Tower {
     @Override
     public void upgrade() {
         setImage(UPGRADEPATH);
+        currentLevel++;
         splashRadius = (int)(splashRadius * 1.2);  // 20% increase in splash radius
-        damage = (int)(damage * 1.2);
+        damage = (int)(damage * 1.5);  // Increase damage by 50%
+        attackRange = (int)(attackRange * 1.1);  // Increase range by 10%
     }
 
     @Override

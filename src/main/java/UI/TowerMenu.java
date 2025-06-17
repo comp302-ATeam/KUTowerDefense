@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 
 import javax.swing.*;
 
@@ -20,6 +22,54 @@ public class TowerMenu extends Pane {
     private Button downButton;
     private Button leftButton;
     private boolean setTower = false;
+    
+    // Static reference to game controller
+    private static UI.GameSceneController gameController;
+    
+    public static void setGameController(UI.GameSceneController controller) {
+        gameController = controller;
+    }
+    
+    /**
+     * Attempts to purchase a tower if the player has enough gold
+     */
+    private boolean tryPurchaseTower(Class<? extends Tower> towerType) {
+        if (gameController == null) return false;
+        
+        int currentGold = Integer.parseInt(gameController.getLabelGold().getText());
+        int cost = getTowerCost(towerType);
+        
+        if (currentGold >= cost) {
+            gameController.updateGold(currentGold - cost);
+            return true;
+        } else {
+            System.out.println("Not enough gold to purchase tower! Need: " + cost + " gold, have: " + currentGold);
+            return false;
+        }
+    }
+    
+    /**
+     * Sells the tower and gives refund to player
+     */
+    private void sellTower() {
+        if (gameController != null && !(tower instanceof TowerLot)) {
+            int refund = tower.calculateRefundAmount();
+            int currentGold = Integer.parseInt(gameController.getLabelGold().getText());
+            gameController.updateGold(currentGold + refund);
+            System.out.println("Tower sold for " + refund + " gold");
+        }
+    }
+    
+    /**
+     * Gets the cost of a tower type
+     */
+    private int getTowerCost(Class<? extends Tower> towerType) {
+        Domain.GameFlow.GameSettings settings = Domain.GameFlow.GameSettingsManager.getInstance().getSettings();
+        if (towerType == ArcherTower.class) return settings.tower.archerCost;
+        if (towerType == ArtilleryTower.class) return settings.tower.artilleryCost;
+        if (towerType == MageTower.class) return settings.tower.mageCost;
+        return 0;
+    }
 
     private void towerMode(){
         if(tower instanceof MageTower){
@@ -39,6 +89,7 @@ public class TowerMenu extends Pane {
 
 
             downButton.setOnAction(e -> {
+                sellTower();  // Give refund to player
                 tower.Destroy();
                 Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(lotTower);
@@ -46,7 +97,14 @@ public class TowerMenu extends Pane {
             });
 
             upButton.setOnAction(e -> {
-                tower.upgrade();
+                if (gameController != null) {
+                    if (!tower.tryUpgrade(gameController)) {
+                        System.out.println("Not enough gold to upgrade tower! Need: " + tower.calculateUpgradeCost() + " gold");
+                    }
+                } else {
+                    // Fallback to old behavior if controller not found
+                    tower.upgrade();
+                }
             });
         }
         if(tower instanceof ArcherTower){
@@ -66,6 +124,7 @@ public class TowerMenu extends Pane {
 
 
             downButton.setOnAction(e -> {
+                sellTower();  // Give refund to player
                 tower.Destroy();
                 Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(lotTower);
@@ -73,7 +132,14 @@ public class TowerMenu extends Pane {
             });
 
             upButton.setOnAction(e -> {
-                tower.upgrade();
+                if (gameController != null) {
+                    if (!tower.tryUpgrade(gameController)) {
+                        System.out.println("Not enough gold to upgrade tower! Need: " + tower.calculateUpgradeCost() + " gold");
+                    }
+                } else {
+                    // Fallback to old behavior if controller not found
+                    tower.upgrade();
+                }
             });
         }
         if(tower instanceof ArtilleryTower){
@@ -93,6 +159,7 @@ public class TowerMenu extends Pane {
 
 
             downButton.setOnAction(e -> {
+                sellTower();  // Give refund to player
                 tower.Destroy();
                 Tower lotTower = new TowerLot( (int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(lotTower);
@@ -100,7 +167,14 @@ public class TowerMenu extends Pane {
             });
 
             upButton.setOnAction(e -> {
-                tower.upgrade();
+                if (gameController != null) {
+                    if (!tower.tryUpgrade(gameController)) {
+                        System.out.println("Not enough gold to upgrade tower! Need: " + tower.calculateUpgradeCost() + " gold");
+                    }
+                } else {
+                    // Fallback to old behavior if controller not found
+                    tower.upgrade();
+                }
             });
         }
 
@@ -110,27 +184,33 @@ public class TowerMenu extends Pane {
 
     private void lotMode(){
         upButton.setOnAction(e -> {
-            tower.Destroy();
-            setTower = true;
-            Tower cur_tower = new ArcherTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+            if (tryPurchaseTower(ArcherTower.class)) {
+                tower.Destroy();
+                setTower = true;
+                Tower cur_tower = new ArcherTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(cur_tower);
-            tower.mapPane.getChildren().remove(this);
+                tower.mapPane.getChildren().remove(this);
+            }
             return;
         });
         leftButton.setOnAction(e -> {
-            tower.Destroy();
-            setTower = true;
-            Tower cur_tower = new ArtilleryTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+            if (tryPurchaseTower(ArtilleryTower.class)) {
+                tower.Destroy();
+                setTower = true;
+                Tower cur_tower = new ArtilleryTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(cur_tower);
-            tower.mapPane.getChildren().remove(this);
+                tower.mapPane.getChildren().remove(this);
+            }
             return;
         });
         downButton.setOnAction(e -> {
-            tower.Destroy();
-            setTower = true;
-            Tower cur_tower = new MageTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
+            if (tryPurchaseTower(MageTower.class)) {
+                tower.Destroy();
+                setTower = true;
+                Tower cur_tower = new MageTower((int) Math.round(tower.getX()),(int) Math.round(tower.getY()),tower.mapPane);
 //            new TowerMenu(cur_tower);
-            tower.mapPane.getChildren().remove(this);
+                tower.mapPane.getChildren().remove(this);
+            }
             return;
         });
     }
@@ -195,7 +275,7 @@ public class TowerMenu extends Pane {
             // Create left button
             cur_button = new Button();
             this.getChildren().add(cur_button);
-            cur_button.setPrefSize(75,75);
+            cur_button.setPrefSize(50,50);
             cur_button.layoutYProperty().bind(this.heightProperty().subtract(cur_button.heightProperty()).divide(2));
             cur_button.setLayoutX(-70);
             
@@ -262,10 +342,13 @@ public class TowerMenu extends Pane {
 
     }
 
+    private void allah(){
+        System.out.println("hmm");
+    }
 
     private Button createButton(String imagePath) {
         Button button = new Button();
-        button.setPrefSize(75, 75);
+        button.setPrefSize(50, 50);
         
         // Create and set the button image
         Image image = new Image(getClass().getResourceAsStream(imagePath));
