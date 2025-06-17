@@ -18,7 +18,7 @@ public class ArtilleryTower extends Tower {
 
     public ArtilleryTower(int x, int y, Pane mapPane) {
         // Artillery tower has low fire rate but high damage and AOE
-        super(x, y, 250, 40, 0.3, 200,mapPane);  // range=250, damage=40, fireRate=0.5, cost=200
+        super(x, y, 250, 25, 0.3, 200,mapPane);  // range=250, damage=40, fireRate=0.5, cost=200
         this.splashRadius = 100;  // AOE radius
         //this.allEnemies = allEnemies;
         renderTower(PATH);
