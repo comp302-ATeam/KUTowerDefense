@@ -65,10 +65,8 @@ public class WaveManager {
         GameActionController.getInstance().setMainPath(mainPath);
 
         // Initialize waves
-        initializeWaves();
 
         // Start the game loop
-        startGameLoop();
     }
 
     /**

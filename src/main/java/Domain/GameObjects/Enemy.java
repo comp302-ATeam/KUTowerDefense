@@ -4,6 +4,7 @@ import Domain.GameFlow.DamageIndicator;
 import Domain.GameFlow.GameActionController;
 import Domain.GameFlow.Tile;
 import Domain.GameFlow.Vector2;
+import UI.GameSceneController;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -24,6 +25,7 @@ public abstract class Enemy extends GameObject {
     String enemyType;
     int healthPoints;
     double speed;
+    int EnemyGoldValue = 10;
     private final ImageView view;
     protected double targetX, targetY;
     protected boolean movingToTarget = false;
@@ -43,6 +45,12 @@ public abstract class Enemy extends GameObject {
     protected static final double TELEPORT_CHANCE = 0.03; // 3% chance for teleport
     protected Vector2<Double> startPosition; // Store the start position for teleporting
     protected int goldReward; // Configurable gold reward amount
+    private static UI.GameSceneController gameController;
+    Domain.GameFlow.GameSettings settings = Domain.GameFlow.GameSettingsManager.getInstance().getSettings();
+
+    public static void setGameController(UI.GameSceneController controller) {
+        gameController = controller;
+    }
 
     //region Animation Attributes
     private static final int FRAME_COLUMNS = 6;
@@ -66,6 +74,7 @@ public abstract class Enemy extends GameObject {
         this.goldReward = goldReward;
         this.startPosition = new Vector2<>(xPos, yPos); // Store initial position
         activeEnemies.add(this);
+        setGameController(gameController);
 
         // Initialize health bar
         this.healthBar = new Rectangle(50, 5); // Width: 50, Height: 5
@@ -322,6 +331,10 @@ public abstract class Enemy extends GameObject {
     // to be implemented, if we are going to recycle the object created rather than destroy and create
     // this method should make this object to go back to its starting state.
     public void Die() {
+       
+
+
+
         isAlive = false;
         // Stop the animation
         if (animation != null) {
