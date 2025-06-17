@@ -147,6 +147,24 @@ public abstract class Tower extends GameObject {
 
     // Method to upgrade the tower
     public abstract void upgrade();
+    
+    /**
+     * Attempts to upgrade the tower if the player has enough gold.
+     * @param gameController The game controller to check and update gold
+     * @return true if upgrade was successful, false if not enough gold or already max level
+     */
+    public boolean tryUpgrade(UI.GameSceneController gameController) {
+        if (gameController == null) return false;
+        
+        int currentGold = Integer.parseInt(gameController.getLabelGold().getText());
+        if (canAffordUpgrade(currentGold)) {
+            int upgradeCost = calculateUpgradeCost();
+            gameController.updateGold(currentGold - upgradeCost);
+            upgrade();
+            return true;
+        }
+        return false;
+    }
 
     protected void setImage(String path) {
         towerImage.setImage(new Image(getClass().getResource(path).toExternalForm()));
@@ -245,4 +263,22 @@ public abstract class Tower extends GameObject {
     public abstract Projectile createProjectile(Enemy enemy);
 
     public abstract void update(double deltaTime);
+
+    /**
+     * Calculates the cost to upgrade this tower.
+     * The upgrade cost is double the original tower cost.
+     * @return The cost to upgrade this tower
+     */
+    public int calculateUpgradeCost() {
+        return cost * 2;
+    }
+    
+    /**
+     * Checks if the tower can be upgraded based on available gold.
+     * @param availableGold The amount of gold the player currently has
+     * @return true if the player has enough gold to upgrade, false otherwise
+     */
+    public boolean canAffordUpgrade(int availableGold) {
+        return availableGold >= calculateUpgradeCost() && currentLevel < 2; // Assuming max level is 2
+    }
 }

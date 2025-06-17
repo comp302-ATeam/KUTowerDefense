@@ -162,6 +162,9 @@ public class GameSceneController {
         Platform.runLater(() -> {
             resetGame();
             
+            // Set this controller in TowerMenu for upgrade cost checking
+            TowerMenu.setGameController(this);
+            
             // Set custom cursor
             Image cursorImg = new Image(getClass().getResourceAsStream("/Assets/UI/01.png"));
             double hotspotX = cursorImg.getWidth() / 2;

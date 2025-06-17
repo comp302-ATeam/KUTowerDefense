@@ -13,15 +13,33 @@ public class ArcherTower extends Tower {
 
     public ArcherTower(int x, int y, Pane mapPane) {
         // Archer tower has high fire rate but moderate damage
-        super(x, y, 150, 10, 1.0, 100,mapPane);  // range=150, damage=10, fireRate=1.0, cost=100
+        super(x, y, getSettingsRange(), getSettingsDamage(), getSettingsFireRate(), getSettingsCost(), mapPane);
         renderTower(PATH);
+    }
+    
+    private static int getSettingsRange() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.archerRange;
+    }
+    
+    private static int getSettingsDamage() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.arrowDamage;
+    }
+    
+    private static double getSettingsFireRate() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.archerFireRate;
+    }
+    
+    private static int getSettingsCost() {
+        return Domain.GameFlow.GameSettingsManager.getInstance().getSettings().tower.archerCost;
     }
 
     @Override
     public void upgrade() {
         setImage(UPGRADEPATH);
-        attackRange *= 1.5;
+        currentLevel++;
+        attackRange = (int)(attackRange * 1.5);
         fireRate *= 2;
+        damage = (int)(damage * 1.3);  // Increase damage by 30%
     }
 
     @Override
